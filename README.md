@@ -556,8 +556,4 @@ Python · pandas · NumPy · SciPy · statsmodels (Poisson regression) · scikit
 
 ---
 
-## License
-
-[MIT](LICENSE) — free to use, learn from, and build on.
-
 *This project is for educational and portfolio purposes. Nothing here is financial or gambling advice. Always gamble responsibly.*
