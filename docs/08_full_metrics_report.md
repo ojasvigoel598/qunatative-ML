@@ -9,14 +9,14 @@ t-tests on the per-bet data, and the $1M simulation gets a bootstrap
 
 ```
                                build                                          metric                                  value
-        Backtest: PoissonElo + Kelly                                strike rate (CI)                       54.1% [0.4, 0.7]
-        Backtest: PoissonElo + Kelly                               avg edge (t vs 0)             25.3% (t=15.8, p=9.10e-18)
-        Backtest: PoissonElo + Kelly                                avg CLV (t vs 0)                -0.12% (t=-0.6, p=0.53)
-        Backtest: PoissonElo + Kelly                 strike vs break-even (binomial)  20/37 wins at avg odds 2.40 (p=0.136)
-      Backtest: PoissonElo + ML + RL                                strike rate (CI)                       48.9% [0.3, 0.6]
-      Backtest: PoissonElo + ML + RL                               avg edge (t vs 0)             20.6% (t=13.6, p=2.51e-17)
-      Backtest: PoissonElo + ML + RL                                avg CLV (t vs 0)                -0.18% (t=-1.0, p=0.33)
-      Backtest: PoissonElo + ML + RL                 strike vs break-even (binomial)  22/45 wins at avg odds 2.34 (p=0.452)
+        Backtest: PoissonElo + Kelly                                strike rate (CI)                       42.3% [0.3, 0.6]
+        Backtest: PoissonElo + Kelly                               avg edge (t vs 0)             14.8% (t=12.2, p=4.82e-12)
+        Backtest: PoissonElo + Kelly                                avg CLV (t vs 0)                  0.01% (t=0.0, p=0.97)
+        Backtest: PoissonElo + Kelly                 strike vs break-even (binomial)  11/26 wins at avg odds 2.32 (p=1.000)
+      Backtest: PoissonElo + ML + RL                                strike rate (CI)                       47.8% [0.3, 0.7]
+      Backtest: PoissonElo + ML + RL                               avg edge (t vs 0)              14.1% (t=9.9, p=1.57e-09)
+      Backtest: PoissonElo + ML + RL                                avg CLV (t vs 0)                  0.18% (t=0.6, p=0.53)
+      Backtest: PoissonElo + ML + RL                 strike vs break-even (binomial)  11/23 wins at avg odds 2.16 (p=1.000)
           Model quality (test split)                                   accuracy (CI)                       54.6% [0.5, 0.6]
           Model quality (test split)                                log-loss / Brier 0.98 / 0.577 vs baselines 1.10 / 0.667
                    Transfer: La Liga                Base rate (most common) acc (CI)                       48.9% [0.4, 0.5]
@@ -50,27 +50,27 @@ t-tests on the per-bet data, and the $1M simulation gets a bootstrap
   Deep net: SYN_baseline_4feat_calib                                 La Liga/EPL acc                          50.5% / 43.4%
      Deep net: SYN_regularised_4feat                                 La Liga/EPL acc                          50.5% / 43.4%
 Deep net: SYN_rich_8feat_regularised                                 La Liga/EPL acc                          50.0% / 44.0%
-          $1M simulation (25 trials)                                   mean (95% CI)      $1,436,128 [1,301,675, 1,575,331]
-          $1M simulation (25 trials)                       median / P(profit) / ruin                  $1,375,800 / 88% / 0%
-          $1M simulation (25 trials)                                90% range / skew            [843,800, 1,940,720] / +0.1
+          $1M simulation (25 trials)                                   mean (95% CI)            $943,996 [893,780, 995,772]
+          $1M simulation (25 trials)                       median / P(profit) / ruin                    $938,000 / 32% / 0%
+          $1M simulation (25 trials)                                90% range / skew            [759,900, 1,148,660] / +0.2
 ```
 
 ## Interpretability verdict
 
-1. **Backtest avg edge (~20-25%)** — t-test p < 1e-6: the selected bets'
+1. **Backtest avg edge (~14-15%)** — t-test p < 1e-6: the selected bets'
    estimated edge is statistically >> 0, i.e. real model-vs-bookmaker
    disagreement inside the synthetic world.
-2. **Backtest CLV (~-0.1..-0.2%)** — p > 0.5: indistinguishable from
+2. **Backtest CLV (0.0..+0.2%)** — p > 0.5: indistinguishable from
    zero; the closing line is not systematically beaten.
-3. **Strike rate (48.9-54.1%)** — Wilson CI is ~±13-16 pts on 37-45
+3. **Strike rate (42.3-47.8%)** — Wilson CI is ~±19-20 pts on 23-26
    bets: the single-path ROI is NOT significant on its own.
 4. **Real-data accuracy (51-55%)** — CI ~±5 pts on 380 matches; the
    ~5-10 pt edge over the majority baseline is stable across all four
    unseen seasons (the strongest non-luck signal).
 5. **Deep-net real vs synthetic** — real-trained beats synthetic-trained
    in every configuration (consistent across 8 runs, not one path).
-6. **$1M simulation** — mean $4.9M but median $495K, P(ruin<100k) 24%:
-   positive EV in the synthetic world, but a single path is dominated
-   by variance. This is the honest risk picture.
+6. **$1M simulation** — mean $0.9M but median $0.9M, P(ruin<100k) 0%: the edge after a real 
+   thin, and a single path is dominated by variance. This is the
+   honest risk picture.
 
 *(Saved by `scripts/07_full_metrics_report.py`.)*

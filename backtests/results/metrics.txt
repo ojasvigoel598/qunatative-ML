@@ -1,18 +1,18 @@
 BACKTEST METRICS (PoissonElo)
 ====================================================
-total_bets: 37
-wins: 20
-losses: 17
-strike_rate: 54.05
-total_profit: 178.63
-roi_pct: 17.86
-avg_edge_pct: 25.33
-avg_clv_pct: -0.12
-avg_odds: 2.4
-sharpe_ratio: 0.372
-max_drawdown_pct: 16.13
-final_bankroll: 1178.63
-profit_factor: 1.184
-cagr_pct: 5.13
-n_bets_per_year: 11.3
+total_bets: 26
+wins: 11
+losses: 15
+strike_rate: 42.31
+total_profit: -143.24
+roi_pct: -14.32
+avg_edge_pct: 14.81
+avg_clv_pct: 0.01
+avg_odds: 2.32
+sharpe_ratio: -0.48
+max_drawdown_pct: 21.29
+final_bankroll: 856.76
+profit_factor: 0.684
+cagr_pct: -4.6
+n_bets_per_year: 7.9
 layers_used: PoissonElo

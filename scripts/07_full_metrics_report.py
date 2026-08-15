@@ -232,21 +232,22 @@ def main():
     print("## H. IS IT LUCK?  — verdict per tracked build")
     print("=" * 88)
     print("""
-  1. Backtest avg edge (~20-25%)  -> t-test p<1e-6: the SELECTED bets' estimated
+  1. Backtest avg edge (~14-15%)  -> t-test p<1e-6: the SELECTED bets' estimated
      edge is statistically >> 0. This is real model-vs-bookie disagreement.
-  2. Backtest CLV (~-0.1 to -0.2%) -> p>0.5: indistinguishable from zero; the
+  2. Backtest CLV (0.0..+0.2%)     -> p>0.5: indistinguishable from zero; the
      bookmaker's closing line is not systematically beaten. Honest.
-  3. Strike rate (48.9-54.1%)     -> Wilson CI is ~+-13-16 pts on 37-45 bets:
-     the single-path ROI (+17.9% / -2.3%) is NOT significant on its own.
+  3. Strike rate (42.3-47.8%)     -> Wilson CI is ~+-19-20 pts on 23-26 bets:
+     the single-path ROI (-14.3% / -13.0%) is NOT significant on its own.
   4. Real-data accuracy (51-55%)  -> CI ~+-5 pts on 380 matches; the ~+5-10 pt
      edge over the majority baseline is stable across seasons (4/4), which is
      the strongest non-luck signal in the project.
   5. Deep-net real vs synthetic   -> real-trained beats synthetic-trained in
      every configuration (consistency across 8 runs, not one lucky path).
-  6. $1M simulation               -> mean $4.9M but median $495K and P(ruin<100k)
-     24%: the strategy has positive EV in the synthetic world, but a single
-     multi-year path is dominated by variance. This is the honest risk picture.
-""")
+  6. $1M simulation               -> mean ${sim_mean:.1f}M but median ${sim_med:.1f}M and
+     P(ruin<100k) {sim_ruin:.0%}: the strategy's edge after a real bookmaker margin is
+     thin, and a single multi-year path is dominated by variance. This is the
+     honest risk picture.
+""".format(sim_mean=mean / 1e6, sim_med=med / 1e6, sim_ruin=p_ruin))
 
     # save ledger
     ledger = pd.DataFrame(L)
@@ -265,21 +266,22 @@ def main():
              "",
              "## Interpretability verdict",
              "",
-             "1. **Backtest avg edge (~20-25%)** — t-test p < 1e-6: the selected bets'",
+             "1. **Backtest avg edge (~14-15%)** — t-test p < 1e-6: the selected bets'",
              "   estimated edge is statistically >> 0, i.e. real model-vs-bookmaker",
              "   disagreement inside the synthetic world.",
-             "2. **Backtest CLV (~-0.1..-0.2%)** — p > 0.5: indistinguishable from",
+             "2. **Backtest CLV (0.0..+0.2%)** — p > 0.5: indistinguishable from",
              "   zero; the closing line is not systematically beaten.",
-             "3. **Strike rate (48.9-54.1%)** — Wilson CI is ~±13-16 pts on 37-45",
+             "3. **Strike rate (42.3-47.8%)** — Wilson CI is ~±19-20 pts on 23-26",
              "   bets: the single-path ROI is NOT significant on its own.",
              "4. **Real-data accuracy (51-55%)** — CI ~±5 pts on 380 matches; the",
              "   ~5-10 pt edge over the majority baseline is stable across all four",
              "   unseen seasons (the strongest non-luck signal).",
              "5. **Deep-net real vs synthetic** — real-trained beats synthetic-trained",
              "   in every configuration (consistent across 8 runs, not one path).",
-             "6. **$1M simulation** — mean $4.9M but median $495K, P(ruin<100k) 24%:",
-             "   positive EV in the synthetic world, but a single path is dominated",
-             "   by variance. This is the honest risk picture.",
+             f"6. **$1M simulation** — mean ${mean / 1e6:.1f}M but median "
+             f"${med / 1e6:.1f}M, P(ruin<100k) {p_ruin:.0%}: the edge after a real ",
+             "   thin, and a single path is dominated by variance. This is the",
+             "   honest risk picture.",
              "",
              "*(Saved by `scripts/07_full_metrics_report.py`.)*",
              ]

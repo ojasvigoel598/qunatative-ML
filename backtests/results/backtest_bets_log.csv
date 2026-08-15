@@ -1,38 +1,27 @@
 date,match,market,my_odds,closing_odds,stake,edge_pct,model,staking,bet_outcome,profit_loss,clv_pct,running_bankroll
-2025-03-19,Brighton vs Liverpool,home_win,3.22,3.17,37.98,33.73,PoissonElo,Fractional-Kelly,Win,84.32,-1.55,1084.32
-2025-03-23,Newcastle vs Liverpool,home_win,2.75,2.76,62.3,40.22,PoissonElo,Fractional-Kelly,Lose,-62.3,0.36,1022.02
-2025-03-24,Newcastle vs Liverpool,home_win,2.71,2.72,57.05,38.18,PoissonElo,Fractional-Kelly,Win,97.56,0.37,1119.58
-2025-03-25,Chelsea vs Liverpool,home_win,2.17,2.17,64.88,27.12,PoissonElo,Fractional-Kelly,Win,75.91,0.0,1195.49
-2025-04-02,Newcastle vs Aston Villa,home_win,2.22,2.18,64.09,26.16,PoissonElo,Fractional-Kelly,Lose,-64.09,-1.8,1131.4
-2025-04-04,Chelsea vs Aston Villa,home_win,1.78,1.77,52.94,14.6,PoissonElo,Fractional-Kelly,Win,41.29,-0.56,1172.69
-2025-04-15,Brighton vs Liverpool,home_win,3.34,3.25,48.5,38.71,PoissonElo,Fractional-Kelly,Lose,-48.5,-2.69,1124.19
-2025-04-25,Arsenal vs Chelsea,home_win,2.73,2.75,45.5,28.01,PoissonElo,Fractional-Kelly,Win,78.72,0.73,1202.91
-2025-04-27,Arsenal vs West Ham,home_win,1.71,1.7,56.33,13.3,PoissonElo,Fractional-Kelly,Win,39.99,-0.58,1242.9
-2025-04-28,Arsenal vs Liverpool,home_win,2.5,2.59,76.27,36.82,PoissonElo,Fractional-Kelly,Lose,-76.27,3.6,1166.63
-2025-05-02,Arsenal vs Newcastle,home_win,2.15,2.14,33.76,13.31,PoissonElo,Fractional-Kelly,Win,38.82,-0.47,1205.45
-2025-05-03,Arsenal vs Aston Villa,home_win,2.08,2.06,72.58,26.01,PoissonElo,Fractional-Kelly,Lose,-72.58,-0.96,1132.87
-2025-05-12,Brighton vs Aston Villa,home_win,2.5,2.48,33.7,17.85,PoissonElo,Fractional-Kelly,Win,50.55,-0.8,1183.42
-2025-05-14,Arsenal vs Chelsea,home_win,2.71,2.73,46.84,27.07,PoissonElo,Fractional-Kelly,Lose,-46.84,0.74,1136.58
-2025-05-17,Brighton vs Liverpool,home_win,3.2,3.2,42.49,32.9,PoissonElo,Fractional-Kelly,Win,93.48,0.0,1230.06
-2025-05-31,Arsenal vs Chelsea,home_win,2.73,2.76,49.79,28.01,PoissonElo,Fractional-Kelly,Lose,-49.79,1.1,1180.27
-2025-06-15,Arsenal vs West Ham,home_win,1.74,1.7,60.97,15.29,PoissonElo,Fractional-Kelly,Win,45.12,-2.3,1225.39
-2025-06-16,Newcastle vs Liverpool,home_win,2.77,2.74,71.38,41.24,PoissonElo,Fractional-Kelly,Lose,-71.38,-1.08,1154.01
-2025-06-18,Brighton vs Liverpool,home_win,3.2,3.23,43.14,32.9,PoissonElo,Fractional-Kelly,Lose,-43.14,0.94,1110.87
-2025-07-11,Arsenal vs Aston Villa,home_win,2.06,2.05,64.95,24.79,PoissonElo,Fractional-Kelly,Win,68.85,-0.49,1179.72
-2025-07-14,Arsenal vs Liverpool,home_win,2.53,2.54,74.16,38.47,PoissonElo,Fractional-Kelly,Lose,-74.16,0.4,1105.56
-2025-07-26,Newcastle vs Liverpool,home_win,2.74,2.75,63.08,39.71,PoissonElo,Fractional-Kelly,Lose,-63.08,0.36,1042.48
-2025-08-03,Brighton vs Aston Villa,home_win,2.5,2.45,31.01,17.85,PoissonElo,Fractional-Kelly,Win,46.52,-2.0,1089.0
-2025-08-05,Arsenal vs Man City,home_win,1.62,1.63,40.71,9.27,PoissonElo,Fractional-Kelly,Win,25.24,0.62,1114.24
-2025-08-16,Newcastle vs Aston Villa,home_win,2.18,2.19,56.4,23.89,PoissonElo,Fractional-Kelly,Win,66.55,0.46,1180.79
-2025-08-17,Brighton vs Liverpool,home_win,3.22,3.22,44.85,33.73,PoissonElo,Fractional-Kelly,Lose,-44.85,0.0,1135.94
-2025-08-22,Chelsea vs Aston Villa,home_win,1.77,1.76,51.45,13.95,PoissonElo,Fractional-Kelly,Lose,-51.45,-0.56,1084.49
-2025-09-08,Chelsea vs Liverpool,home_win,2.12,2.16,58.56,24.19,PoissonElo,Fractional-Kelly,Win,65.59,1.89,1150.08
-2025-09-25,Newcastle vs Aston Villa,home_win,2.17,2.19,57.31,23.32,PoissonElo,Fractional-Kelly,Lose,-57.31,0.92,1092.77
-2025-09-28,Arsenal vs Brighton,home_win,1.87,1.89,39.85,12.69,PoissonElo,Fractional-Kelly,Win,34.67,1.07,1127.44
-2025-09-30,Chelsea vs Aston Villa,home_win,1.8,1.79,55.95,15.88,PoissonElo,Fractional-Kelly,Win,44.76,-0.56,1172.2
-2025-10-06,Newcastle vs West Ham,home_win,1.76,1.76,39.18,10.16,PoissonElo,Fractional-Kelly,Win,29.78,0.0,1201.98
-2025-10-09,Chelsea vs Aston Villa,home_win,1.77,1.76,54.44,13.95,PoissonElo,Fractional-Kelly,Lose,-54.44,-0.56,1147.54
-2025-10-13,Arsenal vs Aston Villa,home_win,2.1,2.09,70.99,27.22,PoissonElo,Fractional-Kelly,Win,78.09,-0.48,1225.63
-2025-10-23,Newcastle vs Brighton,home_win,2.03,2.03,43.79,14.72,PoissonElo,Fractional-Kelly,Win,45.1,0.0,1270.73
-2025-10-28,Newcastle vs Chelsea,home_win,2.96,2.93,45.56,28.11,PoissonElo,Fractional-Kelly,Lose,-45.56,-1.01,1225.17
-2025-11-10,Brighton vs Liverpool,home_win,3.22,3.23,46.54,33.73,PoissonElo,Fractional-Kelly,Lose,-46.54,0.31,1178.63
+2025-03-19,Brighton vs Liverpool,home_win,2.85,2.81,24.81,18.36,PoissonElo,Fractional-Kelly,Win,45.9,-1.4,1045.9
+2025-03-23,Newcastle vs Liverpool,home_win,2.4,2.41,41.8,22.38,PoissonElo,Fractional-Kelly,Lose,-41.8,0.42,1004.1
+2025-03-24,Newcastle vs Liverpool,home_win,2.41,2.42,40.75,22.89,PoissonElo,Fractional-Kelly,Win,57.46,0.41,1061.56
+2025-03-25,Chelsea vs Liverpool,home_win,1.88,1.88,30.55,10.13,PoissonElo,Fractional-Kelly,Win,26.88,0.0,1088.44
+2025-04-02,Newcastle vs Aston Villa,home_win,1.92,1.89,26.94,9.11,PoissonElo,Fractional-Kelly,Lose,-26.94,-1.56,1061.5
+2025-04-15,Brighton vs Liverpool,home_win,2.86,2.79,26.79,18.78,PoissonElo,Fractional-Kelly,Lose,-26.79,-2.45,1034.71
+2025-04-25,Arsenal vs Chelsea,home_win,2.39,2.42,22.46,12.07,PoissonElo,Fractional-Kelly,Win,31.22,1.26,1065.93
+2025-04-28,Arsenal vs Liverpool,home_win,2.21,2.3,46.14,20.95,PoissonElo,Fractional-Kelly,Lose,-46.14,4.07,1019.79
+2025-05-03,Arsenal vs Aston Villa,home_win,1.86,1.83,37.59,12.68,PoissonElo,Fractional-Kelly,Lose,-37.59,-1.61,982.2
+2025-05-12,Brighton vs Aston Villa,home_win,2.21,2.19,8.48,4.18,PoissonElo,Fractional-Kelly,Win,10.26,-0.9,992.46
+2025-05-14,Arsenal vs Chelsea,home_win,2.45,2.47,25.46,14.88,PoissonElo,Fractional-Kelly,Lose,-25.46,0.82,967.0
+2025-05-17,Brighton vs Liverpool,home_win,2.78,2.78,20.98,15.45,PoissonElo,Fractional-Kelly,Win,37.34,0.0,1004.34
+2025-05-31,Arsenal vs Chelsea,home_win,2.41,2.43,23.15,13.0,PoissonElo,Fractional-Kelly,Lose,-23.15,0.83,981.19
+2025-06-16,Newcastle vs Liverpool,home_win,2.48,2.46,43.86,26.46,PoissonElo,Fractional-Kelly,Lose,-43.86,-0.81,937.33
+2025-06-18,Brighton vs Liverpool,home_win,2.81,2.84,21.62,16.7,PoissonElo,Fractional-Kelly,Lose,-21.62,1.07,915.71
+2025-07-11,Arsenal vs Aston Villa,home_win,1.86,1.84,33.75,12.68,PoissonElo,Fractional-Kelly,Win,29.03,-1.08,944.74
+2025-07-14,Arsenal vs Liverpool,home_win,2.29,2.29,46.38,25.33,PoissonElo,Fractional-Kelly,Lose,-46.38,0.0,898.36
+2025-07-26,Newcastle vs Liverpool,home_win,2.42,2.42,37.01,23.4,PoissonElo,Fractional-Kelly,Lose,-37.01,0.0,861.35
+2025-08-03,Brighton vs Aston Villa,home_win,2.24,2.2,9.71,5.59,PoissonElo,Fractional-Kelly,Win,12.04,-1.79,873.39
+2025-08-16,Newcastle vs Aston Villa,home_win,1.89,1.9,18.18,7.41,PoissonElo,Fractional-Kelly,Win,16.18,0.53,889.57
+2025-08-17,Brighton vs Liverpool,home_win,2.8,2.8,20.11,16.28,PoissonElo,Fractional-Kelly,Lose,-20.11,0.0,869.46
+2025-09-08,Chelsea vs Liverpool,home_win,1.87,1.91,23.84,9.54,PoissonElo,Fractional-Kelly,Win,20.74,2.14,890.2
+2025-09-25,Newcastle vs Aston Villa,home_win,1.88,1.9,17.3,6.84,PoissonElo,Fractional-Kelly,Lose,-17.3,1.06,872.9
+2025-10-13,Arsenal vs Aston Villa,home_win,1.82,1.82,27.3,10.26,PoissonElo,Fractional-Kelly,Win,22.39,0.0,895.29
+2025-10-28,Newcastle vs Chelsea,home_win,2.65,2.62,19.93,14.69,PoissonElo,Fractional-Kelly,Lose,-19.93,-1.13,875.36
+2025-11-10,Brighton vs Liverpool,home_win,2.77,2.78,18.6,15.04,PoissonElo,Fractional-Kelly,Lose,-18.6,0.36,856.76
