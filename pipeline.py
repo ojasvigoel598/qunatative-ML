@@ -108,12 +108,22 @@ def _make_bookie_odds(p_true: Dict[str, float], rng: np.random.Generator,
     Closing odds use the same margin but an independent, smaller noise, so
     CLV = (closing - taken) / taken is centred near zero with a realistic
     spread instead of being systematically negative.
+
+    The margin is a POSITIVE overround (implied probabilities sum to > 1), the
+    way real bookmakers price: the house keeps roughly `margin` of every
+    balanced book.  A model therefore has to be genuinely better than the
+    bookmaker's own probabilities to find positive edge.
     """
     def _to_odds(p: Dict[str, float], m: float, s: float, g: float) -> Dict[str, float]:
         raw = np.array([p[k] for k in OUTCOMES]) ** g
         probs = np.clip(raw / raw.sum() + rng.normal(0, s, 3), 1e-4, 0.99)
         probs = probs / probs.sum()
-        return {k: round(float((1.0 / probs[i]) * (1.0 + m)), 2) for i, k in enumerate(OUTCOMES)}
+        # Margin is a POSITIVE overround: implied probabilities sum to 1+m > 1,
+        # i.e. the bookmaker pays odds BELOW fair value.  (The old code
+        # multiplied fair odds by (1+m), which made implied probabilities sum
+        # to ~0.94 and gave every bettor ~+6% EV on every match - a bookmaker
+        # that cannot exist, and one that inflated every synthetic result.)
+        return {k: round(float((1.0 / probs[i]) / (1.0 + m)), 2) for i, k in enumerate(OUTCOMES)}
 
     opening = _to_odds(p_true, margin, prob_noise, gamma)
     closing = _to_odds(p_true, margin, prob_noise * 0.4, gamma)
