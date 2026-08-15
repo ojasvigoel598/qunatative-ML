@@ -56,6 +56,7 @@ All three are glued together by a shared engine (`pipeline.py`) that runs a chro
 - **State-space models** — an **LSTM/GRU** over each team's rolling match sequence (`models/lstm_model.py`) models changing form directly; tested head-to-head against every baseline under the point-in-time protocol, plus a database-vs-model experiment (`scripts/11_lstm_state_test.py`).
 - **Dynamic thinking layer** — `models/dynamic_thinking.py` makes every decision adaptive: it fuses the trained model with the **public-vs-sharp market split** (a hidden signal), **re-weights model-vs-market from its own rolling Brier**, shrinks stakes by uncertainty and drawdown, and switches to survival mode below 10% of the bankroll — now **confidence-aware**: its confidence (how far the top outcome sits above the uniform ⅓) modulates the calibration blend, gates immediate base-model refits when confidence decays, and scales stakes up only when it is genuinely more sure. Wired into the $1M simulation (`demo/simulation_dynamic.py`) and its live video.
 - **Real-data, time-aware validation** — expanding-window season-by-season backtest on five real **La Liga + Serie A + Premier League** seasons plus cross-league transfer tests.
+- **No-future-knowledge walk-forward agent** — `agent_sim/` replays real seasons strictly chronologically: an adaptive ML agent picks leagues and bets from point-in-time information only, and every run is audited for data leakage. The 100-seed aggregate (`scripts/13_multi_league_agent.py`) reports the distribution of outcomes rather than one lucky path, and `scripts/14_tennis_walkforward.py` applies the same method to a different sport (2-outcome matches, real ATP odds).
 - **Rendered demo videos** — real `.mp4` walkthroughs of the $1M simulation and a point-in-time **Serie A 2025/26 replay**, rendered from actual run outputs (no fabricated footage).
 - **Prediction CLI** — `predict_match.py --home "Real Madrid" --away "Barcelona"` prints probabilities, Elo difference, form, baselines, confidence and risk.
 - **No leakage** — chronological split, Elo updated sequentially, rolling form features shifted by one match.
@@ -375,16 +376,22 @@ python scripts/11_lstm_state_test.py --offline
 # 16) Hidden signals on real data (consensus, dispersion, sharp-vs-public CLV)
 python scripts/12_hidden_signals.py --offline
 
-# 17) $1M simulation driven by the dynamic thinking layer
+# 17) Multi-run walk-forward aggregate: 100 independent randomised simulations
+python scripts/13_multi_league_agent.py --seeds 100 --offline   # -> backtests/results/agent_sim/
+
+# 18) Different sport: ATP tennis walk-forward (strict no-future-knowledge)
+python scripts/14_tennis_walkforward.py --offline
+
+# 19) $1M simulation driven by the dynamic thinking layer
 python demo/simulation_dynamic.py
 
-# 18) Render the demo videos (needs: pip install imageio imageio-ffmpeg)
+# 20) Render the demo videos (needs: pip install imageio imageio-ffmpeg)
 python demo/make_simulation_video.py      # -> demo/output/simulation_live_flat.mp4
 python demo/make_dynamic_video.py         # -> demo/output/simulation_live_dynamic.mp4
 python demo/make_serie_a_video.py --offline   # -> demo/output/serie_a_live.mp4
 #    watch all three: the .mp4 links below play inline on GitHub, or open demo/output/video_player.html locally
 
-# 19) One-command pipeline: regenerate EVERY artifact + verify
+# 21) One-command pipeline: regenerate EVERY artifact + verify
 bash ci_report.sh            # full (deep-learning experiments included)
 bash ci_report.sh --fast     # skip the long deep-learning experiments
 ```
@@ -419,6 +426,13 @@ qunatative-ML/                    # repository root (this project)
 │   ├── adaptive_model.py          # dynamic model: online Elo/form + drift-triggered refits
 │   ├── lstm_model.py              # state-space model: LSTM/GRU over rolling team sequences
 │   └── dynamic_thinking.py        # decision layer: market-split signal + adaptive blend + risk-aware staking
+├── agent_sim/
+│   ├── engine.py                  # chronological world: random league reveal, no future knowledge
+│   ├── agent.py                   # adaptive ML agent + per-league trust + survival mode
+│   ├── baselines.py               # no-bet / implied-probability baselines
+│   ├── ledger.py · report.py      # per-run CSV ledger + end-of-run reports
+│   ├── fetch.py · stream.py       # real-data ingestion + chronological match stream
+│   └── tennis.py                  # ATP loader (2-outcome sport)
 ├── demo/
 │   ├── demo_end_to_end.py         # narrated full-project demo
 │   ├── simulation.py              # $1M Monte-Carlo simulation (synthetic world)
@@ -443,13 +457,15 @@ qunatative-ML/                    # repository root (this project)
 │   ├── 09_make_dashboard.py       # interactive docs/dashboard.html generator
 │   ├── 10_adaptive_transfer.py    # adaptive model: cross-league + cross-sport transfer
 │   ├── 11_lstm_state_test.py      # LSTM/GRU state-space test + database-vs-model
-│   └── 12_hidden_signals.py       # consensus / dispersion / sharp-vs-public CLV on real data
-├── data/real_data.py              # shared multi-league loader (SP1 / E0 / I1, rich columns)
+│   ├── 12_hidden_signals.py       # consensus / dispersion / sharp-vs-public CLV on real data
+│   ├── 13_multi_league_agent.py   # 100-seed randomised multi-league walk-forward
+│   └── 14_tennis_walkforward.py   # tennis (different sport) walk-forward
 ├── tests/test_pipeline.py         # 12 verification tests
 ├── data/processed/                # historical_matches.csv (auto-generated)
 ├── data/real/                     # cached real seasons (La Liga, EPL, Serie A)
-├── data/real_data.py              # shared multi-league loader (SP1 / E0 / I1)
-├── backtests/results/             # metrics, bets logs, transfer + season results
+├── data/tennis/                   # cached ATP seasons (downloaded on first run)
+├── data/real_data.py              # shared multi-league loader (SP1 / E0 / I1, rich columns)
+├── backtests/results/             # metrics, bets logs, walk-forward runs, transfer results
 ├── docs/                          # data sources, architecture, experiments, research
 │   └── dashboard.html             # interactive metrics dashboard (self-contained)
 ├── assets/                        # README images
@@ -483,11 +499,12 @@ qunatative-ML/                    # repository root (this project)
 
 ## Demo videos
 
-Two **real `.mp4` walkthroughs** are rendered from the actual run outputs (matplotlib + a bundled ffmpeg — no AI-generated or fabricated footage):
+Three **real `.mp4` walkthroughs** are rendered from the actual run outputs (matplotlib + a bundled ffmpeg — no AI-generated or fabricated footage):
 
 | Video | What it shows | File |
 |-------|---------------|------|
 | **$1M simulation** | The trained model betting through 1,200 synthetic matches: equity curve, every bet as a green/red marker sized by stake, an *ML THINKING* panel (probability bars, odds, edge, stake, WIN/LOSS flash), a BIGGEST-WIN highlight and a speedrun | `demo/output/simulation_live_flat.mp4` (50 s) |
+| **$1M simulation — dynamic thinking layer** | The same stream driven by `models/dynamic_thinking.py`: model-vs-market weights, confidence, refit triggers and risk-aware staking live on screen | `demo/output/simulation_live_dynamic.mp4` (55 s) |
 | **Real Serie A 25/26 replay** | The adaptive model replaying the real 2025/26 season point-in-time with $1M: real teams, real B365 odds, results revealed chronologically | `demo/output/serie_a_live.mp4` (42 s) |
 
 **Play them right here on GitHub** (the `.mp4` files render with an inline player):
@@ -503,6 +520,7 @@ Render them yourself with:
 ```bash
 pip install imageio imageio-ffmpeg
 python demo/make_simulation_video.py
+python demo/make_dynamic_video.py
 python demo/make_serie_a_video.py --offline
 ```
 
