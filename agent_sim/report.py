@@ -88,7 +88,7 @@ def build_run_report(run_id: str, seed: int, world, engine, ledger) -> pd.DataFr
         "total_profit": round(sum(profits), 2),
         "total_staked": round(staked, 2),
         "roi_pct": round(sum(profits) / staked * 100, 2) if staked else 0.0,
-        "avg_odds": round(float(np.mean([r["odds_home"] for r in bets if r.get("odds_home")])) if bets else 0.0, 3),
+        "avg_odds": round(float(np.mean([_bet_odds(r) for r in bets])) if bets else 0.0, 3),
         "avg_model_prob": round(float(np.mean([max(r["prob_home"], r["prob_draw"], r["prob_away"]) for r in bets])) if bets else 0.0, 3),
         "avg_edge": round(float(np.mean([r["edge"] for r in bets])) if bets else 0.0, 4),
         "max_drawdown": round(max_dd, 4),
@@ -100,6 +100,18 @@ def build_run_report(run_id: str, seed: int, world, engine, ledger) -> pd.DataFr
     report_df = pd.DataFrame([report])
     report_df.to_csv(RESULTS_DIR / f"{run_id}_report.csv", index=False)
     return report_df
+
+
+def _bet_odds(row: dict) -> float:
+    """The odds of the outcome that was actually bet (not the home odds)."""
+    d = row.get("decision")
+    if d == "home_win":
+        return float(row.get("odds_home") or 0.0)
+    if d == "draw":
+        return float(row.get("odds_draw") or 0.0)
+    if d == "away_win":
+        return float(row.get("odds_away") or 0.0)
+    return 0.0
 
 
 def agent_start(ledger) -> float:
