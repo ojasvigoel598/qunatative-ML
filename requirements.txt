@@ -7,5 +7,9 @@ scikit-learn>=1.3.0
 seaborn>=0.12.0
 requests>=2.31.0
 openpyxl>=3.1.0
+# Verification suite (Dockerfile gate + README usage #12)
+pytest>=7.0
 # optional: render the demo videos (ships a static ffmpeg binary, no system install)
 # pip install imageio imageio-ffmpeg
+# optional: re-execute the explained notebook end-to-end
+# pip install nbformat nbconvert ipykernel
