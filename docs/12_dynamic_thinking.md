@@ -26,20 +26,20 @@ The layer now adapts **in proportion to how confident it is**:
   more sure than the minimum pass.
 
 ```
-    policy         mean       median   p_profit           p5          p95        worst         best  median_cagr   avg_bets
-      flat 1.365050e+06 1.361400e+06  75.000000 8.043000e+05 1.963720e+06 8.021000e+05 2.201100e+06     9.845409 643.250000
-     kelly 6.397421e+06 2.720664e+05  25.000000 7.034977e+03 3.298998e+07 6.411426e+03 7.172747e+07   -32.713312 643.250000
-   dynamic 1.293736e+06 1.213297e+06  91.666667 1.009954e+06 1.612846e+06 9.571032e+05 1.671870e+06     6.061431 388.666667
-dynamic_v1 1.275068e+06 1.247349e+06 100.000000 1.135635e+06 1.459585e+06 1.123301e+06 1.513909e+06     6.958744 443.000000
+    policy          mean       median  p_profit            p5          p95         worst         best  median_cagr  avg_bets
+      flat 943996.000000 938000.00000      32.0 759900.000000 1.148660e+06 689100.000000 1.245600e+06    -1.929308    127.88
+     kelly 842895.864698 762548.85587      32.0 417673.922202 1.540433e+06 393694.013005 1.586256e+06    -7.920019    127.88
+   dynamic 965757.353268 964813.51430      44.0 869225.253500 1.048257e+06 796876.446900 1.064738e+06    -1.084363    118.68
+dynamic_v1 967327.862412 955929.54090      28.0 904552.561380 1.035677e+06 889144.062800 1.122468e+06    -1.362484     57.92
 ```
 
 **dynamic vs its own v1 baseline (fixed base, no fusion, no confidence):** 
-median $1,213,297 vs $1,247,349, 
-P(profit) 92% vs 100%, 
-90% range [$1,009,954 .. $1,612,846] vs 
-[$1,135,635 .. $1,459,585].  Final model-vs-market weight 
-0.48, base refits/trial 13.5 (confidence-gated 
-1.5), final rolling confidence 0.27.
+median $964,814 vs $955,930, 
+P(profit) 44% vs 28%, 
+90% range [$869,225 .. $1,048,257] vs 
+[$904,553 .. $1,035,677].  Final model-vs-market weight 
+0.50, base refits/trial 14.5 (confidence-gated 
+2.5), final rolling confidence 0.30.
 
 **Honest reading:** the dynamic layer adapts its reasoning (final market
 weight, uncertainty shrink, drawdown risk, survival switch) instead of
