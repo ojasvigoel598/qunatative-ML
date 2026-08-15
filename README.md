@@ -15,9 +15,8 @@
 
 ---
 
-> ## 🚧 Project status: ongoing work-in-progress
->
-> This repository is a **living research project** — it is published as an honest, runnable snapshot of work in progress, not a finished product. The distinctions below are maintained as the project evolves:
+> [!IMPORTANT]
+> **Project status: ongoing work-in-progress.** This repository is a living research project, published as an honest, runnable snapshot of work in progress rather than a finished product.
 >
 > - ✅ **Working / current** — core pipeline (PoissonElo + ML + RL), prediction CLI, real-data season backtests, walk-forward agent simulation, $1M simulations, tests, explained notebook.
 > - 🧪 **Experimental** — deep-learning transfer (PyTorch/TF), adaptive cross-league/cross-sport transfer, LSTM/GRU state-space models, the dynamic thinking layer, hidden-signal CLV studies. These run, but results are reported honestly (often *not* beating the market) and may change.
@@ -42,7 +41,8 @@ All three are glued together by a shared engine (`pipeline.py`) that runs a chro
 
 **Why it matters (portfolio-wise).** This is an end-to-end ML project with the rigor that separates a "notebook demo" from a defensible system: no data leakage, calibrated probabilities, a held-out test split that is never tuned on, a Monte-Carlo simulation instead of one lucky path, and a 12-test verification suite.
 
-> **Honesty first.** The default data is a *synthetic, calibrated world* — the bookmaker odds are generated from the same true probabilities the model learns, plus a margin and the well-documented favourite–longshot bias. The backtest validates the **methodology**; it is **not** a prediction of real-world returns. See [Limitations](#limitations).
+> [!WARNING]
+> **Honesty first.** The default data is a synthetic, calibrated world: the bookmaker odds are generated from the same true probabilities the model learns, plus a margin and the well-documented favourite–longshot bias. The backtest validates the methodology; it is not a prediction of real-world returns. See [Limitations](#limitations).
 
 ---
 
