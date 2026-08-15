@@ -15,6 +15,19 @@
 
 ---
 
+> ## 🚧 Project status: ongoing work-in-progress
+>
+> This repository is a **living research project** — it is published as an honest, runnable snapshot of work in progress, not a finished product. The distinctions below are maintained as the project evolves:
+>
+> - ✅ **Working / current** — core pipeline (PoissonElo + ML + RL), prediction CLI, real-data season backtests, walk-forward agent simulation, $1M simulations, tests, explained notebook.
+> - 🧪 **Experimental** — deep-learning transfer (PyTorch/TF), adaptive cross-league/cross-sport transfer, LSTM/GRU state-space models, the dynamic thinking layer, hidden-signal CLV studies. These run, but results are reported honestly (often *not* beating the market) and may change.
+> - 🗺️ **Planned** — see [Future improvements](#future-improvements).
+> - ⚠️ **Known limitations** — see [Limitations](#limitations). Nothing here is financial or gambling advice; the default dataset is synthetic.
+>
+> Every commit is a small, tested, self-contained contribution, so the repository is always in a usable state.
+
+---
+
 ## Overview
 
 **The problem.** Beating a sportsbook is hard: bookmakers set prices from the same public information you have, then add a margin on top. Winning consistently requires a model that is *genuinely better* at estimating match probabilities — and even then, edge detection is fragile, staking is risky, and a single backtest path tells you almost nothing.
@@ -297,8 +310,8 @@ Trains the PoissonElo + Gradient-Boosting layers on cached real history and prin
 Tested on **Windows (Python 3.14)** and clean-venv installs; macOS/Linux use the same commands with `source .venv/bin/activate`.
 
 ```bash
-git clone https://github.com/<your-username>/sports-betting-model.git
-cd sports_betting_model
+git clone https://github.com/ojasvigoel598/qunatative-ML.git
+cd qunatative-ML
 
 python -m venv .venv
 .venv\Scripts\activate        # Windows
@@ -392,7 +405,7 @@ backtest_summary_ml_rl.png       # one-page results card
 ## Project structure
 
 ```
-sports_betting_model/
+qunatative-ML/                    # repository root (this project)
 ├── pipeline.py                    # shared engine: data, training, backtest, metrics
 ├── run_full_project.py            # CLI: base pipeline (PoissonElo + Kelly)
 ├── run_full_ml_rl.py              # CLI: full pipeline (PoissonElo + ML + RL)
