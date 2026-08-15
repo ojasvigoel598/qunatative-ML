@@ -36,10 +36,15 @@ ODDS_COLS = ["odds_home", "odds_draw", "odds_away",
              "pin_home", "pin_draw", "pin_away"]
 
 
-def download_season(league: str, season: str) -> pd.DataFrame:
-    """Download one real season, normalised to the project schema (with odds)."""
+def download_season(league: str, season: str, raw: pd.DataFrame = None) -> pd.DataFrame:
+    """Normalise one real season to the project schema (with odds).
+
+    `raw` is the raw football-data.co.uk frame; when omitted it is downloaded
+    from the public API.  Callers with a local cache pass the cached raw frame
+    so offline mode never touches the network.
+    """
     url = f"https://www.football-data.co.uk/mmz4281/{season}/{league}.csv"
-    df = pd.read_csv(url)
+    df = raw if raw is not None else pd.read_csv(url)
     df = df.rename(columns={
         "Date": "date", "HomeTeam": "home_team", "AwayTeam": "away_team",
         "FTHG": "home_goals", "FTAG": "away_goals", "FTR": "result",
@@ -56,7 +61,14 @@ def download_season(league: str, season: str) -> pd.DataFrame:
 
 
 def get_season(league: str, season: str, offline: bool = False) -> pd.DataFrame:
-    """Load one season, downloading + caching on first use unless offline."""
+    """Load one season, downloading + caching on first use unless offline.
+
+    Offline mode reads the cached raw CSV and normalises it in memory - it
+    never touches the network.  (The old implementation called
+    ``download_season`` unconditionally, which re-downloaded from the public
+    API on EVERY call even with a populated cache, making ``offline=True``
+    silently depend on the internet.)
+    """
     cache = REAL_DIR / f"{league}_{season}.csv"
     if offline:
         if not cache.exists():
@@ -68,7 +80,7 @@ def get_season(league: str, season: str, offline: bool = False) -> pd.DataFrame:
             raw = pd.read_csv(
                 f"https://www.football-data.co.uk/mmz4281/{season}/{league}.csv")
             cache.write_bytes(raw.to_csv(index=False).encode())
-    return download_season(league, season)
+    return download_season(league, season, raw=pd.read_csv(cache))
 
 
 def load_league(league: str, seasons=None, offline: bool = True) -> pd.DataFrame:
@@ -91,7 +103,7 @@ def get_season_rich(league: str, season: str, offline: bool = True) -> pd.DataFr
     df = df.rename(columns={
         "Date": "date", "HomeTeam": "home_team", "AwayTeam": "away_team",
         "FTHG": "home_goals", "FTAG": "away_goals", "FTR": "result",
-        "B365H": "B365H", "B365D": "B365D", "B365A": "B365A"})
+        "B365H": "odds_home", "B365D": "odds_draw", "B365A": "odds_away"})
     df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y", errors="coerce")
     df["league"] = LEAGUES[league]
     df["season"] = SEASON_LABEL[season]
