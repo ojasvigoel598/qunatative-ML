@@ -74,8 +74,11 @@ def _step_features(row, rich: bool) -> list:
         for c in ["HS", "AS", "HST", "AST", "HC", "AC", "HY", "AY"]:
             v = row.get(c, None)
             f.append(float(v) if pd.notna(v) else 0.0)
-        # implied probabilities from B365 odds at that match (pre-match info)
-        for c in ["B365H", "B365D", "B365A"]:
+        # implied probabilities from the pre-match B365 odds at that match
+        # (renamed to odds_home/odds_draw/odds_away by the rich data loader;
+        # the old code read the raw B365H column names, which no longer exist
+        # in the rich schema, so the market signal silently collapsed to 1/3)
+        for c in ["odds_home", "odds_draw", "odds_away"]:
             v = row.get(c, None)
             f.append(1.0 / float(v) if pd.notna(v) and float(v) > 1 else 1 / 3.0)
     return f
