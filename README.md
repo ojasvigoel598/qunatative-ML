@@ -157,7 +157,7 @@ The model genuinely learns team strength: better than random on 240 matches it n
 | **dynamic (confidence-aware)** | $1.29M | $1.21M | 92% | **$1.01M–$1.61M** | +6.1% |
 | dynamic v1 (original layer) | $1.28M | $1.25M | 100% | $1.14M–$1.46M | +7.0% |
 
-**Honest reading — is the upgrade better?** The confidence-aware layer keeps the dynamic signature — tight 90% range ($1.01M–$1.61M, no path below $957K), 92% P(profit), model-vs-market weight converging to ~0.48 — and now **refits its base model ~13.5× per trial (1.5 of them confidence-gated)** when its rolling confidence decays. Head-to-head against the *previous* (v1) layer on identical streams, the two are statistically indistinguishable at 12 trials: v1 had a marginally tighter tail and 100% P(profit) in this sample, the confidence-aware layer a slightly higher mean. So the honest answer is: the confidence-aware upgrade is **not a clear return winner in a static synthetic world** — its value is behavioural (it re-learns when it loses confidence and scales risk with certainty), and the real-data experiments ([CLV](docs/09_real_walkforward_simulation.md), [hidden signals](#hidden-signals-on-real-data--consensus-dispersion-and-the-sharp-vs-public-split)) are where market value actually shows. Full table: [`docs/12_dynamic_thinking.md`](docs/12_dynamic_thinking.md). Watch the decision trace live in [`demo/output/simulation_live_dynamic.mp4`](demo/output/video_player.html).
+**Honest reading — is the upgrade better?** The confidence-aware layer keeps the dynamic signature — tight 90% range ($1.01M–$1.61M, no path below $957K), 92% P(profit), model-vs-market weight converging to ~0.48 — and now **refits its base model ~13.5× per trial (1.5 of them confidence-gated)** when its rolling confidence decays. Head-to-head against the *previous* (v1) layer on identical streams, the two are statistically indistinguishable at 12 trials: v1 had a marginally tighter tail and 100% P(profit) in this sample, the confidence-aware layer a slightly higher mean. So the honest answer is: the confidence-aware upgrade is **not a clear return winner in a static synthetic world** — its value is behavioural (it re-learns when it loses confidence and scales risk with certainty), and the real-data experiments ([CLV](docs/09_real_walkforward_simulation.md), [hidden signals](#hidden-signals-on-real-data--consensus-dispersion-and-the-sharp-vs-public-split)) are where market value actually shows. Full table: [`docs/12_dynamic_thinking.md`](docs/12_dynamic_thinking.md). Watch the decision trace live in [`demo/output/simulation_live_dynamic.mp4`](demo/output/simulation_live_dynamic.mp4).
 
 ---
 
@@ -382,7 +382,7 @@ python demo/simulation_dynamic.py
 python demo/make_simulation_video.py      # -> demo/output/simulation_live_flat.mp4
 python demo/make_dynamic_video.py         # -> demo/output/simulation_live_dynamic.mp4
 python demo/make_serie_a_video.py --offline   # -> demo/output/serie_a_live.mp4
-#    watch all three in demo/output/video_player.html
+#    watch all three: the .mp4 links below play inline on GitHub, or open demo/output/video_player.html locally
 
 # 19) One-command pipeline: regenerate EVERY artifact + verify
 bash ci_report.sh            # full (deep-learning experiments included)
@@ -490,7 +490,15 @@ Two **real `.mp4` walkthroughs** are rendered from the actual run outputs (matpl
 | **$1M simulation** | The trained model betting through 1,200 synthetic matches: equity curve, every bet as a green/red marker sized by stake, an *ML THINKING* panel (probability bars, odds, edge, stake, WIN/LOSS flash), a BIGGEST-WIN highlight and a speedrun | `demo/output/simulation_live_flat.mp4` (50 s) |
 | **Real Serie A 25/26 replay** | The adaptive model replaying the real 2025/26 season point-in-time with $1M: real teams, real B365 odds, results revealed chronologically | `demo/output/serie_a_live.mp4` (42 s) |
 
-Watch both in [`demo/output/video_player.html`](demo/output/video_player.html). Render them yourself with:
+**Play them right here on GitHub** (the `.mp4` files render with an inline player):
+
+- 💰 [$1,000,000 simulation — flat $10K/bet](demo/output/simulation_live_flat.mp4) · 50 s
+- 🧠 [$1,000,000 simulation — dynamic thinking layer](demo/output/simulation_live_dynamic.mp4) · 55 s
+- ⚽ [Real Serie A 2025/26 replay — point-in-time](demo/output/serie_a_live.mp4) · 42 s
+
+(Cloned locally, you can also open [`demo/output/video_player.html`](demo/output/video_player.html) — a self-contained page that embeds all three. GitHub does not render `.html` files, so on the repo website use the `.mp4` links above.)
+
+Render them yourself with:
 
 ```bash
 pip install imageio imageio-ffmpeg
