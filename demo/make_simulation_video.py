@@ -492,8 +492,8 @@ def main():
             f"Final bankroll   ${final_bankroll:,.0f}",
             f"ROI {roi:+.1f}%   ·   {wins} W / {losses} L",
             f"Bets {n_bets}   ·   biggest win +${max((e['profit'] for e in events if e['is_bet']), default=0):,.0f}",
-            "25-trial distribution: mean $1.44M · median $1.38M",
-            "P(end in profit) 88%  ·  worst path $802K",
+            "25-trial distribution: mean $0.94M · median $0.94M",
+            "P(end in profit) 32%  ·  worst path $689K",
         ],
         footer="this path is ONE Monte-Carlo draw - variance is the story",
         poster_path=poster)

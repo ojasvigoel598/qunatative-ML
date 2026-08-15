@@ -1,6 +1,6 @@
 stage,n_matches,detail
 data,1200,"1200 synthetic matches, seed 42"
 train,780,PoissonElo + ML trained
-validation,180,83 RL experiences
-test,240,107 value bets
-final,107,"final bankroll $1,699.90 (ROI 69.99%)"
+validation,180,26 RL experiences
+test,240,23 value bets
+final,23,final bankroll $869.56 (ROI -13.04%)
