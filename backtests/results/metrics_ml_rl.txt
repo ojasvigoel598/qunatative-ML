@@ -1,0 +1,18 @@
+BACKTEST METRICS (PoissonElo + ML(GB) + RL(Q-Learning))
+====================================================
+total_bets: 45
+wins: 22
+losses: 23
+strike_rate: 48.89
+total_profit: -22.88
+roi_pct: -2.29
+avg_edge_pct: 20.59
+avg_clv_pct: -0.18
+avg_odds: 2.34
+sharpe_ratio: 0.058
+max_drawdown_pct: 25.82
+final_bankroll: 977.12
+profit_factor: 0.977
+cagr_pct: -0.7
+n_bets_per_year: 13.7
+layers_used: PoissonElo + ML(GB) + RL(Q-Learning)

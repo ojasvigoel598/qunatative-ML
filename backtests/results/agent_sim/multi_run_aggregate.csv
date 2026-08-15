@@ -1,0 +1,2 @@
+n_runs,mean_roi,median_roi,std_roi,min_roi,max_roi,mean_final_bankroll,median_final_bankroll,pct_profitable,worst_final,best_final,mean_max_drawdown,median_max_drawdown,mean_bets_per_run,mean_matches_evaluated
+100,-16.3,-14.72,19.32,-100.0,19.24,893864.0,874650.0,18.0,617500.0,1288800.0,0.1972,0.1841,100.8,768.3

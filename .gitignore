@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Project scratch files (agent / debugging)
+_scratch_*.py
+_scratch_*.json
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Notebooks (interactive checkpoints only)
+notebooks/.ipynb_checkpoints/
+
+# Video render scratch (regenerable by demo/*.py renderers)
+demo/output/.embed_tmp/
+
+# Video render frame-check scratch
+.vcheck/
+
+# Per-run walk-forward ledgers (regenerable: scripts/13_multi_league_agent.py)
+# The aggregate summaries (multi_run_*.csv) ARE tracked.
+backtests/results/agent_sim/run_*
+
+# Optional: uncomment to ignore downloaded/cached real data (re-downloadable)
+# data/real/

@@ -1,0 +1,2 @@
+run_id,seed,season,start_date,end_date,leagues_encountered,leagues_analysed,matches_evaluated,bets_placed,no_bets,wins,losses,win_rate,start_bankroll,final_bankroll,total_profit,total_staked,roi_pct,avg_odds,avg_model_prob,avg_edge,max_drawdown,n_leak_flags,frozen_window,survival,model_refits
+notebook_demo,7,2425,2024-11-13,2025-05-25,SP1|E0,E0|SP1,284,27,257,12,15,0.4444,1000000.0,1051700.0,51700.0,270000.0,19.15,2.599,0.455,0.2344,0.047,0,False,False,5

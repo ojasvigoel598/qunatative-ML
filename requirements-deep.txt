@@ -1,0 +1,9 @@
+# Optional deep-learning extras (PyTorch NN + TensorFlow hybrid).
+#
+# Only needed for scripts/04_deep_learning_transfer.py and the PyTorch /
+# TensorFlow model layers. The core pipeline (requirements.txt) works without
+# these. TensorFlow has no stable wheels for Python 3.14 yet; on 3.14 use
+# tf-nightly (>= 2.22.0.dev) as pinned below, on 3.10-3.13 use stable
+# `tensorflow` instead.
+torch>=2.0
+tf-nightly>=2.22.0.dev  # or: tensorflow>=2.15  (Python 3.10-3.13)

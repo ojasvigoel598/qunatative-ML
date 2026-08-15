@@ -1,0 +1,46 @@
+date,match,market,my_odds,closing_odds,stake,edge_pct,model,staking,bet_outcome,profit_loss,clv_pct,running_bankroll
+2025-03-18,Tottenham vs Brighton,away_win,2.59,2.57,22.17,9.4,PoissonElo+ML,RL+Q-Learning,Lose,-22.17,-0.77,977.83
+2025-03-23,Newcastle vs Liverpool,home_win,2.75,2.76,73.34,37.72,PoissonElo+ML,RL+Q-Learning,Lose,-73.34,0.36,904.49
+2025-03-24,Newcastle vs Liverpool,home_win,2.71,2.72,67.84,35.72,PoissonElo+ML,RL+Q-Learning,Win,116.01,0.37,1020.5
+2025-03-25,Chelsea vs Liverpool,home_win,2.17,2.17,59.38,27.23,PoissonElo+ML,RL+Q-Learning,Win,69.47,0.0,1089.97
+2025-04-02,Newcastle vs Aston Villa,home_win,2.22,2.18,60.82,27.23,PoissonElo+ML,RL+Q-Learning,Lose,-60.82,-1.8,1029.15
+2025-04-04,Chelsea vs Aston Villa,home_win,1.78,1.77,48.55,14.72,PoissonElo+ML,RL+Q-Learning,Win,37.87,-0.56,1067.02
+2025-04-18,Brighton vs Newcastle,home_win,2.65,2.57,17.88,11.06,PoissonElo+ML,RL+Q-Learning,Lose,-17.88,-3.02,1049.14
+2025-04-25,Arsenal vs Chelsea,home_win,2.73,2.75,50.29,33.17,PoissonElo+ML,RL+Q-Learning,Win,87.0,0.73,1136.14
+2025-04-28,Arsenal vs Liverpool,home_win,2.5,2.59,85.21,39.53,PoissonElo+ML,RL+Q-Learning,Lose,-85.21,3.6,1050.93
+2025-05-02,Arsenal vs Newcastle,home_win,2.15,2.14,20.12,17.61,PoissonElo+ML,RL+Q-Learning,Win,23.14,-0.47,1074.07
+2025-05-03,Arsenal vs Aston Villa,home_win,2.08,2.06,71.01,28.56,PoissonElo+ML,RL+Q-Learning,Lose,-71.01,-0.96,1003.06
+2025-05-09,Brighton vs West Ham,home_win,1.94,1.96,34.84,13.06,PoissonElo+ML,RL+Q-Learning,Lose,-34.84,1.03,968.22
+2025-05-11,Arsenal vs Newcastle,home_win,2.12,2.15,17.25,15.96,PoissonElo+ML,RL+Q-Learning,Win,19.32,1.42,987.54
+2025-05-12,Brighton vs Aston Villa,home_win,2.5,2.48,49.75,20.15,PoissonElo+ML,RL+Q-Learning,Win,74.62,-0.8,1062.16
+2025-05-14,Arsenal vs Chelsea,home_win,2.71,2.73,49.99,32.19,PoissonElo+ML,RL+Q-Learning,Lose,-49.99,0.74,1012.17
+2025-05-31,Arsenal vs Chelsea,home_win,2.73,2.76,48.52,33.17,PoissonElo+ML,RL+Q-Learning,Lose,-48.52,1.1,963.65
+2025-06-08,Man City vs Arsenal,away_win,2.34,2.32,17.83,6.61,PoissonElo+ML,RL+Q-Learning,Win,23.89,-0.85,987.54
+2025-06-16,Newcastle vs Liverpool,home_win,2.77,2.74,74.07,38.72,PoissonElo+ML,RL+Q-Learning,Lose,-74.07,-1.08,913.47
+2025-07-11,Arsenal vs Aston Villa,home_win,2.06,2.05,58.88,27.33,PoissonElo+ML,RL+Q-Learning,Win,62.41,-0.49,975.88
+2025-07-14,Arsenal vs Liverpool,home_win,2.53,2.54,65.7,41.2,PoissonElo+ML,RL+Q-Learning,Lose,-65.7,0.4,910.18
+2025-07-21,Man City vs Arsenal,away_win,2.41,2.35,23.72,9.8,PoissonElo+ML,RL+Q-Learning,Lose,-23.72,-2.49,886.46
+2025-07-23,West Ham vs Man City,home_win,2.2,2.16,20.54,11.12,PoissonElo+ML,RL+Q-Learning,Win,24.65,-1.82,911.11
+2025-07-26,Newcastle vs Liverpool,home_win,2.74,2.75,68.33,37.22,PoissonElo+ML,RL+Q-Learning,Lose,-68.33,0.36,842.78
+2025-08-03,Brighton vs Aston Villa,home_win,2.5,2.45,28.3,20.15,PoissonElo+ML,RL+Q-Learning,Win,42.45,-2.0,885.23
+2025-08-16,Newcastle vs Aston Villa,home_win,2.18,2.19,46.77,24.94,PoissonElo+ML,RL+Q-Learning,Win,55.19,0.46,940.42
+2025-08-18,Brighton vs Aston Villa,home_win,2.45,2.45,14.39,17.75,PoissonElo+ML,RL+Q-Learning,Lose,-14.39,0.0,926.03
+2025-08-22,Chelsea vs Aston Villa,home_win,1.77,1.76,42.33,14.08,PoissonElo+ML,RL+Q-Learning,Lose,-42.33,-0.56,883.7
+2025-09-01,Brighton vs Newcastle,home_win,2.62,2.59,13.36,9.8,PoissonElo+ML,RL+Q-Learning,Lose,-13.36,-1.15,870.34
+2025-09-05,Tottenham vs Brighton,away_win,2.63,2.65,14.8,11.09,PoissonElo+ML,RL+Q-Learning,Win,24.12,0.76,894.46
+2025-09-08,Chelsea vs Liverpool,home_win,2.12,2.16,48.52,24.3,PoissonElo+ML,RL+Q-Learning,Win,54.34,1.89,948.8
+2025-09-18,Tottenham vs Brighton,away_win,2.66,2.62,17.66,12.36,PoissonElo+ML,RL+Q-Learning,Win,29.32,-1.5,978.12
+2025-09-23,West Ham vs Man City,home_win,2.19,2.16,21.82,10.62,PoissonElo+ML,RL+Q-Learning,Lose,-21.82,-1.37,956.3
+2025-09-25,Newcastle vs Aston Villa,home_win,2.17,2.19,71.72,24.36,PoissonElo+ML,RL+Q-Learning,Lose,-71.72,0.92,884.58
+2025-09-28,Arsenal vs Brighton,home_win,1.87,1.89,32.28,12.7,PoissonElo+ML,RL+Q-Learning,Win,28.08,1.07,912.66
+2025-09-30,Chelsea vs Aston Villa,home_win,1.8,1.79,22.82,16.01,PoissonElo+ML,RL+Q-Learning,Win,18.26,-0.56,930.92
+2025-10-03,Arsenal vs Newcastle,home_win,2.11,2.14,16.17,15.42,PoissonElo+ML,RL+Q-Learning,Win,17.95,1.42,948.87
+2025-10-09,Chelsea vs Aston Villa,home_win,1.77,1.76,43.38,14.08,PoissonElo+ML,RL+Q-Learning,Lose,-43.38,-0.56,905.49
+2025-10-10,Man City vs West Ham,home_win,2.44,2.41,19.32,12.29,PoissonElo+ML,RL+Q-Learning,Lose,-19.32,-1.23,886.17
+2025-10-11,Tottenham vs West Ham,home_win,2.55,2.59,14.31,10.01,PoissonElo+ML,RL+Q-Learning,Lose,-14.31,1.57,871.86
+2025-10-12,Tottenham vs West Ham,home_win,2.6,2.61,16.57,12.16,PoissonElo+ML,RL+Q-Learning,Win,26.51,0.38,898.37
+2025-10-13,Arsenal vs Aston Villa,home_win,2.1,2.09,67.38,29.8,PoissonElo+ML,RL+Q-Learning,Win,74.12,-0.48,972.49
+2025-10-20,Brighton vs West Ham,home_win,1.99,1.98,19.62,15.98,PoissonElo+ML,RL+Q-Learning,Lose,-19.62,-0.5,952.87
+2025-10-23,Newcastle vs Brighton,home_win,2.03,2.03,27.85,12.04,PoissonElo+ML,RL+Q-Learning,Win,28.69,0.0,981.56
+2025-10-28,Newcastle vs Chelsea,home_win,2.96,2.93,36.23,28.94,PoissonElo+ML,RL+Q-Learning,Lose,-36.23,-1.01,945.33
+2025-10-31,Brighton vs Newcastle,home_win,2.6,2.58,19.87,8.97,PoissonElo+ML,RL+Q-Learning,Win,31.79,-0.77,977.12
