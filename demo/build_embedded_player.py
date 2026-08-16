@@ -28,6 +28,15 @@ FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 
 CARDS = [
     {
+        "file": "demo_narrated.mp4",
+        "title": "Full narrated demo — 4:40 self-contained walkthrough (start here)",
+        "tags": ["AI voice narration", "edge-tts", "explains the project end to end"],
+        "note": ("A polished product-style demo with natural AI narration: what the "
+                 "project is, the $1M flat simulation, the confidence-aware dynamic "
+                 "layer, a real Serie A replay, and the honest bottom line. "
+                 "Narration only states what the repo actually does."),
+    },
+    {
         "file": "simulation_live_flat.mp4",
         "title": "$1,000,000 Simulation — live replay",
         "tags": ["synthetic world", "flat $10K/bet", "trial 0: final $1,569,700 (+57%)"],
