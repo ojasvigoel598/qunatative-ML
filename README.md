@@ -443,7 +443,7 @@ qunatative-ML/                    # repository root (this project)
 │   ├── make_dynamic_video.py      # renders the dynamic-thinking trial as an mp4
 │   ├── make_serie_a_video.py      # renders a real Serie A 25/26 replay as an mp4
 │   └── output/
-│       ├── simulation_live_*.mp4 · serie_a_live.mp4 · video_player.html
+│       ├── demo_narrated.mp4 · simulation_live_*.mp4 · serie_a_live.mp4
 ├── notebooks/
 │   └── 01_explained_ml_pipeline.ipynb   # ML pipeline explained end-to-end
 ├── scripts/
@@ -500,6 +500,12 @@ qunatative-ML/                    # repository root (this project)
 
 ## Demo videos
 
+### 🎬 Narrated walkthrough (start here) — 4 min 40 s
+
+[**Watch the full narrated demo**](demo/output/demo_narrated.mp4) — a self-contained walkthrough with AI voice narration (Microsoft Edge neural voice, generated free via `edge-tts`): it explains what the project is, shows the model betting through the $1M simulation, the confidence-aware dynamic thinking layer, and a real Serie A replay, then gives the honest bottom line. Built entirely from the actual run outputs below (no fabricated footage). Rebuild it with `pip install edge-tts` + `python demo/make_narrated_demo.py`.
+
+### Live replays — real `.mp4` walkthroughs
+
 Three **real `.mp4` walkthroughs** are rendered from the actual run outputs (matplotlib + a bundled ffmpeg — no AI-generated or fabricated footage):
 
 | Video | What it shows | File |
@@ -510,6 +516,7 @@ Three **real `.mp4` walkthroughs** are rendered from the actual run outputs (mat
 
 **Play them right here on GitHub** (the `.mp4` files render with an inline player):
 
+- 🎬 [**Full narrated demo (4:40) — start here**](demo/output/demo_narrated.mp4)
 - 💰 [$1,000,000 simulation — flat $10K/bet](demo/output/simulation_live_flat.mp4) · 50 s
 - 🧠 [$1,000,000 simulation — dynamic thinking layer](demo/output/simulation_live_dynamic.mp4) · 55 s
 - ⚽ [Real Serie A 2025/26 replay — point-in-time](demo/output/serie_a_live.mp4) · 42 s
@@ -519,7 +526,8 @@ Three **real `.mp4` walkthroughs** are rendered from the actual run outputs (mat
 Render them yourself with:
 
 ```bash
-pip install imageio imageio-ffmpeg
+pip install imageio imageio-ffmpeg edge-tts
+python demo/make_narrated_demo.py          # -> demo/output/demo_narrated.mp4
 python demo/make_simulation_video.py
 python demo/make_dynamic_video.py
 python demo/make_serie_a_video.py --offline
