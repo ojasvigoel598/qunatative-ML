@@ -335,9 +335,12 @@ P(profit), 90% range — which is the honest way to summarise a high-variance be
 strategy. The confidence-aware **dynamic** variant is compared in section 21.
 
 > A single backtest path is dominated by variance; the Monte-Carlo distribution is the truthful summary.""")
-code(r"""# Quick 2-trial taste of the simulation (full 25-trial run takes ~1-2 minutes)
+code(r"""# Quick 2-trial taste of the simulation (full 25-trial run takes ~1-2 minutes).
+# --tag quick keeps the canonical 25-trial artifacts (simulation_1m_trials.csv / .png)
+# untouched: this cell only writes simulation_1m_quick_*.
 import subprocess, sys
-r = subprocess.run([sys.executable, "demo/simulation.py", "--trials", "2", "--matches", "300"],
+r = subprocess.run([sys.executable, "demo/simulation.py", "--trials", "2", "--matches", "300",
+                    "--tag", "quick"],
                    capture_output=True, text=True, cwd=ROOT)
 print(r.stdout[-1100:])""")
 
