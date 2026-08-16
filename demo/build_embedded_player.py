@@ -50,19 +50,20 @@ CARDS = [
     {
         "file": "simulation_live_flat.mp4",
         "title": "$1,000,000 Simulation — live replay",
-        "tags": ["synthetic world", "flat $10K/bet", "trial 0: final $1,569,700 (+57%)"],
+        "tags": ["synthetic world", "flat $10K/bet", "trial 0: final $866,900 (−13.3%)"],
         "note": ("One Monte-Carlo draw of 1,200 matches (~3.3 yrs). "
-                 "639 bets, 235 W / 404 L. Watch the ML thinking panel on the right."),
+                 "137 bets, 56 W / 81 L. Watch the ML thinking panel on the right."),
     },
     {
         "file": "simulation_live_dynamic.mp4",
         "title": "Dynamic Thinking Layer — $1M live (confidence-aware decisions)",
         "tags": ["confidence-aware", "market-split signal",
-                 "trial 0: final $1,170,489 (+17.0%)"],
+                 "trial 0: final $1,003,819 (+0.4%)"],
         "note": ("The ML THINKING panel shows the live decision trace: "
                  "model-vs-market weight, confidence, dispersion, rest days. "
                  "The layer refits its base model when confidence decays and "
-                 "scales stakes with how sure it is."),
+                 "scales stakes with how sure it is. In this trial: 124 bets "
+                 "(56 W / 68 L), 12 online refits."),
     },
     {
         "file": "serie_a_live.mp4",
