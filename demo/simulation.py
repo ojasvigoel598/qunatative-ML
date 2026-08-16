@@ -158,6 +158,9 @@ def main():
                         help="forward matches per trial (default 1200, ~3.3 years)")
     parser.add_argument("--save", action="store_true", default=True,
                         help="save chart + CSV to demo/output/")
+    parser.add_argument("--tag", type=str, default="",
+                        help="optional filename tag (e.g. 'quick') so short demo "
+                             "runs never overwrite the canonical 25-trial files")
     parser.add_argument("--policy", choices=["flat", "kelly"], default="flat",
                         help="staking policy (default flat=$10K per bet - the "
                              "variance-minimising policy from the stress test)")
@@ -222,16 +225,19 @@ def main():
     print("-" * 60)
 
     if args.save:
+        tag = f"_{args.tag}" if args.tag else ""
+        trials_path = SIM_OUT / f"simulation_1m{tag}_trials.csv"
+        chart_path = SIM_OUT / f"simulation_1m{tag}.png"
         pd.DataFrame({
             "trial": np.arange(args.trials) + 1,
             "final_bankroll": finals,
             "profit": profits,
             "n_bets": bet_counts,
-        }).to_csv(SIM_OUT / "simulation_1m_trials.csv", index=False)
+        }).to_csv(trials_path, index=False)
 
-        _plot_simulation(finals, profits, sample_paths, years)
-        print(f"  [OK] Saved {SIM_OUT / 'simulation_1m.png'}")
-        print(f"  [OK] Saved {SIM_OUT / 'simulation_1m_trials.csv'}")
+        _plot_simulation(finals, profits, sample_paths, years, tag=args.tag)
+        print(f"  [OK] Saved {chart_path}")
+        print(f"  [OK] Saved {trials_path}")
 
     print("\n" + "=" * 78)
     print("BOTTOM LINE")
@@ -248,7 +254,7 @@ def main():
 
 
 def _plot_simulation(finals: np.ndarray, profits: np.ndarray,
-                     sample_paths: list, years: float):
+                     sample_paths: list, years: float, tag: str = ""):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -273,7 +279,8 @@ def _plot_simulation(finals: np.ndarray, profits: np.ndarray,
     axes[1].set_ylabel("Bankroll ($M)")
 
     plt.tight_layout()
-    plt.savefig(SIM_OUT / "simulation_1m.png", dpi=150, bbox_inches="tight")
+    fname = f"simulation_1m{('_' + tag) if tag else ''}.png"
+    plt.savefig(SIM_OUT / fname, dpi=150, bbox_inches="tight")
     plt.close(fig)
 
 
