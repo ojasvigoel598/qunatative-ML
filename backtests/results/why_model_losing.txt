@@ -1,0 +1,11 @@
+WHY IS THE MODEL LOSING? (automatic loss attribution)
+========================================================
+Bets analysed: 23
+
+1. Margin drag    : -6.60% per bet (average overround on the matches bet). The house keeps this before any skill.
+2. Winner's curse : advertised edge +14.09% vs realised edge +3.08% -> selection cost +11.01%. Model prob on bets 53.5% vs actual wins 47.8% (betting-region calibration gap +5.7 pts).
+3. Information    : mean CLV +0.18%, win rate vs closing 47.8%, t = +0.64. No significant edge over the closing line (CLV is the standard test for real information).
+4. Market fit     : model log loss 0.9753 vs market 0.9466 -> model is NOT a better estimator than the market
+
+DOMINANT: winner's curse / selection bias. The model bets where it disagrees with the market most, and that is where its own estimation error is largest.
+INFO: CLV ~ 0 with |t| < 2 means there is no measurable information edge over the closing line - the model is not beating the market, so the negative ROI is expected, not a bug.

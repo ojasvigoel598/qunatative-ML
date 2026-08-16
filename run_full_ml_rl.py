@@ -45,9 +45,23 @@ def main():
     print("\nModel quality on the held-out test split:")
     for k, v in result["test_eval"].items():
         print(f"  {k.replace('_', ' ').title():<20}: {v}")
+
+    # ---- two-user outputs: betting user + model user ----------------------
+    from analysis.loss_attribution import write_loss_report  # noqa: E402
+    from analysis.match_analysis import write_predictions_table  # noqa: E402
+
+    test_df = result["splits"][2]
+    table = write_predictions_table(
+        test_df, result["models"]["poisson"], result["models"]["ml"],
+        pipeline.BACKTEST_DIR / "predictions_table_ml_rl.csv",
+        uncertainty_z=1.0, n_samples=150)
+    report = write_loss_report(result,
+                               pipeline.BACKTEST_DIR / "why_model_losing.txt")
+    print("\n" + report)
     print("\nResults saved in: backtests/results/")
     print("Key files: backtest_bets_log_ml_rl.csv | metrics_ml_rl.txt | "
-          "backtest_analysis_ml_rl.png | backtest_summary_ml_rl.png")
+          "backtest_analysis_ml_rl.png | backtest_summary_ml_rl.png | "
+          "predictions_table_ml_rl.csv | why_model_losing.txt")
 
 
 if __name__ == "__main__":
