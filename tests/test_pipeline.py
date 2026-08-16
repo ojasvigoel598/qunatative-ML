@@ -117,6 +117,24 @@ def test_dixon_coles_tau_cell_values():
     assert model._dc_tau(2, 3, lam_h, lam_a, -0.05) == 1.0
 
 
+def test_uncertainty_is_positive_and_tracks_point_estimate(df):
+    """MC parameter uncertainty must give positive stds, means consistent
+    with the point estimate, and WIDER intervals with less training data."""
+    m = PoissonEloModel()
+    m.train(df.iloc[:200], verbose=False)
+    u = m.predict_with_uncertainty("Arsenal", "Chelsea", n_samples=200, seed=1)
+    for k in ("home_win_std", "draw_std", "away_win_std"):
+        assert u[k] > 0
+    pt = m.predict("Arsenal", "Chelsea")
+    assert abs(u["home_win"] - pt["home_win"]) < 0.02
+    assert abs(sum(u[k] for k in ("home_win", "draw", "away_win")) - 1.0) < 0.01
+    # more data -> narrower uncertainty
+    m_big = PoissonEloModel()
+    m_big.train(df.iloc[:500], verbose=False)
+    u_big = m_big.predict_with_uncertainty("Arsenal", "Chelsea", n_samples=200, seed=1)
+    assert u_big["home_win_std"] < u["home_win_std"]
+
+
 def test_dixon_coles_fit_and_predict(df):
     """DC must fit a bounded rho, keep probabilities normalised, and leave
     predictions valid with the correction enabled (default)."""

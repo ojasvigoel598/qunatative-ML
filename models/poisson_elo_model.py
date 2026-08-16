@@ -35,7 +35,7 @@ Notes on correctness
 """
 
 import pickle
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -49,10 +49,12 @@ class _FittedPoisson:
     """Lightweight stand-in for a statsmodels Poisson fit, restored from saved
     parameter values so a loaded model can predict without re-fitting."""
 
-    def __init__(self, params: Dict[str, float]):
+    def __init__(self, params: Dict[str, float], cov: Optional[np.ndarray] = None):
         self.params = params
         self.names = list(params.keys())
         self.values = np.array(list(params.values()), dtype=float)
+        # Parameter covariance (None when loaded from a pre-covariance save)
+        self.cov = cov
 
     def predict(self, features: pd.DataFrame) -> np.ndarray:
         X = features[self.names].to_numpy(dtype=float)
@@ -227,6 +229,11 @@ class PoissonEloModel:
         self.poisson_home = sm.Poisson(df["home_goals"], X).fit(disp=0)
         self.poisson_away = sm.Poisson(df["away_goals"], X).fit(disp=0)
 
+        # Training mean lambdas (used for shrinkage and by the uncertainty
+        # sampler so sampled lambdas get the same regularisation).
+        self.lam_home_mean = float(np.mean(self.poisson_home.fittedvalues))
+        self.lam_away_mean = float(np.mean(self.poisson_away.fittedvalues))
+
         if self.use_dixon_coles:
             self.rho = self._fit_dixon_coles_rho(df, verbose=verbose)
 
@@ -266,15 +273,26 @@ class PoissonEloModel:
             # to BOTH lambdas; the original code computed `lam_home` but then
             # fed the un-shrunk `lambda_home` into the PMF, leaving home goals
             # overconfident relative to away goals.
-            lam_mean = float(np.mean(self.poisson_home.fittedvalues))
-            lambda_home = lam_mean + self.shrinkage * (lambda_home - lam_mean)
-            lam_mean_a = float(np.mean(self.poisson_away.fittedvalues))
-            lambda_away = lam_mean_a + self.shrinkage * (lambda_away - lam_mean_a)
+            lambda_home = self.lam_home_mean + self.shrinkage * (lambda_home - self.lam_home_mean)
+            lambda_away = self.lam_away_mean + self.shrinkage * (lambda_away - self.lam_away_mean)
 
         # NOTE: home advantage is already captured by the fitted home-goals
         # regression (home teams score more in the data).  Multiplying again
         # here would double-count it and systematically inflate P(home win).
 
+        p_home_win, p_draw, p_away_win = self._score_grid_probs(
+            lambda_home, lambda_away, max_goals)
+        return {
+            "home_win": round(p_home_win, 4),
+            "draw": round(p_draw, 4),
+            "away_win": round(p_away_win, 4),
+            "expected_home_goals": round(lambda_home, 3),
+            "expected_away_goals": round(lambda_away, 3),
+        }
+
+    def _score_grid_probs(self, lambda_home: float, lambda_away: float,
+                          max_goals: int = 8) -> Tuple[float, float, float]:
+        """Outcome probabilities from the (DC-adjusted) score grid."""
         home_dist = [self._poisson_pmf(i, lambda_home) for i in range(max_goals + 1)]
         away_dist = [self._poisson_pmf(i, lambda_away) for i in range(max_goals + 1)]
 
@@ -290,14 +308,85 @@ class PoissonEloModel:
                     p_draw += prob
                 else:
                     p_away_win += prob
-
         total = p_home_win + p_draw + p_away_win
+        return p_home_win / total, p_draw / total, p_away_win / total
+
+    # ------------------------------------------------------- Uncertainty
+    @staticmethod
+    def _params_array(fit) -> np.ndarray:
+        """Coefficient vector from either a statsmodels fit or _FittedPoisson."""
+        if hasattr(fit, "values"):
+            return np.asarray(fit.values, dtype=float)
+        return np.asarray(fit.params, dtype=float)
+
+    @staticmethod
+    def _fit_cov(fit) -> Optional[np.ndarray]:
+        """Parameter covariance from either a statsmodels fit or _FittedPoisson."""
+        if hasattr(fit, "cov"):
+            return fit.cov
+        if hasattr(fit, "cov_params"):
+            return np.asarray(fit.cov_params(), dtype=float)
+        return None
+
+    def predict_with_uncertainty(self, home_team: str, away_team: str,
+                                 n_samples: int = 300, seed: int = 0,
+                                 max_goals: int = 8) -> Dict[str, float]:
+        """Monte-Carlo parameter-uncertainty estimate for one fixture.
+
+        Draws the Poisson regression coefficients from their fitted
+        multivariate-normal distribution (statsmodels ``cov_params``) and
+        propagates each draw through the score grid, giving a per-outcome
+        standard deviation that reflects *estimation* uncertainty (small
+        training samples -> wide posterior -> wide intervals).  This is the
+        uncertainty used by the uncertainty-adjusted edge test: an edge is
+        only trusted when it is large relative to its own uncertainty.
+
+        Returns the MC mean probabilities plus ``_std`` per outcome and the
+        expected-goals means/stds.  Mean probabilities are NOT rounded here;
+        round at the call site if a stable display is needed.
+        """
+        if not self.is_trained:
+            raise ValueError("Model not trained. Call train() first.")
+        from scipy.stats import multivariate_normal
+
+        home_elo = self.elo_ratings.get(home_team, self.elo_base)
+        away_elo = self.elo_ratings.get(away_team, self.elo_base)
+        features = np.array([1.0, home_elo, away_elo])
+
+        p_h = self._params_array(self.poisson_home)
+        p_a = self._params_array(self.poisson_away)
+        cov_h = self._fit_cov(self.poisson_home)
+        cov_a = self._fit_cov(self.poisson_away)
+
+        rng = np.random.default_rng(seed)
+        p_hw = np.empty(n_samples)
+        p_d = np.empty(n_samples)
+        p_aw = np.empty(n_samples)
+        lam_h = np.empty(n_samples)
+        lam_a = np.empty(n_samples)
+
+        for i in range(n_samples):
+            bh = rng.multivariate_normal(p_h, cov_h) if cov_h is not None else p_h
+            ba = rng.multivariate_normal(p_a, cov_a) if cov_a is not None else p_a
+            lh = float(np.exp(features @ bh))
+            la = float(np.exp(features @ ba))
+            if 0 < self.shrinkage < 1.0:
+                lh = self.lam_home_mean + self.shrinkage * (lh - self.lam_home_mean)
+                la = self.lam_away_mean + self.shrinkage * (la - self.lam_away_mean)
+            hw, d, aw = self._score_grid_probs(lh, la, max_goals)
+            p_hw[i], p_d[i], p_aw[i] = hw, d, aw
+            lam_h[i], lam_a[i] = lh, la
+
         return {
-            "home_win": round(p_home_win / total, 4),
-            "draw": round(p_draw / total, 4),
-            "away_win": round(p_away_win / total, 4),
-            "expected_home_goals": round(lambda_home, 3),
-            "expected_away_goals": round(lambda_away, 3),
+            "home_win": float(np.mean(p_hw)),
+            "draw": float(np.mean(p_d)),
+            "away_win": float(np.mean(p_aw)),
+            "home_win_std": float(np.std(p_hw)),
+            "draw_std": float(np.std(p_d)),
+            "away_win_std": float(np.std(p_aw)),
+            "expected_home_goals": float(np.mean(lam_h)),
+            "expected_away_goals": float(np.mean(lam_a)),
+            "n_samples": n_samples,
         }
 
     @staticmethod
@@ -351,6 +440,10 @@ class PoissonEloModel:
                 "elo_ratings": self.elo_ratings,
                 "poisson_home_params": self.poisson_home.params.to_dict() if self.poisson_home else None,
                 "poisson_away_params": self.poisson_away.params.to_dict() if self.poisson_away else None,
+                "poisson_home_cov": np.asarray(self.poisson_home.cov_params()).tolist() if self.poisson_home else None,
+                "poisson_away_cov": np.asarray(self.poisson_away.cov_params()).tolist() if self.poisson_away else None,
+                "lam_home_mean": getattr(self, "lam_home_mean", None),
+                "lam_away_mean": getattr(self, "lam_away_mean", None),
                 "base_rates": self.base_rates,
                 "rho": self.rho,
                 "hyperparams": {
@@ -370,8 +463,14 @@ class PoissonEloModel:
         self.use_dixon_coles = state.get("hyperparams", {}).get(
             "use_dixon_coles", self.use_dixon_coles)
         if state.get("poisson_home_params"):
-            self.poisson_home = _FittedPoisson(state["poisson_home_params"])
-            self.poisson_away = _FittedPoisson(state["poisson_away_params"])
+            self.poisson_home = _FittedPoisson(
+                state["poisson_home_params"],
+                cov=np.asarray(state["poisson_home_cov"]) if state.get("poisson_home_cov") else None)
+            self.poisson_away = _FittedPoisson(
+                state["poisson_away_params"],
+                cov=np.asarray(state["poisson_away_cov"]) if state.get("poisson_away_cov") else None)
+        self.lam_home_mean = state.get("lam_home_mean", 1.6)
+        self.lam_away_mean = state.get("lam_away_mean", 1.3)
         self.is_trained = True
         print(f"Model loaded from {filepath}")
 
