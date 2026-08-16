@@ -67,6 +67,7 @@ class PoissonEloModel:
         home_advantage: float = 0.15,
         margin: float = 0.05,
         shrinkage: float = 0.7,
+        use_dixon_coles: bool = True,
     ):
         """
         Args:
@@ -80,18 +81,89 @@ class PoissonEloModel:
                 the league mean, which reduces tail overconfidence and keeps
                 the estimated *edges* honest in the betting region (see
                 pipeline docs on the winner's curse).
+            use_dixon_coles: Apply the Dixon-Coles (1997) low-score correction:
+                a single ``rho`` parameter fitted by maximum likelihood on the
+                training score matrix adjusts the joint probability of the
+                0-0 / 1-0 / 0-1 / 1-1 cells, which independent Poisson models
+                systematically mis-price (real football has fewer 0-0 and 1-1
+                than an independent model expects).  On synthetic Poisson data
+                rho fits to ~0 and the correction is a no-op, which is the
+                honest behaviour.
         """
         self.elo_k = elo_k
         self.elo_base = elo_base
         self.home_advantage = home_advantage
         self.margin = margin
         self.shrinkage = shrinkage
+        self.use_dixon_coles = use_dixon_coles
+        self.rho: float = 0.0  # Dixon-Coles low-score dependence parameter
         self.elo_ratings: Dict[str, float] = {}
         self.poisson_home = None
         self.poisson_away = None
         self.feature_cols = ["home_elo", "away_elo"]
         self.is_trained = False
         self.base_rates = None
+
+    # ----------------------------------------------- Dixon-Coles correction
+    @staticmethod
+    def _dc_tau(x: int, y: int, lam_home: float, lam_away: float,
+                rho: float) -> float:
+        """Dixon-Coles tau factor for the low-score cells.
+
+        tau(x, y) multiplies the independent Poisson probability of the score
+        cell (x, y).  With rho < 0 the model predicts *fewer* 0-0 and 1-1
+        draws than independence would (the classic football finding); with
+        rho > 0, more.  All other cells keep tau = 1.
+        """
+        if rho == 0.0:
+            return 1.0
+        if x == 0 and y == 0:
+            return 1.0 - lam_home * lam_away * rho
+        if x == 0 and y == 1:
+            return 1.0 + lam_home * rho
+        if x == 1 and y == 0:
+            return 1.0 + lam_away * rho
+        if x == 1 and y == 1:
+            return 1.0 - rho
+        return 1.0
+
+    def _fit_dixon_coles_rho(self, df: pd.DataFrame, verbose: bool = True) -> float:
+        """Estimate rho by 1-D maximum likelihood on the observed scores.
+
+        Given the fitted goal regressions, the MLE for rho maximises
+        sum_i log(tau(h_i, a_i; rho)) over the training matches (the Poisson
+        terms are independent of rho and drop out).  Bounded to [-0.25, 0.25],
+        the range observed in the literature.
+        """
+        from scipy.optimize import minimize_scalar
+
+        X = df[self.feature_cols].copy()
+        X = sm.add_constant(X)
+        lam_home = np.asarray(self.poisson_home.predict(X), dtype=float)
+        lam_away = np.asarray(self.poisson_away.predict(X), dtype=float)
+        h = df["home_goals"].to_numpy(dtype=int)
+        a = df["away_goals"].to_numpy(dtype=int)
+
+        def neg_ll(rho: float) -> float:
+            total = 0.0
+            for i in range(len(h)):
+                if h[i] <= 1 and a[i] <= 1:
+                    tau = self._dc_tau(int(h[i]), int(a[i]),
+                                       float(lam_home[i]), float(lam_away[i]), rho)
+                    if tau > 0:
+                        total += np.log(max(tau, 1e-12))
+            return -total
+
+        if not np.any((h <= 1) & (a <= 1)):
+            if verbose:
+                print("  No low-score cells in training data - Dixon-Coles rho=0")
+            return 0.0
+
+        res = minimize_scalar(neg_ll, bounds=(-0.25, 0.25), method="bounded")
+        rho = float(np.clip(res.x, -0.25, 0.25)) if res.success else 0.0
+        if verbose:
+            print(f"  Dixon-Coles rho={rho:+.4f} (MLE on {len(df)} matches)")
+        return rho
 
     # ------------------------------------------------------------------ Elo
     def _init_elo(self, teams):
@@ -145,7 +217,7 @@ class PoissonEloModel:
         return df
 
     # --------------------------------------------------------------- Train
-    def train(self, historical_df: pd.DataFrame):
+    def train(self, historical_df: pd.DataFrame, verbose: bool = True):
         print("Training PoissonEloModel on historical data...")
         df = self.prepare_features(historical_df)
 
@@ -154,6 +226,9 @@ class PoissonEloModel:
 
         self.poisson_home = sm.Poisson(df["home_goals"], X).fit(disp=0)
         self.poisson_away = sm.Poisson(df["away_goals"], X).fit(disp=0)
+
+        if self.use_dixon_coles:
+            self.rho = self._fit_dixon_coles_rho(df, verbose=verbose)
 
         # League base rates (used by the pipeline for ensemble shrinkage).
         counts = df["result"].value_counts(normalize=True)
@@ -207,6 +282,8 @@ class PoissonEloModel:
         for h in range(max_goals + 1):
             for a in range(max_goals + 1):
                 prob = home_dist[h] * away_dist[a]
+                if self.use_dixon_coles and abs(self.rho) > 1e-9:
+                    prob *= self._dc_tau(h, a, lambda_home, lambda_away, self.rho)
                 if h > a:
                     p_home_win += prob
                 elif h == a:
@@ -275,9 +352,11 @@ class PoissonEloModel:
                 "poisson_home_params": self.poisson_home.params.to_dict() if self.poisson_home else None,
                 "poisson_away_params": self.poisson_away.params.to_dict() if self.poisson_away else None,
                 "base_rates": self.base_rates,
+                "rho": self.rho,
                 "hyperparams": {
                     "k": self.elo_k, "base": self.elo_base,
                     "home_adv": self.home_advantage,
+                    "use_dixon_coles": self.use_dixon_coles,
                 },
             }, f)
         print(f"Model saved to {filepath}")
@@ -287,6 +366,9 @@ class PoissonEloModel:
             state = pickle.load(f)
         self.elo_ratings = state["elo_ratings"]
         self.base_rates = state.get("base_rates")
+        self.rho = state.get("rho", 0.0)
+        self.use_dixon_coles = state.get("hyperparams", {}).get(
+            "use_dixon_coles", self.use_dixon_coles)
         if state.get("poisson_home_params"):
             self.poisson_home = _FittedPoisson(state["poisson_home_params"])
             self.poisson_away = _FittedPoisson(state["poisson_away_params"])
@@ -313,4 +395,6 @@ if __name__ == "__main__":
     print("Predictions:", probs)
     print("Fair odds:", model.probs_to_fair_odds(probs))
     print("Edges:", model.calculate_edge(probs, {"home_win": 2.1, "draw": 3.4, "away_win": 4.0}))
+    print(f"Dixon-Coles rho: {model.rho:+.4f}")
+    assert abs(sum(probs[k] for k in ("home_win", "draw", "away_win")) - 1.0) < 0.01
     print("[OK] PoissonEloModel self-test passed.")
