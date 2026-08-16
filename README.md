@@ -517,16 +517,16 @@ Three **real `.mp4` walkthroughs** are rendered from the actual run outputs (mat
 
 | Video | What it shows | File |
 |-------|---------------|------|
-| **$1M simulation** | The trained model betting through 1,200 synthetic matches: equity curve, every bet as a green/red marker sized by stake, an *ML THINKING* panel (probability bars, odds, edge, stake, WIN/LOSS flash), a BIGGEST-WIN highlight and a speedrun | `demo/output/simulation_live_flat.mp4` (50 s) |
-| **$1M simulation — dynamic thinking layer** | The same stream driven by `models/dynamic_thinking.py`: model-vs-market weights, confidence, refit triggers and risk-aware staking live on screen | `demo/output/simulation_live_dynamic.mp4` (55 s) |
+| **$1M simulation** | The trained model betting through 1,200 synthetic matches: equity curve, every bet as a green/red marker sized by stake, an *ML THINKING* panel (probability bars, odds, edge, stake, WIN/LOSS flash), a BIGGEST-WIN highlight and a speedrun | `demo/output/simulation_live_flat.mp4` (1 min 35 s) |
+| **$1M simulation — dynamic thinking layer** | The same stream driven by `models/dynamic_thinking.py`: model-vs-market weights, confidence, refit triggers and risk-aware staking live on screen | `demo/output/simulation_live_dynamic.mp4` (1 min 32 s) |
 | **Real Serie A 25/26 replay** | The adaptive model replaying the real 2025/26 season point-in-time with $1M: real teams, real B365 odds, results revealed chronologically | `demo/output/serie_a_live.mp4` (42 s) |
 
 **Play them right here on GitHub** (the `.mp4` files render with an inline player):
 
 - 🎬 [**Whole-project explainer (4:39) — start here**](demo/output/project_explainer.mp4)
 - 🎬 [**Narrated demo (4:40)**](demo/output/demo_narrated.mp4)
-- 💰 [$1,000,000 simulation — flat $10K/bet](demo/output/simulation_live_flat.mp4) · 50 s
-- 🧠 [$1,000,000 simulation — dynamic thinking layer](demo/output/simulation_live_dynamic.mp4) · 55 s
+- 💰 [$1,000,000 simulation — flat $10K/bet](demo/output/simulation_live_flat.mp4) · 1 min 35 s
+- 🧠 [$1,000,000 simulation — dynamic thinking layer](demo/output/simulation_live_dynamic.mp4) · 1 min 32 s
 - ⚽ [Real Serie A 2025/26 replay — point-in-time](demo/output/serie_a_live.mp4) · 42 s
 
 (Cloned locally, you can also open [`demo/output/video_player.html`](demo/output/video_player.html) — a self-contained page that embeds all five videos, playable from any host or `file://`. GitHub does not render `.html` files, so on the repo website use the `.mp4` links above.)
