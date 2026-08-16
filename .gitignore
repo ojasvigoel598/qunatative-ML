@@ -39,6 +39,7 @@ backtests/results/agent_sim/run_*
 # Live rolling ledger (rewritten every 20 matches on every run)
 backtests/results/agent_sim/agent_sim_live.csv
 
-# Notebook quick-taste demo outputs (regenerable: --tag quick runs)
+# Tagged simulation demo outputs (regenerable: --tag quick / --tag verify runs)
 # The canonical 25-trial $1M artifacts are tracked; these tagged runs are not.
 demo/output/simulation_1m_quick*
+demo/output/simulation_1m_verify*
