@@ -555,7 +555,8 @@ A frame-accurate recording plan with narration for a screen-recorded version (se
 4. **Variance.** A single 240-match backtest is one path of a noisy process. The $1M simulation is the honest summary: flat staking keeps the 90% range tight ($0.76M–$1.15M) but the median path **loses** ~6% — the model does not beat a properly margined bookmaker in the synthetic world.
 5. **Simple features.** No injuries, xG, opponent-specific form, weather, referee, or live-market data. Real systems add these.
 6. **RL agent is a demo-scale learner** — a tabular Q-table over ~40–100 validation experiences, and in the canonical run it did **not** improve returns over plain fractional Kelly. It demonstrates the concept; it is not a production bankroll manager.
-7. **Minor same-day lookahead in the tennis walk.** The tennis walk (`scripts/14`) updates Elo after every row, so when a player appears in two matches on the same calendar date the second prediction can see the first result. In practice this is rare (11 of 2,703 ATP matches in 2024, 5 of 2,644 in 2025) and mostly reflects genuine same-day scheduling knowledge, but the football agent (`agent_sim`) avoids it entirely by resolving a day's matches before offering any new ones.
+
+Both the football agent (`agent_sim`) and the tennis walk (`scripts/14`) enforce the same strict temporal discipline: every match of a calendar day is predicted and decided against the model state as of the *previous* day, and results are learned only after all of that day's decisions are locked (two-phase daily walk, audited per opportunity).
 
 ---
 
