@@ -35,6 +35,22 @@ SEASON_LABEL = {"2021": "2020/21", "2122": "2021/22", "2223": "2022/23",
 ODDS_COLS = ["odds_home", "odds_draw", "odds_away",
              "pin_home", "pin_draw", "pin_away"]
 
+# Closing lines and best-available prices (price shopping + CLV).  Named to
+# match the synthetic world's schema so one accessor works for both.
+CLOSING_COLS = ["closing_odds_home", "closing_odds_draw", "closing_odds_away",
+                "closing_odds_home_pin", "closing_odds_draw_pin", "closing_odds_away_pin",
+                "best_odds_home", "best_odds_draw", "best_odds_away",
+                "best_closing_odds_home", "best_closing_odds_draw",
+                "best_closing_odds_away"]
+
+_CLOSING_RENAME = {
+    "B365CH": "closing_odds_home", "B365CD": "closing_odds_draw", "B365CA": "closing_odds_away",
+    "PSCH": "closing_odds_home_pin", "PSCD": "closing_odds_draw_pin", "PSCA": "closing_odds_away_pin",
+    "MaxH": "best_odds_home", "MaxD": "best_odds_draw", "MaxA": "best_odds_away",
+    "MaxCH": "best_closing_odds_home", "MaxCD": "best_closing_odds_draw",
+    "MaxCA": "best_closing_odds_away",
+}
+
 
 def download_season(league: str, season: str, raw: pd.DataFrame = None) -> pd.DataFrame:
     """Normalise one real season to the project schema (with odds).
@@ -42,6 +58,10 @@ def download_season(league: str, season: str, raw: pd.DataFrame = None) -> pd.Da
     `raw` is the raw football-data.co.uk frame; when omitted it is downloaded
     from the public API.  Callers with a local cache pass the cached raw frame
     so offline mode never touches the network.
+
+    Keeps the closing lines (B365/Pinnacle) and the Max opening/closing
+    columns so real data supports the same price-shopping and CLV analysis as
+    the synthetic world.
     """
     url = f"https://www.football-data.co.uk/mmz4281/{season}/{league}.csv"
     df = raw if raw is not None else pd.read_csv(url)
@@ -49,12 +69,13 @@ def download_season(league: str, season: str, raw: pd.DataFrame = None) -> pd.Da
         "Date": "date", "HomeTeam": "home_team", "AwayTeam": "away_team",
         "FTHG": "home_goals", "FTAG": "away_goals", "FTR": "result",
         "B365H": "odds_home", "B365D": "odds_draw", "B365A": "odds_away",
-        "PSH": "pin_home", "PSD": "pin_draw", "PSA": "pin_away"})
+        "PSH": "pin_home", "PSD": "pin_draw", "PSA": "pin_away",
+        **_CLOSING_RENAME})
     df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y", errors="coerce")
     df["league"] = LEAGUES[league]
     df["season"] = SEASON_LABEL[season]
     keep = ["date", "home_team", "away_team", "home_goals", "away_goals",
-            "result", "league", "season"] + ODDS_COLS
+            "result", "league", "season"] + ODDS_COLS + CLOSING_COLS
     df = df[[c for c in keep if c in df.columns]]
     df = df.dropna(subset=["home_goals", "away_goals", "result"])
     return df.sort_values("date").reset_index(drop=True)
