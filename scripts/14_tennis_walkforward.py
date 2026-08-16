@@ -139,128 +139,149 @@ def run_walk(year: int, mode: str, seed: int,
     brier_sum = 0.0
     clv_list = []
 
-    for _, m in walk.iterrows():
-        day = m["date"]
+    # ---- two-phase daily walk (strict no-future-knowledge) --------------
+    # The football engine resolves a day's matches before offering new ones.
+    # The previous tennis walk settled + learned per row, so a player in two
+    # matches on the SAME calendar date could leak the first result into the
+    # second prediction's Elo.  Now every match of a day is predicted and
+    # decided against the Elo state as of the PREVIOUS day; settlement and
+    # Elo updates happen only after all of the day's decisions are locked,
+    # so the leak audit (data_cutoff > day) is genuinely airtight.
+    for day, grp in walk.groupby("date", sort=True):
         if last_day is not None and day != last_day:
             daily_used = 0.0
         last_day = day
-        winner, loser = m["winner"], m["loser"]
-        surf = m["surface"]
-        odds_w = float(m.get("odds_winner", np.nan))
-        odds_l = float(m.get("odds_loser", np.nan))
-        pin_w = float(m.get("pin_winner", np.nan))
-        pin_l = float(m.get("pin_loser", np.nan))
+        pending = []   # (match, decision, stake, odds, pins, leak, row)
 
-        # ---- the ONLY audit: features must come from before this match ----
-        data_cutoff = last_known
-        leak = bool(pd.notna(data_cutoff) and data_cutoff > day)
+        # ---- phase 1: predict + decide every match of the day ------------
+        for _, m in grp.iterrows():
+            winner, loser = m["winner"], m["loser"]
+            surf = m["surface"]
+            odds_w = float(m.get("odds_winner", np.nan))
+            odds_l = float(m.get("odds_loser", np.nan))
+            pin_w = float(m.get("pin_winner", np.nan))
+            pin_l = float(m.get("pin_loser", np.nan))
 
-        # model probs built ONLY from matches before this match
-        p_w = elo.prob(winner, loser, surf)
-        p_l = 1.0 - p_w
-        probs = {"winner": float(p_w), "loser": float(p_l)}
+            # the ONLY audit: features must come from before this match
+            data_cutoff = last_known
+            leak = bool(pd.notna(data_cutoff) and data_cutoff > day)
 
-        # pick accuracy + Brier on the favourite outcome (whole universe)
-        acc_better += int(p_w >= 0.5)        # model favoured the real winner
-        acc_lower += 1
-        brier_sum += (p_w - 1.0) ** 2        # target: winner always = 1
+            # model probs built ONLY from matches before this day
+            p_w = elo.prob(winner, loser, surf)
+            p_l = 1.0 - p_w
+            probs = {"winner": float(p_w), "loser": float(p_l)}
 
-        decision = None
-        reason = "no edge"
-        stake = 0.0
-        edge = 0.0
-        conf = float(np.clip((max(probs.values()) - 0.5) / 0.5, 0.0, 1.0))
+            # pick accuracy + Brier on the favourite outcome (whole universe)
+            acc_better += int(p_w >= 0.5)        # model favoured the real winner
+            acc_lower += 1
+            brier_sum += (p_w - 1.0) ** 2        # target: winner always = 1
 
-        if not leak:
-            if mode == "ml":
-                best = "winner" if p_w >= p_l else "loser"
-                best_odds = odds_w if best == "winner" else odds_l
-                if pd.notna(best_odds) and best_odds > 1.0:
-                    edge = probs[best] * best_odds - 1.0
-                    floor = SURVIVAL_PROB_FLOOR if survival else PROB_FLOOR
-                    thresh = SURVIVAL_EDGE if survival else EDGE_BASE
-                    if edge > thresh and probs[best] >= floor \
-                            and best_odds >= MIN_ODDS:
-                        if survival:
-                            stake = SURVIVAL_STAKE_FRAC * bank
-                        else:
-                            kelly = max(0.0, edge / (best_odds - 1.0))
-                            stake = min(KELLY_FRACTION * kelly * bank,
-                                        STAKE_CAP_FRAC * bank)
-                        stake = min(stake, max(
-                            0.0, DAILY_CAP_FRAC * bank - daily_used))
-                        if stake >= 1.0:
-                            decision = best
-                            reason = (f"edge {edge:+.1%} > {thresh:+.1%}"
-                                      + (", survival" if survival else ""))
-                        else:
-                            reason = "stake below minimum (daily cap)"
-                    elif edge <= 0:
-                        reason = "no positive edge"
-                    else:
-                        reason = (f"prob {probs[best]:.0%} < {floor:.0%}"
-                                  if probs[best] < floor
-                                  else f"odds {best_odds:.2f} < {MIN_ODDS}")
-            elif mode == "implied":
-                ip = implied_probs(odds_w, odds_l)
-                if ip and max(ip.values()) >= 0.55:
-                    best = max(ip, key=ip.get)
-                    decision, stake = best, FLAT_STAKE
-                    reason = f"implied {ip[best]:.0%} >= 55%"
-            elif mode == "random" and pd.notna(odds_w) and odds_w > 1.0:
-                decision = str(rng.choice(["winner", "loser"]))
-                stake = FLAT_STAKE
-                reason = "random"
-            elif mode == "nobet":
-                reason = "no-bet baseline"
-
-        bank_before = round(bank, 2)
-        if leak:
-            n_leaks += 1
             decision = None
-            reason = "DATA LEAKAGE — prediction invalidated"
+            reason = "no edge"
             stake = 0.0
+            edge = 0.0
+            conf = float(np.clip((max(probs.values()) - 0.5) / 0.5, 0.0, 1.0))
 
-        # ---- reveal result, settle, learn --------------------------------
-        won = False
-        profit = 0.0
-        if decision is not None and not leak:
-            won = (decision == "winner")
-            odds_taken = odds_w if decision == "winner" else odds_l
-            profit = stake * (odds_taken - 1.0) if won else -stake
-            bank += profit
-            peak = max(peak, bank)
-            daily_used += stake
-            n_bets += 1
-            n_wins += int(won)
-            total_staked += stake
-            if bank < SURVIVAL_FLOOR * start and not survival:
-                survival, survival_day = True, day
-            # CLV vs Pinnacle (sharp) — positive means we beat the sharp line
-            sharp = pin_w if decision == "winner" else pin_l
-            if pd.notna(sharp) and sharp > 1.0 and odds_taken > 1.0:
-                clv_list.append((sharp - odds_taken) / odds_taken)
+            if not leak:
+                if mode == "ml":
+                    best = "winner" if p_w >= p_l else "loser"
+                    best_odds = odds_w if best == "winner" else odds_l
+                    if pd.notna(best_odds) and best_odds > 1.0:
+                        edge = probs[best] * best_odds - 1.0
+                        floor = SURVIVAL_PROB_FLOOR if survival else PROB_FLOOR
+                        thresh = SURVIVAL_EDGE if survival else EDGE_BASE
+                        if edge > thresh and probs[best] >= floor \
+                                and best_odds >= MIN_ODDS:
+                            if survival:
+                                stake = SURVIVAL_STAKE_FRAC * bank
+                            else:
+                                kelly = max(0.0, edge / (best_odds - 1.0))
+                                stake = min(KELLY_FRACTION * kelly * bank,
+                                            STAKE_CAP_FRAC * bank)
+                            stake = min(stake, max(
+                                0.0, DAILY_CAP_FRAC * bank - daily_used))
+                            if stake >= 1.0:
+                                decision = best
+                                reason = (f"edge {edge:+.1%} > {thresh:+.1%}"
+                                          + (", survival" if survival else ""))
+                            else:
+                                reason = "stake below minimum (daily cap)"
+                        elif edge <= 0:
+                            reason = "no positive edge"
+                        else:
+                            reason = (f"prob {probs[best]:.0%} < {floor:.0%}"
+                                      if probs[best] < floor
+                                      else f"odds {best_odds:.2f} < {MIN_ODDS}")
+                elif mode == "implied":
+                    ip = implied_probs(odds_w, odds_l)
+                    if ip and max(ip.values()) >= 0.55:
+                        best = max(ip, key=ip.get)
+                        decision, stake = best, FLAT_STAKE
+                        reason = f"implied {ip[best]:.0%} >= 55%"
+                elif mode == "random" and pd.notna(odds_w) and odds_w > 1.0:
+                    decision = str(rng.choice(["winner", "loser"]))
+                    stake = FLAT_STAKE
+                    reason = "random"
+                elif mode == "nobet":
+                    reason = "no-bet baseline"
 
-        rows.append({
-            "date": day, "tournament": m.get("tournament", ""),
-            "round": m.get("round", ""), "surface": surf,
-            "match": f"{winner} vs {loser}",
-            "wrank": m.get("wrank", np.nan), "lrank": m.get("lrank", np.nan),
-            "prob_winner": round(p_w, 4),
-            "odds_winner": odds_w, "odds_loser": odds_l,
-            "pin_winner": pin_w, "pin_loser": pin_l,
-            "edge": round(edge, 4), "confidence": round(conf, 3),
-            "decision": decision, "reason": reason, "stake": round(stake, 2),
-            "result": "winner" if won else ("loser" if decision else ""),
-            "leak_flag": int(leak), "invalidated": int(leak),
-            "data_cutoff": str(data_cutoff.date()) if pd.notna(data_cutoff) else "",
-            "bankroll_before": bank_before, "profit": round(profit, 2),
-            "bankroll_after": round(bank, 2),
-        })
-        # learn the result AFTER it happened (adaptive, chronological)
-        elo.update(winner, loser, surf,
-                   int(m.get("wsets", 2)), int(m.get("lsets", 0)))
-        last_known = day
+            bank_before = round(bank, 2)
+            if leak:
+                n_leaks += 1
+                decision = None
+                reason = "DATA LEAKAGE — prediction invalidated"
+                stake = 0.0
+
+            rows.append({
+                "date": day, "tournament": m.get("tournament", ""),
+                "round": m.get("round", ""), "surface": surf,
+                "match": f"{winner} vs {loser}",
+                "wrank": m.get("wrank", np.nan), "lrank": m.get("lrank", np.nan),
+                "prob_winner": round(p_w, 4),
+                "odds_winner": odds_w, "odds_loser": odds_l,
+                "pin_winner": pin_w, "pin_loser": pin_l,
+                "edge": round(edge, 4), "confidence": round(conf, 3),
+                "decision": decision, "reason": reason, "stake": round(stake, 2),
+                "result": "",
+                "leak_flag": int(leak), "invalidated": int(leak),
+                "data_cutoff": str(data_cutoff.date()) if pd.notna(data_cutoff) else "",
+                "bankroll_before": bank_before, "profit": 0.0,
+                "bankroll_after": round(bank, 2),
+            })
+            pending.append((m, decision, stake, odds_w, odds_l,
+                            pin_w, pin_l, leak, rows[-1]))
+
+        # ---- phase 2: settle + learn after ALL of the day's decisions ----
+        for m, decision, stake, odds_w, odds_l, pin_w, pin_l, leak, row in pending:
+            winner, loser = m["winner"], m["loser"]
+            surf = m["surface"]
+            won = False
+            profit = 0.0
+            if decision is not None and not leak:
+                won = (decision == "winner")
+                odds_taken = odds_w if decision == "winner" else odds_l
+                profit = stake * (odds_taken - 1.0) if won else -stake
+                bank += profit
+                peak = max(peak, bank)
+                daily_used += stake
+                n_bets += 1
+                n_wins += int(won)
+                total_staked += stake
+                if bank < SURVIVAL_FLOOR * start and not survival:
+                    survival, survival_day = True, day
+                # CLV vs Pinnacle (sharp) — positive means we beat the line
+                sharp = pin_w if decision == "winner" else pin_l
+                if pd.notna(sharp) and sharp > 1.0 and odds_taken > 1.0:
+                    clv_list.append((sharp - odds_taken) / odds_taken)
+
+            row["result"] = "winner" if won else ("loser" if decision else "")
+            row["profit"] = round(profit, 2)
+            row["bankroll_after"] = round(bank, 2)
+
+            # learn the result AFTER it happened (adaptive, chronological)
+            elo.update(winner, loser, surf,
+                       int(m.get("wsets", 2)), int(m.get("lsets", 0)))
+            last_known = day
 
     df = pd.DataFrame(rows)
     bets = df[(df["decision"].notna()) & (df["invalidated"] == 0)]
