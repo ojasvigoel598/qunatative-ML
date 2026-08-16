@@ -35,3 +35,6 @@ backtests/results/agent_sim/run_*
 
 # Optional: uncomment to ignore downloaded/cached real data (re-downloadable)
 # data/real/
+
+# Live rolling ledger (rewritten every 20 matches on every run)
+backtests/results/agent_sim/agent_sim_live.csv
