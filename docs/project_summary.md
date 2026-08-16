@@ -18,19 +18,19 @@
 | Metric | PoissonElo + Kelly | PoissonElo + ML + RL |
 |--------|-------------------:|---------------------:|
 | Test matches | 240 | 240 |
-| Value bets | 37 | 45 |
-| Strike rate | 54.1% | 48.9% |
-| ROI | **+17.9%** | **−2.3%** |
-| Final bankroll ($1,000 start) | $1,179 | $977 |
-| Sharpe ratio | 0.37 | 0.06 |
-| Max drawdown | 16.1% | 25.8% |
-| Avg edge (selected bets) | 25.3% | 20.6% |
-| Avg CLV | −0.12% | −0.18% |
+| Value bets | 26 | 23 |
+| Strike rate | 42.3% | 47.8% |
+| ROI | **−14.3%** | **−13.0%** |
+| Final bankroll ($1,000 start) | $857 | $870 |
+| Sharpe ratio | −0.48 | −0.39 |
+| Max drawdown | 21.3% | 21.8% |
+| Avg edge (selected bets) | 14.8% | 14.1% |
+| Avg CLV | +0.01% | +0.18% |
 
 **Model quality on the held-out test split (all 240 matches, not just bets):**
 accuracy **54.6%** vs 46.7% baseline · log-loss **0.98** vs 1.10 (random) · Brier 0.577.
 
-**Honest finding:** the simpler configuration (PoissonElo + Kelly) beat the full ML + RL stack on this run — a single 37–45-bet path is dominated by variance, and the $1M Monte-Carlo simulation (median **loses** money, mean positive from a fat tail) makes that clear.
+**Honest finding:** against a bookmaker with a real positive margin both configurations **lose** on this small sample (−14.3% / −13.0% ROI on 23–26 bets); the estimated edges (~14%) overstate realised returns (winner's curse). The model prices matches close to the bookmaker (test accuracy 54.6% vs 46.7% baseline) but not well enough to overcome the overround. The $1M Monte-Carlo simulation is the honest summary: median path **loses** ~6%, P(profit) 32%.
 
 ## Real-data experiments
 - **Season-by-season (La Liga):** PoissonElo / Ridge ~53–55% accuracy on unseen seasons vs ~44–49% majority baseline; log-loss and calibration (ECE 0.03–0.09) stable.

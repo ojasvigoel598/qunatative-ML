@@ -103,19 +103,19 @@ All numbers below are from the **canonical run** (`seed=42`, 1,200 synthetic mat
 | Metric | PoissonElo + Kelly | PoissonElo + ML + RL |
 |--------|-------------------:|---------------------:|
 | Test matches | 240 | 240 |
-| Value bets placed | 37 | 45 |
-| Strike rate | 54.1% | 48.9% |
-| **ROI** | **+17.9%** | **−2.3%** |
-| Final bankroll ($1,000 start) | $1,179 | $977 |
-| Sharpe ratio | 0.37 | 0.06 |
-| Max drawdown | 16.1% | 25.8% |
-| Profit factor | 1.18 | 0.98 |
-| Avg edge (selected bets) | 25.3% | 20.6% |
-| Avg CLV | −0.12% | −0.18% |
+| Value bets placed | 26 | 23 |
+| Strike rate | 42.3% | 47.8% |
+| **ROI** | **−14.3%** | **−13.0%** |
+| Final bankroll ($1,000 start) | $857 | $870 |
+| Sharpe ratio | −0.48 | −0.39 |
+| Max drawdown | 21.3% | 21.8% |
+| Profit factor | 0.68 | 0.70 |
+| Avg edge (selected bets) | 14.8% | 14.1% |
+| Avg CLV | +0.01% | +0.18% |
 
 *Full details: [`backtests/results/metrics.txt`](backtests/results/metrics.txt) · [`metrics_ml_rl.txt`](backtests/results/metrics_ml_rl.txt) · bets logs in the same folder.*
 
-**An honest finding:** on this canonical run the *simpler* configuration (PoissonElo + fractional Kelly) is the better performer. Adding the ML and RL layers did not improve returns — 45 bets is a very small sample, and a single backtest path is dominated by variance (the [Monte-Carlo simulation](#-the-1m-question--monte-carlo-simulation) is the honest summary). The layered pipeline exists to demonstrate the full ML stack, not because more layers always win.
+**An honest finding:** against a bookmaker that carries a real positive margin, both configurations **lose money** on this canonical run (−14.3% and −13.0% ROI on a tiny 23–26 bet sample). The estimated edges (~14%) are systematically larger than the realised returns — the classic winner's-curse pattern of betting exactly where the model disagrees with the market. The single path proves nothing by itself (the [Monte-Carlo simulation](#-the-1m-question--monte-carlo-simulation) is the honest summary): the synthetic world validates the *methodology* (no leakage, calibrated probabilities, honest metrics), not profitability.
 
 ### Model quality on the held-out test split (all 240 matches, not just bets)
 
@@ -137,28 +137,28 @@ The model genuinely learns team strength: better than random on 240 matches it n
 
 | Statistic | Value |
 |-----------|------:|
-| Expected final bankroll (mean) | $1.44M (+43.6%) |
-| Median final bankroll | $1.38M |
-| P(finish in profit) | 88% |
-| 90% range | $0.84M – $1.94M |
-| Median CAGR | +10.2% / yr |
+| Expected final bankroll (mean) | $0.94M (−5.6%) |
+| Median final bankroll | $0.94M |
+| P(finish in profit) | 32% |
+| 90% range | $0.76M – $1.15M |
+| Median CAGR | −1.9% / yr |
 
-**Read this carefully:** flat staking removes the compounding boom/bust — no trial ever fell below $802K, and the median is positive. The mean is only slightly above the median (no fat-tail illusion). This is the honest picture of a modest-edge strategy: **positive and relatively stable**, but a 12% chance of finishing in the red even inside a calibrated synthetic world. It is **not** a claim about real markets.
+**Read this carefully:** once the bookmaker carries a real margin, the trained model's edge evaporates — the median path **loses** ~6% of the bankroll and only 32% of the 25 independent paths finish in profit. This is the honest picture: the model prices matches close to the bookmaker but not well enough to overcome the overround (the real-data experiments agree — see [Limitations](#limitations)). The simulation is a methodology demonstration, **not** a claim about real markets.
 
 ![Simulation](demo/output/simulation_1m.png)
 
 ### The same $1M, but with a DYNAMIC thinking layer — confidence-aware
 
-[`demo/simulation_dynamic.py`](demo/simulation_dynamic.py) re-runs the $1M question with `models/dynamic_thinking.py` — every decision is made adaptively: the model fuses the **public-vs-sharp market split** (opening vs closing line divergence, a classic hidden signal), re-weights model-vs-market from its own rolling Brier, shrinks stakes by model/market disagreement and drawdown, and switches to a low-risk survival mode below 10% of the start. The layer is **confidence-aware**: its confidence (how far the top outcome sits above the uniform ⅓) weights the calibration blend, gates immediate base-model refits when rolling confidence decays, and scales stakes up only when it is genuinely more sure. 12 trials × 1,200 matches, same streams, four policies:
+[`demo/simulation_dynamic.py`](demo/simulation_dynamic.py) re-runs the $1M question with `models/dynamic_thinking.py` — every decision is made adaptively: the model fuses the **public-vs-sharp market split** (opening vs closing line divergence, a classic hidden signal), re-weights model-vs-market from its own rolling Brier, shrinks stakes by model/market disagreement and drawdown, and switches to a low-risk survival mode below 10% of the start. The layer is **confidence-aware**: its confidence (how far the top outcome sits above the uniform ⅓) weights the calibration blend, gates immediate base-model refits when rolling confidence decays, and scales stakes up only when it is genuinely more sure. 25 trials × 1,200 matches, same streams, four policies:
 
 | Policy | Mean | Median | P(profit) | 90% range | Median CAGR |
 |--------|-----:|-------:|:---------:|:---------:|------------:|
-| flat ($10K/bet) | $1.37M | $1.36M | 75% | $0.80M–$1.96M | +9.8% |
-| quarter-Kelly | $6.40M | $0.27M | 25% | $0.01M–$33.0M | −32.7% |
-| **dynamic (confidence-aware)** | $1.29M | $1.21M | 92% | **$1.01M–$1.61M** | +6.1% |
-| dynamic v1 (original layer) | $1.28M | $1.25M | 100% | $1.14M–$1.46M | +7.0% |
+| flat ($10K/bet) | $0.94M | $0.94M | 32% | $0.76M–$1.15M | −1.9% |
+| quarter-Kelly | $0.84M | $0.76M | 32% | $0.42M–$1.54M | −7.9% |
+| **dynamic (confidence-aware)** | $0.97M | $0.96M | 44% | **$0.87M–$1.05M** | −1.1% |
+| dynamic v1 (original layer) | $0.97M | $0.96M | 28% | $0.90M–$1.04M | −1.4% |
 
-**Honest reading — is the upgrade better?** The confidence-aware layer keeps the dynamic signature — tight 90% range ($1.01M–$1.61M, no path below $957K), 92% P(profit), model-vs-market weight converging to ~0.48 — and now **refits its base model ~13.5× per trial (1.5 of them confidence-gated)** when its rolling confidence decays. Head-to-head against the *previous* (v1) layer on identical streams, the two are statistically indistinguishable at 12 trials: v1 had a marginally tighter tail and 100% P(profit) in this sample, the confidence-aware layer a slightly higher mean. So the honest answer is: the confidence-aware upgrade is **not a clear return winner in a static synthetic world** — its value is behavioural (it re-learns when it loses confidence and scales risk with certainty), and the real-data experiments ([CLV](docs/09_real_walkforward_simulation.md), [hidden signals](#hidden-signals-on-real-data--consensus-dispersion-and-the-sharp-vs-public-split)) are where market value actually shows. Full table: [`docs/12_dynamic_thinking.md`](docs/12_dynamic_thinking.md). Watch the decision trace live in [`demo/output/simulation_live_dynamic.mp4`](demo/output/simulation_live_dynamic.mp4).
+**Honest reading — is the upgrade better?** Against a properly margined bookmaker **every policy loses on average** — the model does not price well enough to overcome the overround. Within that, the confidence-aware layer is the best risk-adjusted policy: it loses the least (−1.1% CAGR), has the tightest 90% range ($0.87M–$1.05M — no path below $797K), the highest P(profit) (44% vs 32% for flat and its own 28% for v1), and it **refits its base model ~14.5× per trial (2.5 of them confidence-gated)** while its model-vs-market weight converges to ~0.50 and rolling confidence sits at ~0.30. So the confidence-aware upgrade is genuinely doing its job — cutting downside and preserving bankroll in a hostile market — even though no policy turns a profit in the synthetic world. Its real value shows on real data ([CLV](docs/09_real_walkforward_simulation.md), [hidden signals](#hidden-signals-on-real-data--consensus-dispersion-and-the-sharp-vs-public-split)). Full table: [`docs/12_dynamic_thinking.md`](docs/12_dynamic_thinking.md). Watch the decision trace live in [`demo/output/simulation_live_dynamic.mp4`](demo/output/simulation_live_dynamic.mp4).
 
 ---
 
@@ -260,17 +260,18 @@ python scripts/11_lstm_state_test.py --offline
 
 | Method | Serie A 25/26 | La Liga 25/26 | Premier League 25/26 |
 |--------|--------------:|--------------:|---------------------:|
-| PoissonElo | **51.8%** | **50.8%** | 46.6% |
+| PoissonElo | 51.8% | **50.8%** | 46.6% |
 | Gradient Boosting | 50.3% | 49.7% | 46.8% |
-| Adaptive (online refits) | 49.2% | 46.6% | 44.5% |
-| **LSTM (rich features)** | 50.5% | 47.9% | 46.3% |
-| **GRU (rich features)** | 49.2% | 48.7% | **47.9%** |
-| LSTM thin (goals only) | 50.5% | 48.2% | 48.4% |
+| Adaptive (online refits) | 49.2% | 46.3% | 44.5% |
+| **LSTM (rich features)** | 51.1% | 50.0% | 47.9% |
+| **GRU (rich features)** | **51.8%** | 50.3% | **48.7%** |
+| LSTM thin (goals only) | **52.6%** | **51.6%** | 47.6% |
+| LSTM rich, **NO odds** | 43.7% | 40.5% | 38.2% |
 | Majority / base rate | 39.0% | 48.9% | 42.6% |
 
-**Honest reading:** on ~1,500 training matches the sequence architecture **matches but does not beat** the simpler feed-forward baselines — PoissonElo stays best within-league, and GRU is competitive cross-league. That is a legitimate, literature-consistent result: sequence models need far more data than one league's four seasons to justify their parameters, and the *testing protocol* (point-in-time, expanding window) is what makes the comparison trustworthy.
+**Honest reading:** on ~1,500 training matches the sequence architectures are **competitive with but do not clearly beat** the simpler baselines — GRU ties PoissonElo within-league and is best cross-league. What the numbers do prove is that **the pre-match odds are a real feature**: removing them costs ~7 accuracy points (51.1 → 43.7 on Serie A). A legitimate, literature-consistent result: sequence models need far more data than one league's four seasons to justify their parameters, and the *testing protocol* (point-in-time, expanding window) is what makes the comparison trustworthy.
 
-**Your thesis, tested directly — does the database matter more than the model?** The *same* LSTM is trained on 1 vs 2 vs 3 real leagues (Serie A → +La Liga → +EPL) and tested on the same Serie A 25/26: 50.0% → 49.2% → 50.5%. **More same-sport leagues barely moves accuracy** — because the added rows carry the same information as the ones you already have. What moves the needle is *information variety*: real vs synthetic data (worth +1.6–4.2 pts, `scripts/06`), pre-match odds and rich match features, and a rigorous testing protocol. The database matters — but as *feature/content richness*, not raw row count. Full numbers: [`docs/11_lstm_state_test.md`](docs/11_lstm_state_test.md).
+**Your thesis, tested directly — does the database matter more than the model?** The *same* LSTM is trained on 1 vs 2 vs 3 real leagues (Serie A → +La Liga → +EPL) and tested on the same Serie A 25/26: 51.3% → 52.9% → 52.6%. **Adding one more same-sport league helps a little (≈ +1.6 pts), a third league adds nothing** — because the added rows carry the same information as the ones you already have. What moves the needle is *information variety*: real pre-match odds and rich match features (worth ~7 pts) and real vs synthetic training data. The database matters — but as *feature/content richness*, not raw row count. Full numbers: [`docs/11_lstm_state_test.md`](docs/11_lstm_state_test.md).
 
 ## Hidden signals on real data — consensus, dispersion, and the sharp-vs-public split
 
@@ -478,7 +479,7 @@ qunatative-ML/                    # repository root (this project)
 
 ## Methodology
 
-**World model.** Each team has a latent strength `s ~ N(0,1)`. Expected goals follow a Poisson process with home advantage (`λ_home = 1.6·e^{0.22·Δs}·1.12`, `λ_away = 1.3·e^{−0.22·Δs}`); results follow. Bookmaker odds are the *true* probabilities → fair odds → multiplied by a margin (`~U(5%, 8%)`) and the favourite–longshot bias (`p_bookie ∝ p_true^0.88`, a real documented market effect: bookies overprice longshots). Closing odds are drawn independently with less noise, which makes **CLV** — how the line moved after you bet — meaningful and centred near zero.
+**World model.** Each team has a latent strength `s ~ N(0,1)`. Expected goals follow a Poisson process with home advantage (`λ_home = 1.6·e^{0.22·Δs}·1.12`, `λ_away = 1.3·e^{−0.22·Δs}`); results follow. Bookmaker odds are the *true* probabilities → fair odds → divided by a **positive margin** (`~U(5%, 8%)`, i.e. implied probabilities sum to ~1.05–1.08 like a real book) and the favourite–longshot bias (`p_bookie ∝ p_true^0.88`, a real documented market effect: bookies overprice longshots). Closing odds are drawn independently with less noise, which makes **CLV** — how the line moved after you bet — meaningful and centred near zero.
 
 **Model.** Elo ratings are updated sequentially (match *i* sees only matches `0..i−1`). Two Poisson regressions (`statsmodels`) map Elo → expected goals; the 0–8 goal grid is summed into outcome probabilities. A Gradient-Boosting classifier on the same Elo plus *shifted* rolling form adds a flexible second opinion; its probabilities are sigmoid-calibrated with internal cross-validation. The final prediction is the average of the two.
 
@@ -532,10 +533,11 @@ A frame-accurate recording plan with narration for a screen-recorded version (se
 
 1. **Synthetic data by default.** Odds come from the same true distribution the model learns. The synthetic backtest proves the *pipeline mechanics*; it says nothing about real-world profitability. Real-data experiments (`scripts/04`, `scripts/05`, `predict_match.py`) show the models beat the majority baseline but **not** the real bookmaker — consistent with the ~50–58% accuracy ceiling in the published football-prediction literature.
 2. **Deep nets do not transfer from synthetic to real.** The transfer experiment is honest: simple tree/linear models generalise better than the PyTorch/TensorFlow nets out-of-distribution. Retraining on real data is the path to deployment.
-3. **The average edge looks large (~20–25%).** Selection inflates it: the model bets exactly where it disagrees with the bookmaker most, and the synthetic bias is deliberately strong. Real markets are far tighter; treat the edges as relative, not absolute.
-4. **Variance.** A single 240-match backtest is one path of a noisy process. The simulation is the honest summary: under the variance-minimising flat staking the 90% range is $0.84M–$1.94M, and even then 12% of paths finish in the red — under the old quarter-Kelly default, 22% of 100-trial paths dipped below $100K.
+3. **The estimated edge (~14%) overstates realised returns.** Selection inflates the edge: the model bets exactly where it disagrees with the bookmaker most (the winner's curse), and realised ROI is negative once the margin is real. Treat edges as relative, not absolute.
+4. **Variance.** A single 240-match backtest is one path of a noisy process. The $1M simulation is the honest summary: flat staking keeps the 90% range tight ($0.76M–$1.15M) but the median path **loses** ~6% — the model does not beat a properly margined bookmaker in the synthetic world.
 5. **Simple features.** No injuries, xG, opponent-specific form, weather, referee, or live-market data. Real systems add these.
 6. **RL agent is a demo-scale learner** — a tabular Q-table over ~40–100 validation experiences, and in the canonical run it did **not** improve returns over plain fractional Kelly. It demonstrates the concept; it is not a production bankroll manager.
+7. **Minor same-day lookahead in the tennis walk.** The tennis walk (`scripts/14`) updates Elo after every row, so when a player appears in two matches on the same calendar date the second prediction can see the first result. In practice this is rare (11 of 2,703 ATP matches in 2024, 5 of 2,644 in 2025) and mostly reflects genuine same-day scheduling knowledge, but the football agent (`agent_sim`) avoids it entirely by resolving a day's matches before offering any new ones.
 
 ---
 
