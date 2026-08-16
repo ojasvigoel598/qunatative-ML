@@ -550,6 +550,7 @@ def run_backtest(
         "models": {"poisson": poisson, "ml": ml, "rl": rl_agent},
         "validation_eval": valid_eval,
         "test_eval": test_eval,
+        "test_scored": test_scored,
         "splits": (train_df, valid_df, test_df),
     }
 
