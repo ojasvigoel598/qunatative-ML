@@ -102,9 +102,8 @@ print("\nResult frequencies:")
 print(df["result"].value_counts(normalize=True).round(3).to_string())
 
 print("\nHome advantage is visible: home teams score more than away teams.")
-print(f"  avg home goals = {df['home_goals'].mean():.2f}  vs  avg away goals = {df['away_goals'].mean():.2f}")"")
+print(f"  avg home goals = {df['home_goals'].mean():.2f}  vs  avg away goals = {df['away_goals'].mean():.2f}")""")
 
-""" )
 # ============================================================ 3. SPLIT
 md("""## 3. Train / validation / test split — and why it matters
 
@@ -725,7 +724,7 @@ rows = [
                              "n_bets": 0, "n_wins": 0, "strike_rate": 0.0}),
 ]
 for name, s in rows:
-    print(f"{name:<28}{s['final_bankroll']:>13,.0f}{s['roi_pct']:>9+.1f}{s['n_bets']:>7}"
+    print(f"{name:<28}{s['final_bankroll']:>13,.0f}{s['roi_pct']:>+9.1f}{s['n_bets']:>7}"
           f"{s['n_wins']:>7}{s.get('strike_rate', 0) * 100:>8.0f}%")""")
 code(r"""# The auditable ledger: bets, no-bet reasons, per-league performance.
 bets_l = pd.read_csv(ROOT / "backtests/results/agent_sim/notebook_demo_bets.csv")
@@ -854,6 +853,6 @@ nb["metadata"] = {
     "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
     "language_info": {"name": "python", "version": "3"},
 }
-out = Path(__file__).resolve().parent / "notebooks" / "01_explained_ml_pipeline.ipynb"
+out = Path(__file__).resolve().parent / "01_explained_ml_pipeline.ipynb"
 nbf.write(nb, out)
 print(f"[OK] wrote {out} with {len(cells)} cells")
