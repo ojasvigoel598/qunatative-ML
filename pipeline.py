@@ -326,10 +326,16 @@ def _predictions_over(df: pd.DataFrame, poisson: PoissonEloModel,
 
 
 def evaluate_probability_quality(scored: pd.DataFrame) -> Dict[str, float]:
-    """Log-loss, Brier score and accuracy of the model on a scored split.
+    """Log-loss, Brier score, accuracy and ECE of the model on a scored split,
+    plus a head-to-head against the bookmaker's implied probabilities on the
+    SAME matches (opening and closing lines where available).
 
     Uses all matches (not just bets), so it measures genuine predictive quality.
+    The market comparison answers the load-bearing question: is the model a
+    better probability estimator than the market it is betting against?
     """
+    from models.calibration import (bookie_probs_matrix, compare_to_market,
+                                    expected_calibration_error)
     # Probability columns are ordered [away_win, draw, home_win], so the class
     # index for result H (home win) is 2, for A (away win) is 0.
     y_true = scored["result"].map({"H": 2, "D": 1, "A": 0}).to_numpy()
@@ -341,13 +347,30 @@ def evaluate_probability_quality(scored: pd.DataFrame) -> Dict[str, float]:
     n = len(y_true)
     # 3-class baseline: always predicting the most common outcome
     base_acc = float(max(np.bincount(y_true, minlength=3)) / n)
-    return {
+    out = {
         "log_loss": round(log_loss, 4),
         "brier_score": round(brier, 4),
         "accuracy": round(accuracy, 4),
+        "ece": round(expected_calibration_error(probs, y_true), 4),
         "baseline_accuracy": round(base_acc, 4),
         "n_matches": n,
     }
+    # ---- model vs market on identical matches --------------------------
+    for label, cols in (("market", ("odds_home_b365", "odds_draw_b365",
+                                    "odds_away_b365")),
+                        ("closing", ("closing_odds_home", "closing_odds_draw",
+                                     "closing_odds_away"))):
+        if not all(c in scored.columns for c in cols):
+            continue
+        market = bookie_probs_matrix(scored, cols[0], cols[1], cols[2])
+        cmp = compare_to_market(probs, market, y_true)
+        out[f"{label}_log_loss"] = cmp["market_log_loss"]
+        out[f"{label}_brier"] = cmp["market_brier"]
+        out[f"{label}_accuracy"] = cmp["market_accuracy"]
+        out[f"{label}_ece"] = cmp["market_ece"]
+    if "market_log_loss" in out:
+        out["beats_market_logloss"] = bool(out["log_loss"] < out["market_log_loss"])
+    return out
 
 
 def _discovery_experiences(valid_df: pd.DataFrame, poisson: PoissonEloModel,

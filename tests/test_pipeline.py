@@ -225,6 +225,24 @@ def test_backtest_is_reproducible(df):
     assert r1["bets_df"].equals(r2["bets_df"])
 
 
+def test_evaluation_compares_model_to_market(df):
+    """evaluate_probability_quality must include the market head-to-head on
+    identical matches (opening and closing implied probabilities)."""
+    poisson = PoissonEloModel(use_dixon_coles=False)
+    train = df.iloc[: int(len(df) * 0.65)]
+    poisson.train(train, verbose=False)
+    test = df.iloc[int(len(df) * 0.8):]
+    scored = pipeline._predictions_over(test, poisson, None)
+    ev = pipeline.evaluate_probability_quality(scored)
+    assert "market_log_loss" in ev
+    assert "closing_log_loss" in ev
+    assert "beats_market_logloss" in ev
+    assert isinstance(ev["beats_market_logloss"], bool)
+    # market implied probabilities are normalised, so they must be reasonable
+    assert 0.5 < ev["market_log_loss"] < 1.5
+    assert 0.5 < ev["closing_log_loss"] < 1.5
+
+
 def test_evaluation_metrics_match_results(df):
     """The class mapping in evaluate_probability_quality must be correct:
     result H (home win) has class index 2 (p_home_win column)."""
