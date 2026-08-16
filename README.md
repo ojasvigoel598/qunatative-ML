@@ -442,8 +442,11 @@ qunatative-ML/                    # repository root (this project)
 │   ├── make_simulation_video.py   # renders the $1M simulation as an mp4
 │   ├── make_dynamic_video.py      # renders the dynamic-thinking trial as an mp4
 │   ├── make_serie_a_video.py      # renders a real Serie A 25/26 replay as an mp4
+│   ├── make_narrated_demo.py      # narrated simulation-focused walkthrough (edge-tts)
+│   ├── make_project_explainer.py  # narrated WHOLE-project explainer (edge-tts)
+│   ├── build_embedded_player.py   # self-contained video_player.html (videos embedded)
 │   └── output/
-│       ├── demo_narrated.mp4 · simulation_live_*.mp4 · serie_a_live.mp4
+│       ├── project_explainer.mp4 · demo_narrated.mp4 · simulation_live_*.mp4 · serie_a_live.mp4
 ├── notebooks/
 │   └── 01_explained_ml_pipeline.ipynb   # ML pipeline explained end-to-end
 ├── scripts/
@@ -500,9 +503,13 @@ qunatative-ML/                    # repository root (this project)
 
 ## Demo videos
 
-### 🎬 Narrated walkthrough (start here) — 4 min 40 s
+### 🎬 Whole-project explainer (start here) — 4 min 39 s
 
-[**Watch the full narrated demo**](demo/output/demo_narrated.mp4) — a self-contained walkthrough with AI voice narration (Microsoft Edge neural voice, generated free via `edge-tts`): it explains what the project is, shows the model betting through the $1M simulation, the confidence-aware dynamic thinking layer, and a real Serie A replay, then gives the honest bottom line. Built entirely from the actual run outputs below (no fabricated footage). Rebuild it with `pip install edge-tts` + `python demo/make_narrated_demo.py`.
+[**Watch the narrated project explainer**](demo/output/project_explainer.mp4) — a self-contained, AI-voiced tour of the *entire* project, not just the simulation: the architecture diagram, actual code snippets from all three model layers (Poisson+Elo, gradient boosting, Q-learning staking), the real data-ingestion source (football-data.co.uk + Pinnacle closing odds), the backtest plots, the season-by-season real-data validation, the $1M Monte-Carlo simulation, the confidence-aware dynamic layer, and how the honest losses prove the methodology works. Every image and number in it is a real file produced by running the repo. Rebuild it with `pip install edge-tts` + `python demo/make_project_explainer.py`.
+
+### 🎬 Simulation-focused narrated walkthrough — 4 min 40 s
+
+[**Watch the full narrated demo**](demo/output/demo_narrated.mp4) — AI voice narration (Microsoft Edge neural voice, free via `edge-tts`): the model betting through the $1M simulation, the confidence-aware dynamic thinking layer, and a real Serie A replay, then the honest bottom line. Rebuild with `python demo/make_narrated_demo.py`.
 
 ### Live replays — real `.mp4` walkthroughs
 
@@ -516,21 +523,24 @@ Three **real `.mp4` walkthroughs** are rendered from the actual run outputs (mat
 
 **Play them right here on GitHub** (the `.mp4` files render with an inline player):
 
-- 🎬 [**Full narrated demo (4:40) — start here**](demo/output/demo_narrated.mp4)
+- 🎬 [**Whole-project explainer (4:39) — start here**](demo/output/project_explainer.mp4)
+- 🎬 [**Narrated demo (4:40)**](demo/output/demo_narrated.mp4)
 - 💰 [$1,000,000 simulation — flat $10K/bet](demo/output/simulation_live_flat.mp4) · 50 s
 - 🧠 [$1,000,000 simulation — dynamic thinking layer](demo/output/simulation_live_dynamic.mp4) · 55 s
 - ⚽ [Real Serie A 2025/26 replay — point-in-time](demo/output/serie_a_live.mp4) · 42 s
 
-(Cloned locally, you can also open [`demo/output/video_player.html`](demo/output/video_player.html) — a self-contained page that embeds all three. GitHub does not render `.html` files, so on the repo website use the `.mp4` links above.)
+(Cloned locally, you can also open [`demo/output/video_player.html`](demo/output/video_player.html) — a self-contained page that embeds all five videos, playable from any host or `file://`. GitHub does not render `.html` files, so on the repo website use the `.mp4` links above.)
 
 Render them yourself with:
 
 ```bash
 pip install imageio imageio-ffmpeg edge-tts
-python demo/make_narrated_demo.py          # -> demo/output/demo_narrated.mp4
+python demo/make_project_explainer.py     # -> demo/output/project_explainer.mp4
+python demo/make_narrated_demo.py         # -> demo/output/demo_narrated.mp4
 python demo/make_simulation_video.py
 python demo/make_dynamic_video.py
 python demo/make_serie_a_video.py --offline
+python demo/build_embedded_player.py      # -> demo/output/video_player.html (all videos embedded)
 ```
 
 A frame-accurate recording plan with narration for a screen-recorded version (setup → architecture → execution → methodology → results → simulation) is in [`docs/03_demo_video_script.md`](docs/03_demo_video_script.md).
