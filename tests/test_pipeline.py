@@ -33,9 +33,26 @@ def test_data_generation_shape(df):
     assert len(df) == N_MATCHES
     required = ["date", "home_team", "away_team", "home_goals", "away_goals",
                 "result", "odds_home_b365", "odds_draw_b365", "odds_away_b365",
-                "closing_odds_home", "closing_odds_draw", "closing_odds_away"]
+                "closing_odds_home", "closing_odds_draw", "closing_odds_away",
+                "odds_home_pin", "odds_draw_pin", "odds_away_pin",
+                "best_odds_home", "best_odds_draw", "best_odds_away",
+                "best_closing_odds_home", "best_closing_odds_draw",
+                "best_closing_odds_away"]
     for col in required:
         assert col in df.columns, f"missing column {col}"
+
+
+def test_best_odds_are_price_shopping(df):
+    """Best odds must be >= every book's odds, and the second (sharper) book
+    must exist so price shopping is meaningful."""
+    for out in ("home", "draw", "away"):
+        assert (df[f"best_odds_{out}"] >= df[f"odds_{out}_b365"]).all()
+        assert (df[f"best_odds_{out}"] >= df[f"odds_{out}_pin"]).all()
+        assert (df[f"best_closing_odds_{out}"] >= df[f"closing_odds_{out}"]).all()
+    # the sharper book has lower overround: pin implied sum < b365 implied sum
+    b365_sum = 1 / df["odds_home_b365"] + 1 / df["odds_draw_b365"] + 1 / df["odds_away_b365"]
+    pin_sum = 1 / df["odds_home_pin"] + 1 / df["odds_draw_pin"] + 1 / df["odds_away_pin"]
+    assert pin_sum.mean() < b365_sum.mean()
 
 
 def test_no_team_plays_itself(df):

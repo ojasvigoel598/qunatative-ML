@@ -135,9 +135,19 @@ def generate_match_data(n_matches: int = 1200, seed: int = 42) -> pd.DataFrame:
 
     Returns a DataFrame with columns: date, home_team, away_team, home_goals,
     away_goals, result, odds_home_b365, odds_draw_b365, odds_away_b365,
-    closing_odds_home, closing_odds_draw, closing_odds_away, margin.
+    closing_odds_home, closing_odds_draw, closing_odds_away, margin, plus a
+    second (sharper) bookmaker for price shopping: odds_home_pin,
+    odds_draw_pin, odds_away_pin, closing_odds_home_pin, closing_odds_draw_pin,
+    closing_odds_away_pin, and the best-available prices across both books:
+    best_odds_home/draw/away and best_closing_odds_home/draw/away.
+
+    The second book uses its own independent RNG stream (seed-derived) so the
+    existing B365 columns are byte-identical to a single-book world - the
+    new columns are purely additive.
     """
     rng = np.random.default_rng(seed)
+    # Independent stream for the second book so B365 values never change.
+    rng_pin = np.random.default_rng(seed + 999_983)
     strengths = {t: float(rng.normal(0, 1)) for t in TEAMS}
 
     dates = pd.date_range("2022-08-01", periods=n_matches, freq="D")
@@ -159,12 +169,19 @@ def generate_match_data(n_matches: int = 1200, seed: int = 42) -> pd.DataFrame:
 
     margins = rng.uniform(*BOOKIE_MARGIN_RANGE, n_matches)
     open_odds, close_odds = [], []
+    open_pin, close_pin = [], []
     for i in range(n_matches):
         p_true = _true_probs(float(lam_home[i]), float(lam_away[i]))
         o, c = _make_bookie_odds(p_true, rng, margin=float(margins[i]),
                                  prob_noise=BOOKIE_PROB_NOISE, gamma=BOOKIE_GAMMA)
         open_odds.append(o)
         close_odds.append(c)
+        # Sharper second book (Pinnacle-style): lower margin, less noise.
+        po, pc = _make_bookie_odds(p_true, rng_pin, margin=float(margins[i]) * 0.4,
+                                   prob_noise=BOOKIE_PROB_NOISE * 0.5,
+                                   gamma=BOOKIE_GAMMA)
+        open_pin.append(po)
+        close_pin.append(pc)
 
     df = pd.DataFrame({
         "date": dates,
@@ -179,8 +196,22 @@ def generate_match_data(n_matches: int = 1200, seed: int = 42) -> pd.DataFrame:
         "closing_odds_home": [c["home_win"] for c in close_odds],
         "closing_odds_draw": [c["draw"] for c in close_odds],
         "closing_odds_away": [c["away_win"] for c in close_odds],
+        "odds_home_pin": [o["home_win"] for o in open_pin],
+        "odds_draw_pin": [o["draw"] for o in open_pin],
+        "odds_away_pin": [o["away_win"] for o in open_pin],
+        "closing_odds_home_pin": [c["home_win"] for c in close_pin],
+        "closing_odds_draw_pin": [c["draw"] for c in close_pin],
+        "closing_odds_away_pin": [c["away_win"] for c in close_pin],
         "margin": margins,
     })
+    # Price shopping: best available price per outcome across both books.
+    for out, col_b365, col_pin in (("home_win", "odds_home_b365", "odds_home_pin"),
+                                   ("draw", "odds_draw_b365", "odds_draw_pin"),
+                                   ("away_win", "odds_away_b365", "odds_away_pin")):
+        df[f"best_odds_{out.split('_')[0]}"] = df[[col_b365, col_pin]].max(axis=1)
+        df[f"best_closing_odds_{out.split('_')[0]}"] = \
+            df[[f"closing_odds_{out.split('_')[0]}",
+                f"closing_odds_{out.split('_')[0]}_pin"]].max(axis=1)
     return df
 
 
@@ -191,7 +222,8 @@ def load_or_generate_data(n_matches: int = 1200, seed: int = 42,
     Returns (df, generated).  `generated=True` means the CSV was (re)written.
     """
     DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
-    required = ["closing_odds_home", "closing_odds_draw", "closing_odds_away"]
+    required = ["closing_odds_home", "closing_odds_draw", "closing_odds_away",
+                "best_odds_home", "best_odds_draw", "best_odds_away"]
     if DATA_PATH.exists() and not regenerate:
         df = pd.read_csv(DATA_PATH, parse_dates=["date"])
         if all(c in df.columns for c in required):
