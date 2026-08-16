@@ -28,13 +28,24 @@ FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 
 CARDS = [
     {
+        "file": "project_explainer.mp4",
+        "title": "Whole-project explainer — 4:39 narrated tour (start here)",
+        "tags": ["AI voice narration", "architecture diagram", "real code snippets",
+                 "data sources", "how the simulation proves the methodology"],
+        "note": ("The full picture, not just the simulation: the architecture "
+                 "diagram, actual code from all three model layers, the data "
+                 "ingestion source, backtest plots, real-data season validation, "
+                 "the $1M Monte-Carlo simulation, the confidence-aware layer, and "
+                 "why the honest losses prove the methodology works."),
+    },
+    {
         "file": "demo_narrated.mp4",
-        "title": "Full narrated demo — 4:40 self-contained walkthrough (start here)",
-        "tags": ["AI voice narration", "edge-tts", "explains the project end to end"],
-        "note": ("A polished product-style demo with natural AI narration: what the "
-                 "project is, the $1M flat simulation, the confidence-aware dynamic "
-                 "layer, a real Serie A replay, and the honest bottom line. "
-                 "Narration only states what the repo actually does."),
+        "title": "Narrated demo — 4:40 simulation-focused walkthrough",
+        "tags": ["AI voice narration", "edge-tts", "flat + dynamic simulations", "Serie A replay"],
+        "note": ("A polished product-style demo with natural AI narration: the $1M "
+                 "flat simulation, the confidence-aware dynamic layer, a real Serie "
+                 "A replay, and the honest bottom line. Narration only states what "
+                 "the repo actually does."),
     },
     {
         "file": "simulation_live_flat.mp4",
