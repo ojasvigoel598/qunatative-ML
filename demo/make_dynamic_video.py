@@ -104,7 +104,8 @@ def record_dynamic_trial(train_df, strengths, rng, n_matches):
         layer.observe(home, away, hg, ag, result, decision, opening,
                       current_day=day)
         events.append(ev)
-    return events, bankroll
+    refits = getattr(layer.base, "refits", 0)
+    return events, bankroll, layer.market_weight, refits, layer.conf_refits
 
 
 def main():
@@ -119,7 +120,8 @@ def main():
 
     strengths = _world_strengths(42)
     rng = np.random.default_rng(1000 + 0)   # same trial 0 as the other videos
-    events, final_bankroll = record_dynamic_trial(train_df, strengths, rng, 1200)
+    events, final_bankroll, market_w, refits, conf_refits = \
+        record_dynamic_trial(train_df, strengths, rng, 1200)
 
     n_bets = sum(1 for e in events if e["is_bet"])
     wins = sum(1 for e in events if e["is_bet"] and e["win"])
@@ -148,8 +150,9 @@ def main():
             f"Final bankroll   ${final_bankroll:,.0f}",
             f"ROI {roi:+.1f}%   ·   {wins} W / {losses} L",
             f"Bets {n_bets}   ·   biggest win +${max((e['profit'] for e in events if e['is_bet']), default=0):,.0f}",
-            "confidence-aware: median $1.21M · 90% [$1.01M .. $1.61M] (12 trials)",
-            "13.5 refits/trial (1.5 confidence-gated) · model weight 0.48",
+            "25-trial distribution: median $0.96M · 90% [$0.87M .. $1.05M]",
+            "P(end in profit) 44%  ·  {:.0f} online refits ({:.1f} confidence-gated) · model weight {:.2f}".format(
+                refits, conf_refits, market_w),
         ],
         footer="one Monte-Carlo draw · synthetic calibrated world",
         poster_path=poster)
