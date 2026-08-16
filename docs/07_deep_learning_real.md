@@ -35,10 +35,10 @@ SYN_rich_8feat_regularised           8                  0.4868                  
 
 ```
                                                                                                                       0                                                                                                 1
-single__La Liga 25/26  {'accuracy': 0.5211, 'balanced_acc': 0.4293, 'log_loss': 0.9656, 'brier': 0.5722, 'ece': 0.0403}   {'accuracy': 0.5158, 'balanced_acc': 0.4179, 'log_loss': 0.972, 'brier': 0.5748, 'ece': 0.0342}
-single__EPL 25/26      {'accuracy': 0.4763, 'balanced_acc': 0.4157, 'log_loss': 1.0459, 'brier': 0.6303, 'ece': 0.0486}  {'accuracy': 0.4579, 'balanced_acc': 0.3774, 'log_loss': 1.0549, 'brier': 0.6359, 'ece': 0.0338}
-dual__La Liga 25/26     {'accuracy': 0.5105, 'balanced_acc': 0.414, 'log_loss': 0.9773, 'brier': 0.5793, 'ece': 0.0535}     {'accuracy': 0.5, 'balanced_acc': 0.4038, 'log_loss': 0.9802, 'brier': 0.5806, 'ece': 0.0796}
-dual__EPL 25/26        {'accuracy': 0.4974, 'balanced_acc': 0.4417, 'log_loss': 1.0232, 'brier': 0.6147, 'ece': 0.0719}  {'accuracy': 0.4763, 'balanced_acc': 0.4183, 'log_loss': 1.0187, 'brier': 0.6117, 'ece': 0.0405}
+single__La Liga 25/26  {'accuracy': 0.5211, 'balanced_acc': 0.4293, 'log_loss': 0.9656, 'brier': 0.5722, 'ece': 0.0403}    {'accuracy': 0.5184, 'balanced_acc': 0.4215, 'log_loss': 0.9725, 'brier': 0.575, 'ece': 0.037}
+single__EPL 25/26      {'accuracy': 0.4763, 'balanced_acc': 0.4157, 'log_loss': 1.0459, 'brier': 0.6303, 'ece': 0.0486}  {'accuracy': 0.4579, 'balanced_acc': 0.3774, 'log_loss': 1.0554, 'brier': 0.6363, 'ece': 0.0294}
+dual__La Liga 25/26     {'accuracy': 0.5105, 'balanced_acc': 0.414, 'log_loss': 0.9773, 'brier': 0.5793, 'ece': 0.0535}     {'accuracy': 0.5, 'balanced_acc': 0.4038, 'log_loss': 0.9804, 'brier': 0.5807, 'ece': 0.0834}
+dual__EPL 25/26        {'accuracy': 0.4974, 'balanced_acc': 0.4417, 'log_loss': 1.0232, 'brier': 0.6147, 'ece': 0.0719}  {'accuracy': 0.4763, 'balanced_acc': 0.4183, 'log_loss': 1.0186, 'brier': 0.6116, 'ece': 0.0419}
 ```
 
 ## Root-cause analysis

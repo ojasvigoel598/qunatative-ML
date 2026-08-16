@@ -38,7 +38,7 @@ t-tests on the per-bet data, and the $1M simulation gets a bootstrap
             Transfer: Premier League                  sklearn Random Forest acc (CI)                       36.8% [0.3, 0.4]
             Transfer: Premier League PyTorch NN - cold start (no team info) acc (CI)                       42.6% [0.4, 0.5]
            Season backtest (La Liga)                        Majority / base rate acc                   46.3% (44.0%..48.9%)
-           Season backtest (La Liga)                            PoissonElo model acc                   54.2% (53.4%..54.7%)
+           Season backtest (La Liga)                            PoissonElo model acc                   53.6% (52.1%..54.5%)
            Season backtest (La Liga)                            Ridge classifier acc                   53.6% (51.6%..55.0%)
            Season backtest (La Liga)                           Gradient Boosting acc                   50.7% (49.2%..51.8%)
            Season backtest (La Liga)                               Random Forest acc                   52.9% (51.8%..53.9%)
@@ -46,10 +46,10 @@ t-tests on the per-bet data, and the $1M simulation gets a bootstrap
       Deep net: baseline_4feat_calib                                 La Liga/EPL acc                          51.6% / 47.1%
          Deep net: regularised_4feat                                 La Liga/EPL acc                          52.1% / 47.6%
     Deep net: rich_8feat_regularised                                 La Liga/EPL acc                          50.8% / 48.4%
-    Deep net: SYN_baseline_4feat_raw                                 La Liga/EPL acc                          48.7% / 42.6%
-  Deep net: SYN_baseline_4feat_calib                                 La Liga/EPL acc                          50.5% / 43.4%
-     Deep net: SYN_regularised_4feat                                 La Liga/EPL acc                          50.5% / 43.4%
-Deep net: SYN_rich_8feat_regularised                                 La Liga/EPL acc                          50.0% / 44.0%
+    Deep net: SYN_baseline_4feat_raw                                 La Liga/EPL acc                          46.1% / 45.5%
+  Deep net: SYN_baseline_4feat_calib                                 La Liga/EPL acc                          48.7% / 48.2%
+     Deep net: SYN_regularised_4feat                                 La Liga/EPL acc                          49.5% / 47.9%
+Deep net: SYN_rich_8feat_regularised                                 La Liga/EPL acc                          48.7% / 50.0%
           $1M simulation (25 trials)                                   mean (95% CI)            $943,996 [893,780, 995,772]
           $1M simulation (25 trials)                       median / P(profit) / ruin                    $938,000 / 32% / 0%
           $1M simulation (25 trials)                                90% range / skew            [759,900, 1,148,660] / +0.2
