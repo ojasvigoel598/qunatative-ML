@@ -96,6 +96,42 @@ def test_poisson_predictions_sum_to_one(df):
     assert probs["expected_home_goals"] > 0
 
 
+def test_dixon_coles_tau_cell_values():
+    """DC tau factors: with rho < 0 (the classic football finding) 0-0 and
+    1-1 become MORE likely than independence and 1-0 / 0-1 less likely;
+    mirrored for rho > 0; tau = 1 for rho = 0 and for all other cells."""
+    model = PoissonEloModel()
+    lam_h, lam_a = 1.5, 1.2
+    # rho < 0: 0-0 and 1-1 up, 1-0 / 0-1 down
+    assert model._dc_tau(0, 0, lam_h, lam_a, -0.05) > 1.0
+    assert model._dc_tau(1, 1, lam_h, lam_a, -0.05) > 1.0
+    assert model._dc_tau(1, 0, lam_h, lam_a, -0.05) < 1.0
+    assert model._dc_tau(0, 1, lam_h, lam_a, -0.05) < 1.0
+    # rho > 0: 0-0 and 1-1 down, 1-0 / 0-1 up
+    assert model._dc_tau(0, 0, lam_h, lam_a, 0.05) < 1.0
+    assert model._dc_tau(1, 1, lam_h, lam_a, 0.05) < 1.0
+    assert model._dc_tau(1, 0, lam_h, lam_a, 0.05) > 1.0
+    assert model._dc_tau(0, 1, lam_h, lam_a, 0.05) > 1.0
+    # rho = 0 and non-low-score cells are always 1
+    assert model._dc_tau(0, 0, lam_h, lam_a, 0.0) == 1.0
+    assert model._dc_tau(2, 3, lam_h, lam_a, -0.05) == 1.0
+
+
+def test_dixon_coles_fit_and_predict(df):
+    """DC must fit a bounded rho, keep probabilities normalised, and leave
+    predictions valid with the correction enabled (default)."""
+    poisson = PoissonEloModel()
+    poisson.train(df.iloc[: int(len(df) * 0.7)])
+    assert -0.25 <= poisson.rho <= 0.25
+    probs = poisson.predict("Arsenal", "Chelsea")
+    assert abs(sum(probs[k] for k in ("home_win", "draw", "away_win")) - 1.0) < 0.01
+    # disabling DC must still produce a valid model
+    off = PoissonEloModel(use_dixon_coles=False)
+    off.train(df.iloc[: int(len(df) * 0.7)], verbose=False)
+    p_off = off.predict("Arsenal", "Chelsea")
+    assert abs(sum(p_off[k] for k in ("home_win", "draw", "away_win")) - 1.0) < 0.01
+
+
 def test_poisson_calibration_is_not_absurd(df):
     poisson = PoissonEloModel()
     poisson.train(df.iloc[: int(len(df) * 0.7)])
