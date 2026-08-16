@@ -80,14 +80,21 @@ def available_books(row: pd.Series) -> List[str]:
 
 
 def best_odds(row: pd.Series) -> Dict[str, Optional[float]]:
-    """Best available price per outcome across all books (price shopping)."""
+    """Best available price per outcome across all books (price shopping).
+
+    Prefers the aggregated ``best_odds_*`` columns when present (the real-data
+    loader maps these to football-data's Max* columns, which span every book
+    in the file); otherwise takes the max over the books we can probe.
+    """
+    best = {o: _probe(row, [f"best_odds_{o.split('_')[0]}"]) for o in OUTCOMES}
+    if all(v is not None for v in best.values()):
+        return best
     books = available_books(row)
-    if not books:
-        return {o: None for o in OUTCOMES}
     out = {}
     for o in OUTCOMES:
         vals = [book_odds(row, b)[o] for b in books]
-        out[o] = float(np.max(vals))
+        best_probe = float(np.max(vals)) if vals else None
+        out[o] = best[o] if best[o] is not None else best_probe
     return out
 
 
