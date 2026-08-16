@@ -375,15 +375,20 @@ def evaluate_probability_quality(scored: pd.DataFrame) -> Dict[str, float]:
 
 def _discovery_experiences(valid_df: pd.DataFrame, poisson: PoissonEloModel,
                            ml: Optional[MLFootballPredictor],
-                           initial_bankroll: float) -> List[Tuple[float, float, float, bool]]:
+                           initial_bankroll: float,
+                           use_best_odds: bool = False) -> List[Tuple[float, float, float, bool]]:
     """Kelly backtest on the validation split, collecting realized bets as
     (edge, bankroll_pct, odds, win) experiences for the RL agent."""
     experiences = []
     bankroll = initial_bankroll
     for _, row in valid_df.iterrows():
         probs = ensemble_probs(poisson, ml, row["home_team"], row["away_team"])
-        bookie = {"home_win": row["odds_home_b365"], "draw": row["odds_draw_b365"],
-                  "away_win": row["odds_away_b365"]}
+        if use_best_odds:
+            bookie = {"home_win": row["best_odds_home"], "draw": row["best_odds_draw"],
+                      "away_win": row["best_odds_away"]}
+        else:
+            bookie = {"home_win": row["odds_home_b365"], "draw": row["odds_draw_b365"],
+                      "away_win": row["odds_away_b365"]}
         edges = poisson.calculate_edge(probs, bookie, threshold=EDGE_THRESHOLD)
         best = edges.get("best_value")
         if not best or edges.get("max_edge", 0) < EDGE_THRESHOLD:
@@ -417,6 +422,7 @@ def run_backtest(
     save_results: bool = True,
     out_dir: Path = BACKTEST_DIR,
     verbose: bool = True,
+    use_best_odds: bool = False,
 ) -> dict:
     """Run the full train / validation / test backtest.
 
@@ -447,7 +453,8 @@ def run_backtest(
 
     rl_agent = None
     if use_rl:
-        experiences = _discovery_experiences(valid_df, poisson, ml, initial_bankroll)
+        experiences = _discovery_experiences(valid_df, poisson, ml, initial_bankroll,
+                                             use_best_odds=use_best_odds)
         if verbose:
             print(f"  Discovery backtest on validation: {len(experiences)} realized bets")
         rl_agent = QLearningStakingAgent()
@@ -463,8 +470,13 @@ def run_backtest(
 
     for _, row in test_df.iterrows():
         probs = ensemble_probs(poisson, ml, row["home_team"], row["away_team"])
-        bookie = {"home_win": row["odds_home_b365"], "draw": row["odds_draw_b365"],
-                  "away_win": row["odds_away_b365"]}
+        if use_best_odds:
+            # price shopping: bet the best available price across books
+            bookie = {"home_win": row["best_odds_home"], "draw": row["best_odds_draw"],
+                      "away_win": row["best_odds_away"]}
+        else:
+            bookie = {"home_win": row["odds_home_b365"], "draw": row["odds_draw_b365"],
+                      "away_win": row["odds_away_b365"]}
         edges = poisson.calculate_edge(probs, bookie, threshold=edge_threshold)
         best = edges.get("best_value")
         if not best or edges.get("max_edge", 0) < edge_threshold:
@@ -489,7 +501,10 @@ def run_backtest(
         profit = round(stake * (odds - 1), 2) if win else -stake
         bankroll = round(bankroll + profit, 2)
 
-        closing_odds = row[f"closing_odds_{best.split('_')[0]}"]
+        if use_best_odds:
+            closing_odds = row[f"best_closing_odds_{best.split('_')[0]}"]
+        else:
+            closing_odds = row[f"closing_odds_{best.split('_')[0]}"]
         clv = round((closing_odds - odds) / odds * 100, 2) if closing_odds > 0 else 0.0
 
         bets.append({
@@ -548,7 +563,8 @@ def compute_metrics(bets_df: pd.DataFrame, equity: List[float],
         return {
             "total_bets": 0, "wins": 0, "losses": 0, "strike_rate": 0.0,
             "total_profit": 0.0, "roi_pct": 0.0, "avg_edge_pct": 0.0,
-            "avg_clv_pct": 0.0, "avg_odds": 0.0, "sharpe_ratio": 0.0,
+            "avg_clv_pct": 0.0, "clv_win_rate_pct": 0.0, "clv_t_stat": 0.0,
+            "avg_odds": 0.0, "sharpe_ratio": 0.0,
             "max_drawdown_pct": 0.0, "final_bankroll": initial_bankroll,
             "profit_factor": 0.0, "cagr_pct": 0.0, "n_bets_per_year": 0.0,
         }
@@ -572,6 +588,15 @@ def compute_metrics(bets_df: pd.DataFrame, equity: List[float],
     gross_losses = float(-bets_df.loc[bets_df["profit_loss"] < 0, "profit_loss"].sum())
     profit_factor = gross_wins / gross_losses if gross_losses > 0 else float("inf")
 
+    # CLV as a primary information signal: the closing line is the sharpest
+    # price, so a bet that consistently beats it (positive CLV) is evidence of
+    # real information; a t-stat far from 0 quantifies how significant.
+    clv_arr = bets_df["clv_pct"].to_numpy(dtype=float)
+    clv_mean = float(clv_arr.mean())
+    clv_sd = float(clv_arr.std(ddof=1))
+    clv_t = float(clv_mean / (clv_sd / np.sqrt(len(clv_arr)))) \
+        if len(clv_arr) > 1 and clv_sd > 0 else 0.0
+
     final_bankroll = float(equity[-1])
     cagr = (final_bankroll / initial_bankroll) ** (365.25 / span_days) - 1 if final_bankroll > 0 else -1.0
 
@@ -583,7 +608,9 @@ def compute_metrics(bets_df: pd.DataFrame, equity: List[float],
         "total_profit": round(total_profit, 2),
         "roi_pct": round(roi, 2),
         "avg_edge_pct": round(float(bets_df["edge_pct"].mean()), 2),
-        "avg_clv_pct": round(float(bets_df["clv_pct"].mean()), 2),
+        "avg_clv_pct": round(clv_mean, 2),
+        "clv_win_rate_pct": round(float(np.mean(clv_arr > 0)) * 100, 2),
+        "clv_t_stat": round(clv_t, 2),
         "avg_odds": round(float(bets_df["my_odds"].mean()), 2),
         "sharpe_ratio": round(sharpe, 3),
         "max_drawdown_pct": round(max_dd, 2),

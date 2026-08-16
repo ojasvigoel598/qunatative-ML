@@ -8,6 +8,8 @@ total_profit: -143.24
 roi_pct: -14.32
 avg_edge_pct: 14.81
 avg_clv_pct: 0.01
+clv_win_rate_pct: 42.31
+clv_t_stat: 0.03
 avg_odds: 2.32
 sharpe_ratio: -0.48
 max_drawdown_pct: 21.29
