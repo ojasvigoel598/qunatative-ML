@@ -20,22 +20,22 @@ information at all) shows the null result.
         league                                 method  accuracy  log_loss  brier
        La Liga                Base rate (most common)    0.4895    1.0464 0.6299
        La Liga                Market (bookmaker odds)    0.5447    0.9637 0.5710
-       La Liga                             PyTorch NN    0.4395    1.1583 0.6836
-       La Liga            TF hybrid (NN + PoissonElo)    0.4237    1.3057 0.7383
-       La Liga              sklearn Gradient Boosting    0.4763    1.0524 0.6345
-       La Liga            sklearn Logistic Regression    0.4816    1.0604 0.6393
-       La Liga               sklearn Ridge classifier    0.4816    1.0578 0.6373
-       La Liga                  sklearn Random Forest    0.4789    1.0485 0.6311
-       La Liga PyTorch NN - cold start (no team info)    0.4895    1.0892 0.6485
+       La Liga                             PyTorch NN    0.4158    1.1481 0.6878
+       La Liga            TF hybrid (NN + PoissonElo)    0.4711    1.2369 0.7187
+       La Liga              sklearn Gradient Boosting    0.4553    1.0738 0.6493
+       La Liga            sklearn Logistic Regression    0.4684    1.0666 0.6440
+       La Liga               sklearn Ridge classifier    0.4737    1.0615 0.6410
+       La Liga                  sklearn Random Forest    0.4342    1.0807 0.6550
+       La Liga PyTorch NN - cold start (no team info)    0.4895    1.0639 0.6384
 Premier League                Base rate (most common)    0.4263    1.0793 0.6534
 Premier League                Market (bookmaker odds)    0.4895    1.0185 0.6115
-Premier League                             PyTorch NN    0.4158    1.2614 0.7374
-Premier League            TF hybrid (NN + PoissonElo)    0.3737    1.5341 0.8187
-Premier League              sklearn Gradient Boosting    0.4158    1.1023 0.6695
-Premier League            sklearn Logistic Regression    0.4026    1.1193 0.6808
-Premier League               sklearn Ridge classifier    0.4158    1.1159 0.6780
-Premier League                  sklearn Random Forest    0.4263    1.0961 0.6644
-Premier League PyTorch NN - cold start (no team info)    0.4263    1.1377 0.6795
+Premier League                             PyTorch NN    0.3921    1.2442 0.7358
+Premier League            TF hybrid (NN + PoissonElo)    0.4132    1.3646 0.7723
+Premier League              sklearn Gradient Boosting    0.4079    1.1420 0.6942
+Premier League            sklearn Logistic Regression    0.4184    1.1296 0.6877
+Premier League               sklearn Ridge classifier    0.4105    1.1267 0.6854
+Premier League                  sklearn Random Forest    0.3684    1.1449 0.6983
+Premier League PyTorch NN - cold start (no team info)    0.4263    1.1062 0.6671
 ```
 
 *(Saved by `scripts/04_deep_learning_transfer.py`; full numbers in

@@ -1,4 +1,4 @@
-experiment,method,n,consensus_acc_low_disp,consensus_acc_high_disp,mean_dispersion,avg_clv_pct,clv_t,clv_p,strike_at_public,positive,final_bankroll,roi_pct,n_bets,n_wins,strike_rate,final_market_weight,base_refits,survival,survival_day
-dispersion-vs-predictability,consensus,380.0,0.5211,0.5632,0.0057,,,,,,,,,,,,,,
-sharp-public-split,CLV,200.0,,,,1.16,4.72,0.0,0.355,94.0,,,,,,,,,
-dynamic-layer-real-2526,DynamicThinking,,,,,,,,,,945268.74,-5.47,18.0,4.0,22.22,0.483,2.0,False,
+experiment,method,n,consensus_acc_low_disp,consensus_acc_high_disp,mean_dispersion,avg_clv_pct,clv_t,clv_p,strike_at_public,positive,final_bankroll,roi_pct,n_bets,n_wins,strike_rate,final_market_weight,base_refits,conf_refits,final_confidence,confidence_aware,survival,survival_day
+dispersion-vs-predictability,consensus,380.0,0.5211,0.5632,0.0057,,,,,,,,,,,,,,,,,
+sharp-public-split,CLV,200.0,,,,1.16,4.72,0.0,0.355,94.0,,,,,,,,,,,,
+dynamic-layer-real-2526,DynamicThinking,,,,,,,,,,932411.73,-6.76,17.0,3.0,17.65,0.486,2.0,0.0,0.234,True,False,

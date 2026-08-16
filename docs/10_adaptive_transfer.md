@@ -10,14 +10,14 @@ refits, so the gap isolates the value of adaptation.
 
 ```
                                                 experiment             method  majority_acc  accuracy  balanced_acc  log_loss  brier  acc_first_half  acc_second_half  refits  base_acc
-    Serie A -> Serie A 25/26 (within-league unseen season)           Adaptive      0.389474    0.5000        0.4568    1.0260 0.6154          0.4842           0.5158      32  0.389474
-    Serie A -> Serie A 25/26 (within-league unseen season) Static (frozen ML)      0.389474    0.4816        0.4299    1.0198 0.6103          0.4632           0.5000       0  0.389474
-          Serie A -> La Liga 25/26 (cross-league transfer)           Adaptive      0.489474    0.4500        0.3449    1.0426 0.6261          0.4737           0.4263      28  0.489474
-          Serie A -> La Liga 25/26 (cross-league transfer) Static (frozen ML)      0.489474    0.4816        0.3476    1.0410 0.6260          0.4632           0.5000       0  0.489474
-   Serie A -> Premier League 25/26 (cross-league transfer)           Adaptive      0.426316    0.4263        0.3663    1.0692 0.6462          0.4684           0.3842      32  0.426316
-   Serie A -> Premier League 25/26 (cross-league transfer) Static (frozen ML)      0.426316    0.4421        0.3587    1.0631 0.6418          0.4684           0.4158       0  0.426316
-Football -> synthetic basketball-like league (cross-sport)           Adaptive      0.548750    0.7825        0.7748    0.7455 0.4220          0.7600           0.8050      64  0.548750
-Football -> synthetic basketball-like league (cross-sport) Static (frozen ML)      0.548750    0.8075        0.7980    0.9147 0.5379          0.7725           0.8425       0  0.548750
+    Serie A -> Serie A 25/26 (within-league unseen season)           Adaptive      0.389474    0.4974        0.4520    1.0269 0.6158          0.4895           0.5053      32  0.389474
+    Serie A -> Serie A 25/26 (within-league unseen season) Static (frozen ML)      0.389474    0.4868        0.4350    1.0180 0.6093          0.4737           0.5000       0  0.389474
+          Serie A -> La Liga 25/26 (cross-league transfer)           Adaptive      0.489474    0.4605        0.3554    1.0449 0.6272          0.4842           0.4368      28  0.489474
+          Serie A -> La Liga 25/26 (cross-league transfer) Static (frozen ML)      0.489474    0.4868        0.3542    1.0390 0.6245          0.4737           0.5000       0  0.489474
+   Serie A -> Premier League 25/26 (cross-league transfer)           Adaptive      0.426316    0.4342        0.3742    1.0629 0.6420          0.4895           0.3789      32  0.426316
+   Serie A -> Premier League 25/26 (cross-league transfer) Static (frozen ML)      0.426316    0.4474        0.3637    1.0637 0.6422          0.4684           0.4263       0  0.426316
+Football -> synthetic basketball-like league (cross-sport)           Adaptive      0.548750    0.8063        0.7996    0.7350 0.4137          0.7775           0.8350      60  0.548750
+Football -> synthetic basketball-like league (cross-sport) Static (frozen ML)      0.548750    0.8113        0.8022    0.9023 0.5283          0.7850           0.8375       0  0.548750
 ```
 
 *(Saved by `scripts/10_adaptive_transfer.py`; full numbers in

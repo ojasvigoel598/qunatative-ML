@@ -1,9 +1,9 @@
 experiment,method,majority_acc,accuracy,balanced_acc,log_loss,brier,acc_first_half,acc_second_half,refits,base_acc
-Serie A -> Serie A 25/26 (within-league unseen season),Adaptive,0.3894736842105263,0.5,0.4568,1.026,0.6154,0.4842,0.5158,32,0.3894736842105263
-Serie A -> Serie A 25/26 (within-league unseen season),Static (frozen ML),0.3894736842105263,0.4816,0.4299,1.0198,0.6103,0.4632,0.5,0,0.3894736842105263
-Serie A -> La Liga 25/26 (cross-league transfer),Adaptive,0.48947368421052634,0.45,0.3449,1.0426,0.6261,0.4737,0.4263,28,0.48947368421052634
-Serie A -> La Liga 25/26 (cross-league transfer),Static (frozen ML),0.48947368421052634,0.4816,0.3476,1.041,0.626,0.4632,0.5,0,0.48947368421052634
-Serie A -> Premier League 25/26 (cross-league transfer),Adaptive,0.4263157894736842,0.4263,0.3663,1.0692,0.6462,0.4684,0.3842,32,0.4263157894736842
-Serie A -> Premier League 25/26 (cross-league transfer),Static (frozen ML),0.4263157894736842,0.4421,0.3587,1.0631,0.6418,0.4684,0.4158,0,0.4263157894736842
-Football -> synthetic basketball-like league (cross-sport),Adaptive,0.54875,0.7825,0.7748,0.7455,0.422,0.76,0.805,64,0.54875
-Football -> synthetic basketball-like league (cross-sport),Static (frozen ML),0.54875,0.8075,0.798,0.9147,0.5379,0.7725,0.8425,0,0.54875
+Serie A -> Serie A 25/26 (within-league unseen season),Adaptive,0.3894736842105263,0.4974,0.452,1.0269,0.6158,0.4895,0.5053,32,0.3894736842105263
+Serie A -> Serie A 25/26 (within-league unseen season),Static (frozen ML),0.3894736842105263,0.4868,0.435,1.018,0.6093,0.4737,0.5,0,0.3894736842105263
+Serie A -> La Liga 25/26 (cross-league transfer),Adaptive,0.48947368421052634,0.4605,0.3554,1.0449,0.6272,0.4842,0.4368,28,0.48947368421052634
+Serie A -> La Liga 25/26 (cross-league transfer),Static (frozen ML),0.48947368421052634,0.4868,0.3542,1.039,0.6245,0.4737,0.5,0,0.48947368421052634
+Serie A -> Premier League 25/26 (cross-league transfer),Adaptive,0.4263157894736842,0.4342,0.3742,1.0629,0.642,0.4895,0.3789,32,0.4263157894736842
+Serie A -> Premier League 25/26 (cross-league transfer),Static (frozen ML),0.4263157894736842,0.4474,0.3637,1.0637,0.6422,0.4684,0.4263,0,0.4263157894736842
+Football -> synthetic basketball-like league (cross-sport),Adaptive,0.54875,0.8063,0.7996,0.735,0.4137,0.7775,0.835,60,0.54875
+Football -> synthetic basketball-like league (cross-sport),Static (frozen ML),0.54875,0.8113,0.8022,0.9023,0.5283,0.785,0.8375,0,0.54875
