@@ -66,6 +66,9 @@ def build_run_report(run_id: str, seed: int, world, engine, ledger) -> pd.DataFr
     league_df = pd.DataFrame(leagues).T.reset_index().rename(
         columns={"index": "league_code"})
     if len(league_df):
+        # stable row order: dict keys come from set() iteration, which varies
+        # with the hash seed between runs (breaks byte-identical reproducibility)
+        league_df = league_df.sort_values("league_code").reset_index(drop=True)
         league_df.to_csv(RESULTS_DIR / f"{run_id}_by_league.csv", index=False)
 
     # league availability + selection timeline
