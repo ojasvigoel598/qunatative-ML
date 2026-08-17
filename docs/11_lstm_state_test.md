@@ -10,25 +10,25 @@ the test window, predict -> reveal -> update online, zero future info).
 ```
                                     experiment                   method  accuracy  balanced_acc  log_loss  brier
       Serie A -> Serie A 25/26 (within-league)     Majority / base rate    0.3895        0.3333    1.0869 0.6592
-      Serie A -> Serie A 25/26 (within-league)         PoissonElo model    0.5184        0.4638    1.0049 0.6008
+      Serie A -> Serie A 25/26 (within-league)         PoissonElo model    0.5184        0.4638    1.0061 0.6016
       Serie A -> Serie A 25/26 (within-league)        Gradient Boosting    0.5026        0.4512    1.0250 0.6142
-      Serie A -> Serie A 25/26 (within-league) Adaptive (online refits)    0.4921        0.4436    1.0168 0.6095
+      Serie A -> Serie A 25/26 (within-league) Adaptive (online refits)    0.4842        0.4374    1.0178 0.6100
       Serie A -> Serie A 25/26 (within-league)              LSTM (rich)    0.5105        0.4648    0.9985 0.5961
       Serie A -> Serie A 25/26 (within-league)               GRU (rich)    0.5184        0.4710    0.9951 0.5945
       Serie A -> Serie A 25/26 (within-league)   LSTM thin (goals only)    0.5263        0.4850    0.9924 0.5920
       Serie A -> Serie A 25/26 (within-league)       LSTM rich, NO odds    0.4368        0.4248    1.0492 0.6335
        Serie A -> La Liga 25/26 (cross-league)     Majority / base rate    0.4895        0.3333    1.0599 0.6399
-       Serie A -> La Liga 25/26 (cross-league)         PoissonElo model    0.5079        0.3911    1.0315 0.6184
+       Serie A -> La Liga 25/26 (cross-league)         PoissonElo model    0.5079        0.3911    1.0345 0.6206
        Serie A -> La Liga 25/26 (cross-league)        Gradient Boosting    0.4974        0.3978    1.0306 0.6163
-       Serie A -> La Liga 25/26 (cross-league) Adaptive (online refits)    0.4632        0.3641    1.0376 0.6223
+       Serie A -> La Liga 25/26 (cross-league) Adaptive (online refits)    0.4579        0.3608    1.0394 0.6235
        Serie A -> La Liga 25/26 (cross-league)              LSTM (rich)    0.5000        0.4155    0.9874 0.5864
        Serie A -> La Liga 25/26 (cross-league)               GRU (rich)    0.5026        0.4230    1.0078 0.6003
        Serie A -> La Liga 25/26 (cross-league)   LSTM thin (goals only)    0.5158        0.4250    0.9804 0.5811
        Serie A -> La Liga 25/26 (cross-league)       LSTM rich, NO odds    0.4053        0.4057    1.0742 0.6503
 Serie A -> Premier League 25/26 (cross-league)     Majority / base rate    0.4263        0.3333    1.0805 0.6542
-Serie A -> Premier League 25/26 (cross-league)         PoissonElo model    0.4658        0.3902    1.0473 0.6314
+Serie A -> Premier League 25/26 (cross-league)         PoissonElo model    0.4658        0.3902    1.0486 0.6326
 Serie A -> Premier League 25/26 (cross-league)        Gradient Boosting    0.4684        0.4052    1.0581 0.6381
-Serie A -> Premier League 25/26 (cross-league) Adaptive (online refits)    0.4447        0.3878    1.0693 0.6460
+Serie A -> Premier League 25/26 (cross-league) Adaptive (online refits)    0.4368        0.3811    1.0700 0.6465
 Serie A -> Premier League 25/26 (cross-league)              LSTM (rich)    0.4789        0.4276    1.0231 0.6147
 Serie A -> Premier League 25/26 (cross-league)               GRU (rich)    0.4868        0.4404    1.0281 0.6186
 Serie A -> Premier League 25/26 (cross-league)   LSTM thin (goals only)    0.4763        0.4244    1.0226 0.6150
