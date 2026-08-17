@@ -23,7 +23,7 @@ n=200 · avg CLV **+1.16%** (t=4.72, p=0.0) · positive 94/200
 
 ## Dynamic layer on real 2025/26
 
-Final **$932,412** · ROI **-6.8%** · bets 17 · strike 17.65% · online refits 2
+Final **$948,800** · ROI **-5.1%** · bets 14 · strike 21.43% · online refits 2
 
 *(Saved by `scripts/12_hidden_signals.py`; full numbers in
 `backtests/results/hidden_signals_results.csv`.)*
