@@ -113,6 +113,24 @@ def test_poisson_predictions_sum_to_one(df):
     assert probs["expected_home_goals"] > 0
 
 
+def test_poisson_training_uses_one_sequential_elo_pass(df):
+    """Training, ML features, and inference must share one point-in-time Elo state."""
+    train = df.iloc[:180].copy()
+    expected = PoissonEloModel(use_dixon_coles=False)
+    expected_features = expected.prepare_features(train)
+
+    actual = PoissonEloModel(use_dixon_coles=False)
+    actual.train(train, verbose=False)
+
+    pd.testing.assert_series_equal(
+        actual.training_features["home_elo"], expected_features["home_elo"],
+        check_names=False)
+    pd.testing.assert_series_equal(
+        actual.training_features["away_elo"], expected_features["away_elo"],
+        check_names=False)
+    assert actual.elo_ratings == expected.elo_ratings
+
+
 def test_dixon_coles_tau_cell_values():
     """DC tau factors: with rho < 0 (the classic football finding) 0-0 and
     1-1 become MORE likely than independence and 1-0 / 0-1 less likely;
@@ -178,10 +196,12 @@ def test_poisson_calibration_is_not_absurd(df):
 
 
 def test_ml_predicts_distinct_teams_differently(df):
-    poisson = PoissonEloModel()
-    feat = poisson.prepare_features(df.iloc[: int(len(df) * 0.7)])
+    poisson = PoissonEloModel(use_dixon_coles=False)
+    poisson.train(df.iloc[: int(len(df) * 0.7)], verbose=False)
+    feat = poisson.training_features
     ml = MLFootballPredictor()
     ml.train(feat, verbose=False)
+    assert ml.validation_protocol == "chronological_holdout_80_20"
     p1 = ml.predict_proba("Arsenal", "Chelsea", 1600, 1400)
     p2 = ml.predict_proba("Chelsea", "Arsenal", 1400, 1600)
     assert p1["home_win"] != p2["home_win"]

@@ -105,6 +105,7 @@ class PoissonEloModel:
         self.feature_cols = ["home_elo", "away_elo"]
         self.is_trained = False
         self.base_rates = None
+        self.training_features: Optional[pd.DataFrame] = None
 
     # ----------------------------------------------- Dixon-Coles correction
     @staticmethod
@@ -221,7 +222,12 @@ class PoissonEloModel:
     # --------------------------------------------------------------- Train
     def train(self, historical_df: pd.DataFrame, verbose: bool = True):
         print("Training PoissonEloModel on historical data...")
-        df = self.prepare_features(historical_df)
+        # Retraining must start from a clean online state.  Otherwise a second
+        # call (or a caller that prepared features before train()) would fit on
+        # ratings from a previous pass while inference used a third state.
+        self.elo_ratings = {}
+        self.training_features = self.prepare_features(historical_df)
+        df = self.training_features
 
         X = df[self.feature_cols].copy()
         X = sm.add_constant(X)

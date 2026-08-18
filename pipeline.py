@@ -254,8 +254,12 @@ def train_models(train_df: pd.DataFrame, use_ml: bool = True,
     # default keeps it ON for real football data, where rho = -0.05 is the
     # documented, meaningful correction.
     poisson = PoissonEloModel(use_dixon_coles=False)
-    train_feat = poisson.prepare_features(train_df)
+    # train() owns the single sequential Elo pass and retains the enriched
+    # training frame.  Preparing features before train() would advance Elo
+    # once, then train() would advance it again, creating an inconsistent
+    # model/feature/inference state.
     poisson.train(train_df)
+    train_feat = poisson.training_features.copy()
     if verbose:
         print(f"  Learned Elo for {len(poisson.elo_ratings)} teams: "
               f"{min(poisson.elo_ratings.values()):.0f} - {max(poisson.elo_ratings.values()):.0f}")
