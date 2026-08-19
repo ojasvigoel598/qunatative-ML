@@ -37,6 +37,12 @@ warnings.filterwarnings("ignore")
 BASE_HOME_GOALS = 1.6
 BASE_AWAY_GOALS = 1.3
 BASE_ELO = 1500.0
+BASE_FORM_PTS = 1.33  # league-average points per match (≈ 46% home-win rate)
+
+
+def _result_points(result: str) -> float:
+    """Points earned by the home team for a given result."""
+    return 3.0 if result == "H" else (1.0 if result == "D" else 0.0)
 
 
 class MLFootballPredictor:
@@ -75,20 +81,30 @@ class MLFootballPredictor:
         self.is_trained = False
         self.validation_protocol = "chronological_holdout_80_20"
         self.feature_cols = [
-            "home_elo", "away_elo", "home_goals_avg", "away_goals_avg",
+            "home_elo", "away_elo", "elo_diff",
+            "home_goals_avg", "away_goals_avg", "goal_diff",
+            "home_conceded_avg", "away_conceded_avg",
+            "home_form_pts", "away_form_pts",
         ]
         # Per-team form, stored at the end of training and used for
         # out-of-sample predictions (avoids constant/placeholder features).
         self.team_home_form: pd.Series = pd.Series(dtype=float)
         self.team_away_form: pd.Series = pd.Series(dtype=float)
+        self.team_home_conceded: pd.Series = pd.Series(dtype=float)
+        self.team_away_conceded: pd.Series = pd.Series(dtype=float)
+        self.team_home_pts: pd.Series = pd.Series(dtype=float)
+        self.team_away_pts: pd.Series = pd.Series(dtype=float)
 
     # ------------------------------------------------------- Features
     def prepare_features(self, df: pd.DataFrame, window: int = 5) -> pd.DataFrame:
-        """Add rolling (shifted) form features and Elo columns if missing."""
+        """Add rolling (shifted) form features and Elo columns if missing.
+
+        All rolling features use ``.shift(1)`` so a match's own goals are
+        never used as a feature for that same match (no target leakage).
+        """
         df = df.copy()
 
-        # Shifted rolling means: the feature for match i uses matches i-5..i-1,
-        # never the current match -> no leakage.
+        # --- rolling goals scored (shifted, no leakage) ---
         df["home_goals_avg"] = (
             df.groupby("home_team")["home_goals"]
             .transform(lambda x: x.rolling(window, min_periods=1).mean().shift(1))
@@ -98,9 +114,45 @@ class MLFootballPredictor:
             .transform(lambda x: x.rolling(window, min_periods=1).mean().shift(1))
         )
 
+        # --- rolling goals CONCEDED (shifted, no leakage) ---
+        # home team concedes away_goals when playing at home
+        df["home_conceded_avg"] = (
+            df.groupby("home_team")["away_goals"]
+            .transform(lambda x: x.rolling(window, min_periods=1).mean().shift(1))
+        )
+        # away team concedes home_goals when playing away
+        df["away_conceded_avg"] = (
+            df.groupby("away_team")["home_goals"]
+            .transform(lambda x: x.rolling(window, min_periods=1).mean().shift(1))
+        )
+
+        # --- rolling form points (shifted, no leakage) ---
+        # home team's points from home matches
+        if "result" in df.columns:
+            df["_home_pts"] = df["result"].apply(_result_points)
+            df["home_form_pts"] = (
+                df.groupby("home_team")["_home_pts"]
+                .transform(lambda x: x.rolling(window, min_periods=1).mean().shift(1))
+            )
+            # away team's points from away matches (invert result)
+            df["_away_pts"] = df["result"].map(
+                {"H": 0.0, "D": 1.0, "A": 3.0})  # points for the away team
+            df["away_form_pts"] = (
+                df.groupby("away_team")["_away_pts"]
+                .transform(lambda x: x.rolling(window, min_periods=1).mean().shift(1))
+            )
+            df.drop(columns=["_home_pts", "_away_pts"], inplace=True)
+        else:
+            df["home_form_pts"] = BASE_FORM_PTS
+            df["away_form_pts"] = BASE_FORM_PTS
+
         if "home_elo" not in df.columns:
             df["home_elo"] = BASE_ELO
             df["away_elo"] = BASE_ELO
+
+        # --- derived relative features ---
+        df["elo_diff"] = df["home_elo"] - df["away_elo"]
+        df["goal_diff"] = df["home_goals_avg"] - df["away_goals_avg"]
 
         return df
 
@@ -110,6 +162,20 @@ class MLFootballPredictor:
         away = df.dropna(subset=["away_goals_avg"]).groupby("away_team")["away_goals_avg"].last()
         self.team_home_form = home
         self.team_away_form = away
+        if "home_conceded_avg" in df.columns:
+            self.team_home_conceded = (
+                df.dropna(subset=["home_conceded_avg"])
+                .groupby("home_team")["home_conceded_avg"].last())
+            self.team_away_conceded = (
+                df.dropna(subset=["away_conceded_avg"])
+                .groupby("away_team")["away_conceded_avg"].last())
+        if "home_form_pts" in df.columns:
+            self.team_home_pts = (
+                df.dropna(subset=["home_form_pts"])
+                .groupby("home_team")["home_form_pts"].last())
+            self.team_away_pts = (
+                df.dropna(subset=["away_form_pts"])
+                .groupby("away_team")["away_form_pts"].last())
 
     # ------------------------------------------------------- Train
     def train(self, historical_df: pd.DataFrame, verbose: bool = True):
@@ -125,11 +191,18 @@ class MLFootballPredictor:
         y = df["result"].map(target_map)
 
         X = df[self.feature_cols].copy()
-        # A team with no prior home games gets the league-average baseline.
-        X["home_elo"] = X["home_elo"].fillna(BASE_ELO)
-        X["away_elo"] = X["away_elo"].fillna(BASE_ELO)
-        X["home_goals_avg"] = X["home_goals_avg"].fillna(BASE_HOME_GOALS)
-        X["away_goals_avg"] = X["away_goals_avg"].fillna(BASE_AWAY_GOALS)
+        # A team with no prior history gets league-average baselines.
+        defaults = {
+            "home_elo": BASE_ELO, "away_elo": BASE_ELO,
+            "elo_diff": 0.0,
+            "home_goals_avg": BASE_HOME_GOALS, "away_goals_avg": BASE_AWAY_GOALS,
+            "goal_diff": 0.0,
+            "home_conceded_avg": BASE_AWAY_GOALS, "away_conceded_avg": BASE_HOME_GOALS,
+            "home_form_pts": BASE_FORM_PTS, "away_form_pts": BASE_FORM_PTS,
+        }
+        for col, default in defaults.items():
+            if col in X.columns:
+                X[col] = X[col].fillna(default)
 
         # Drop any rows with a missing target (defensive).
         mask = y.notna()
@@ -189,12 +262,22 @@ class MLFootballPredictor:
 
         home_form = float(self.team_home_form.get(home_team, BASE_HOME_GOALS))
         away_form = float(self.team_away_form.get(away_team, BASE_AWAY_GOALS))
+        home_conc = float(self.team_home_conceded.get(home_team, BASE_AWAY_GOALS))
+        away_conc = float(self.team_away_conceded.get(away_team, BASE_HOME_GOALS))
+        home_pts = float(self.team_home_pts.get(home_team, BASE_FORM_PTS))
+        away_pts = float(self.team_away_pts.get(away_team, BASE_FORM_PTS))
 
         features = pd.DataFrame([{
             "home_elo": home_elo,
             "away_elo": away_elo,
+            "elo_diff": home_elo - away_elo,
             "home_goals_avg": home_form,
             "away_goals_avg": away_form,
+            "goal_diff": home_form - away_form,
+            "home_conceded_avg": home_conc,
+            "away_conceded_avg": away_conc,
+            "home_form_pts": home_pts,
+            "away_form_pts": away_pts,
         }])
 
         proba = self.model.predict_proba(features)[0]
