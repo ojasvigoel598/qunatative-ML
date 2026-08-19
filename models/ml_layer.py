@@ -26,6 +26,12 @@ from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.metrics import accuracy_score, log_loss
 from sklearn.model_selection import TimeSeriesSplit
 
+try:
+    import lightgbm as lgb
+    HAS_LIGHTGBM = True
+except ImportError:
+    HAS_LIGHTGBM = False
+
 warnings.filterwarnings("ignore")
 
 BASE_HOME_GOALS = 1.6
@@ -36,7 +42,18 @@ BASE_ELO = 1500.0
 class MLFootballPredictor:
     def __init__(self, model_type: str = "gradient_boosting"):
         self.model_type = model_type
-        if model_type == "gradient_boosting":
+        if model_type == "lightgbm":
+            if not HAS_LIGHTGBM:
+                raise ImportError(
+                    "lightgbm is not installed.  "
+                    "Install with: pip install lightgbm"
+                )
+            base = lgb.LGBMClassifier(
+                n_estimators=200, max_depth=4, learning_rate=0.05,
+                min_child_samples=20, subsample=0.8, colsample_bytree=0.8,
+                random_state=42, verbose=-1,
+            )
+        elif model_type == "gradient_boosting":
             base = GradientBoostingClassifier(
                 n_estimators=100, max_depth=3, learning_rate=0.05,
                 min_samples_leaf=20, subsample=0.8, random_state=42,
