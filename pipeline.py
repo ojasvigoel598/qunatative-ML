@@ -571,15 +571,25 @@ def run_backtest(
 def compute_metrics(bets_df: pd.DataFrame, equity: List[float],
                     initial_bankroll: float, df: pd.DataFrame,
                     use_ml: bool = True, use_rl: bool = True) -> Dict[str, float]:
-    """Compute backtest metrics from the bets log and equity curve."""
+    """Compute backtest metrics from the bets log and equity curve.
+
+    Includes predictive, calibration, betting, and risk metrics as required
+    by the research methodology: Sharpe, Sortino, Calmar, yield, streaks,
+    CLV, and profit factor.
+    """
     total_bets = len(bets_df)
     if total_bets == 0:
         return {
             "total_bets": 0, "wins": 0, "losses": 0, "strike_rate": 0.0,
-            "total_profit": 0.0, "roi_pct": 0.0, "avg_edge_pct": 0.0,
-            "avg_clv_pct": 0.0, "clv_win_rate_pct": 0.0, "clv_t_stat": 0.0,
-            "avg_odds": 0.0, "sharpe_ratio": 0.0,
-            "max_drawdown_pct": 0.0, "final_bankroll": initial_bankroll,
+            "total_profit": 0.0, "roi_pct": 0.0, "yield_pct": 0.0,
+            "avg_edge_pct": 0.0, "avg_clv_pct": 0.0,
+            "clv_win_rate_pct": 0.0, "clv_t_stat": 0.0,
+            "avg_odds": 0.0, "avg_stake": 0.0, "total_turnover": 0.0,
+            "sharpe_ratio": 0.0, "sortino_ratio": 0.0, "calmar_ratio": 0.0,
+            "max_drawdown_pct": 0.0, "longest_losing_streak": 0,
+            "longest_winning_streak": 0,
+            "avg_winning_bet": 0.0, "avg_losing_bet": 0.0,
+            "final_bankroll": initial_bankroll,
             "profit_factor": 0.0, "cagr_pct": 0.0, "n_bets_per_year": 0.0,
         }
 
@@ -594,13 +604,44 @@ def compute_metrics(bets_df: pd.DataFrame, equity: List[float],
     bets_per_year = total_bets / (span_days / 365.25)
     sharpe = float(np.mean(returns) / np.std(returns) * np.sqrt(bets_per_year)) if len(returns) > 1 and np.std(returns) > 0 else 0.0
 
+    # Sortino ratio: penalises only downside volatility (more meaningful for
+    # betting where upside variance is desirable).
+    downside = returns[returns < 0]
+    downside_std = float(np.std(downside)) if len(downside) > 1 else 0.0
+    sortino = float(np.mean(returns) / downside_std * np.sqrt(bets_per_year)) if downside_std > 0 else 0.0
+
     equity_arr = np.array(equity)
     peak = np.maximum.accumulate(equity_arr)
     max_dd = float(abs(((equity_arr - peak) / peak).min()) * 100)
 
+    # Calmar ratio: annualised return / max drawdown (risk-adjusted return).
+    cagr_raw = (float(equity[-1]) / initial_bankroll) ** (365.25 / max(span_days, 1)) - 1 if float(equity[-1]) > 0 else -1.0
+    calmar = float(cagr_raw / (max_dd / 100)) if max_dd > 0 else 0.0
+
     gross_wins = float(bets_df.loc[bets_df["profit_loss"] > 0, "profit_loss"].sum())
     gross_losses = float(-bets_df.loc[bets_df["profit_loss"] < 0, "profit_loss"].sum())
     profit_factor = gross_wins / gross_losses if gross_losses > 0 else float("inf")
+
+    # Yield: profit / total turnover (the industry-standard ROI metric).
+    total_turnover = float(bets_df["stake"].sum())
+    yield_pct = total_profit / total_turnover * 100 if total_turnover > 0 else 0.0
+
+    # Win/loss streaks.
+    outcomes = (bets_df["bet_outcome"] == "Win").to_numpy()
+    max_win_streak = max_lose_streak = cur = 0
+    cur_win = cur_lose = 0
+    for w in outcomes:
+        if w:
+            cur_win += 1
+            cur_lose = 0
+        else:
+            cur_lose += 1
+            cur_win = 0
+        max_win_streak = max(max_win_streak, cur_win)
+        max_lose_streak = max(max_lose_streak, cur_lose)
+
+    avg_win_bet = float(bets_df.loc[bets_df["profit_loss"] > 0, "profit_loss"].mean()) if wins > 0 else 0.0
+    avg_lose_bet = float(bets_df.loc[bets_df["profit_loss"] < 0, "profit_loss"].mean()) if losses > 0 else 0.0
 
     # CLV as a primary information signal: the closing line is the sharpest
     # price, so a bet that consistently beats it (positive CLV) is evidence of
@@ -612,7 +653,7 @@ def compute_metrics(bets_df: pd.DataFrame, equity: List[float],
         if len(clv_arr) > 1 and clv_sd > 0 else 0.0
 
     final_bankroll = float(equity[-1])
-    cagr = (final_bankroll / initial_bankroll) ** (365.25 / span_days) - 1 if final_bankroll > 0 else -1.0
+    cagr = cagr_raw
 
     return {
         "total_bets": total_bets,
@@ -621,13 +662,22 @@ def compute_metrics(bets_df: pd.DataFrame, equity: List[float],
         "strike_rate": round(wins / total_bets * 100, 2),
         "total_profit": round(total_profit, 2),
         "roi_pct": round(roi, 2),
+        "yield_pct": round(yield_pct, 2),
+        "total_turnover": round(total_turnover, 2),
+        "avg_stake": round(float(bets_df["stake"].mean()), 2),
         "avg_edge_pct": round(float(bets_df["edge_pct"].mean()), 2),
         "avg_clv_pct": round(clv_mean, 2),
         "clv_win_rate_pct": round(float(np.mean(clv_arr > 0)) * 100, 2),
         "clv_t_stat": round(clv_t, 2),
         "avg_odds": round(float(bets_df["my_odds"].mean()), 2),
         "sharpe_ratio": round(sharpe, 3),
+        "sortino_ratio": round(sortino, 3),
+        "calmar_ratio": round(calmar, 3),
         "max_drawdown_pct": round(max_dd, 2),
+        "longest_winning_streak": max_win_streak,
+        "longest_losing_streak": max_lose_streak,
+        "avg_winning_bet": round(avg_win_bet, 2),
+        "avg_losing_bet": round(avg_lose_bet, 2),
         "final_bankroll": round(final_bankroll, 2),
         "profit_factor": round(profit_factor, 3) if np.isfinite(profit_factor) else None,
         "cagr_pct": round(cagr * 100, 2),
