@@ -46,8 +46,10 @@ def _result_points(result: str) -> float:
 
 
 class MLFootballPredictor:
-    def __init__(self, model_type: str = "gradient_boosting"):
+    def __init__(self, model_type: str = "gradient_boosting",
+                 calibration_method: str = "sigmoid"):
         self.model_type = model_type
+        self.calibration_method = calibration_method
         if model_type == "lightgbm":
             if not HAS_LIGHTGBM:
                 raise ImportError(
@@ -70,14 +72,20 @@ class MLFootballPredictor:
             )
         # Probability calibration is essential: raw tree ensembles give extreme
         # probabilities, and edge = p * odds - 1 is extremely sensitive to
-        # miscalibration.  CalibratedClassifierCV fits an internal 3-fold
-        # sigmoid calibration on the training data (no test leakage).
+        # miscalibration.  CalibratedClassifierCV fits an internal calibration
+        # on the training data (no test leakage).
         # Calibration folds must respect time order.  Random folds can make
         # the diagnostics look better by allowing later matches to calibrate
         # earlier ones; the final model is evaluated only after the training
         # window, so use temporal folds throughout.
+        #
+        # method: "sigmoid" (Platt scaling) is fast and stable; "isotonic"
+        # is non-parametric and can capture more complex miscalibration, but
+        # needs more data and is prone to overfitting on small samples.
+        if calibration_method not in ("sigmoid", "isotonic"):
+            raise ValueError(f"Unknown calibration method: {calibration_method}")
         self.model = CalibratedClassifierCV(
-            base, method="sigmoid", cv=TimeSeriesSplit(n_splits=3))
+            base, method=calibration_method, cv=TimeSeriesSplit(n_splits=3))
         self.is_trained = False
         self.validation_protocol = "chronological_holdout_80_20"
         self.feature_cols = [

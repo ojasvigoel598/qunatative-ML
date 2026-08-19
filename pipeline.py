@@ -241,6 +241,7 @@ def load_or_generate_data(n_matches: int = 1200, seed: int = 42,
 # ----------------------------------------------------------------------------
 def train_models(train_df: pd.DataFrame, use_ml: bool = True,
                  ml_type: str = "gradient_boosting",
+                 calibration: str = "sigmoid",
                  verbose: bool = True) -> Tuple[PoissonEloModel, Optional[MLFootballPredictor]]:
     """Train the PoissonElo model (and optionally the ML layer).
 
@@ -249,6 +250,7 @@ def train_models(train_df: pd.DataFrame, use_ml: bool = True,
 
     Args:
         ml_type: "gradient_boosting" (default), "lightgbm", or "random_forest".
+        calibration: "sigmoid" (Platt scaling, default) or "isotonic".
     """
     if verbose:
         print("  Training PoissonEloModel (Poisson regression + Elo)...")
@@ -274,8 +276,8 @@ def train_models(train_df: pd.DataFrame, use_ml: bool = True,
                        "lightgbm": "LightGBM",
                        "random_forest": "Random Forest"}.get(ml_type, ml_type)
         if verbose:
-            print(f"  Training ML layer ({model_label})...")
-        ml = MLFootballPredictor(model_type=ml_type)
+            print(f"  Training ML layer ({model_label}, {calibration} calibration)...")
+        ml = MLFootballPredictor(model_type=ml_type, calibration_method=calibration)
         metrics = ml.train(train_feat, verbose=verbose)
         if verbose:
             print(f"  ML validation: accuracy={metrics['accuracy']:.3f}, "
