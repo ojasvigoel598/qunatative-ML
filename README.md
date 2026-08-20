@@ -7,7 +7,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/)
-[![Tests](https://img.shields.io/badge/tests-12%20passing-brightgreen.svg)](#validation)
+[![Tests](https://img.shields.io/badge/tests-84%20passing-brightgreen.svg)](#validation)
 
 ![Pipeline architecture](assets/architecture.png)
 
@@ -439,6 +439,34 @@ backtest_summary_ml_rl.png       # one-page results card
 
 ---
 
+## Research system
+
+An autonomous research, Monte Carlo validation, and iterative improvement infrastructure:
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| **Frozen Judge** | `evaluation/frozen_judge.py` | Immutable evaluation gates — optimizer cannot modify |
+| **Monte Carlo Engine** | `optimization/monte_carlo_engine.py` | 1M vectorized simulations in ~11s |
+| **Conformal Prediction** | `analysis/conformal_prediction.py` | Distribution-free uncertainty intervals (89.5% coverage) |
+| **ROI Attribution** | `analysis/roi_attribution.py` | Causal explanation of every ROI change |
+| **Market Correlation** | `analysis/market_correlation.py` | Model vs bookmaker probability analysis |
+| **Iterative Controller** | `optimization/iterative_controller.py` | Research loop orchestration |
+| **Experiment Registry** | `experiments/experiment_registry.py` | JSONL experiment tracking with graph |
+| **Literature Review** | `research/RESEARCH_REVIEW.md` | 10 papers covering betting ML, calibration, validation |
+| **Research Mapping** | `research/RESEARCH_TO_IMPLEMENTATION.md` | Paper → code mapping with results |
+| **Final Report** | `FINAL_RESEARCH_REPORT.md` | Complete research documentation |
+
+Key capabilities:
+- **10 validation gates**: min bets, positive ROI, max drawdown, calibration, Sharpe, CLV, win rate, profit factor, CI, losing streak
+- **1M Monte Carlo**: outcome uncertainty, odds perturbation, calibration stress, slippage, fractional Kelly
+- **10-consecutive-window stability**: no claim of success without passing 10 independent temporal windows
+- **Holdout lock**: SHA-256 hash ensures test data integrity
+- **Transaction costs**: slippage, commission, vig adjustment
+
+See [`FINAL_RESEARCH_REPORT.md`](FINAL_RESEARCH_REPORT.md) for complete results.
+
+---
+
 ## Project structure
 
 ```
@@ -499,6 +527,24 @@ qunatative-ML/                    # repository root (this project)
 ├── data/tennis/                   # cached ATP seasons (downloaded on first run)
 ├── data/real_data.py              # shared multi-league loader (SP1 / E0 / I1, rich columns)
 ├── backtests/results/             # metrics, bets logs, walk-forward runs, transfer results
+├── evaluation/
+│   └── frozen_judge.py            # immutable evaluation gates and temporal split
+├── optimization/
+│   ├── monte_carlo_engine.py      # 1M vectorized Monte Carlo simulations
+│   └── iterative_controller.py    # research loop orchestration
+├── experiments/
+│   ├── experiment_registry.py     # JSONL experiment tracking
+│   ├── experiment_registry.jsonl  # experiment records
+│   └── experiment_graph.json      # parent-child experiment graph
+├── research/
+│   ├── RESEARCH_REVIEW.md         # literature review (10 papers)
+│   ├── RESEARCH_TO_IMPLEMENTATION.md  # paper → code mapping
+│   ├── papers.jsonl               # research paper database
+│   └── hypotheses.jsonl           # experiment hypotheses
+├── results/
+│   ├── monte_carlo_summary.json   # 1M simulation results
+│   └── monte_carlo_report.md      # Monte Carlo report
+├── FINAL_RESEARCH_REPORT.md       # complete research documentation
 ├── docs/                          # data sources, architecture, experiments, research
 │   └── dashboard.html             # interactive metrics dashboard (self-contained)
 ├── assets/                        # README images
