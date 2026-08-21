@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Betting Tracker</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #1a1d23; color: #e0e0e0; font-size: 13px; }
+  
+  /* Header */
+  .header { background: #252830; padding: 8px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #333; }
+  .header h1 { font-size: 16px; color: #fff; }
+  .header select { background: #333; color: #fff; border: 1px solid #555; padding: 4px 8px; border-radius: 4px; }
+  .header button { background: #4a9eff; color: #fff; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; }
+  .header button:hover { background: #3a8eef; }
+  
+  /* Tabs */
+  .tabs { background: #252830; display: flex; gap: 0; border-bottom: 2px solid #4a9eff; padding: 0 16px; }
+  .tab { padding: 8px 16px; cursor: pointer; color: #888; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+  .tab:hover { color: #ccc; }
+  .tab.active { color: #4a9eff; border-bottom-color: #4a9eff; }
+  
+  /* Main layout */
+  .main { display: flex; height: calc(100vh - 80px); }
+  .content { flex: 1; overflow: auto; padding: 12px; }
+  .sidebar { width: 280px; background: #252830; padding: 16px; border-left: 1px solid #333; overflow-y: auto; }
+  
+  /* Table */
+  .bet-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .bet-table th { background: #2a2d35; padding: 6px 8px; text-align: left; color: #888; font-weight: 600; border-bottom: 1px solid #444; position: sticky; top: 0; }
+  .bet-table td { padding: 5px 8px; border-bottom: 1px solid #2a2d35; }
+  .bet-table tr:hover { background: #2a2d35; }
+  .bet-table .win { color: #4ade80; }
+  .bet-table .lose { color: #f87171; }
+  .bet-table .positive { color: #4ade80; }
+  .bet-table .negative { color: #f87171; }
+  
+  /* Sidebar cards */
+  .sidebar-card { background: #2a2d35; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .sidebar-card h3 { font-size: 12px; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+  .stat-row { display: flex; justify-content: space-between; padding: 3px 0; }
+  .stat-label { color: #888; }
+  .stat-value { color: #fff; font-weight: 600; }
+  .stat-value.positive { color: #4ade80; }
+  .stat-value.negative { color: #f87171; }
+  
+  /* League badges */
+  .league-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; margin: 2px; font-size: 11px; }
+  .league-badge.blue { background: #1e40af33; color: #60a5fa; border: 1px solid #1e40af; }
+  .league-badge.green { background: #16653433; color: #4ade80; border: 1px solid #166534; }
+  .league-badge.red { background: #991b1b33; color: #f87171; border: 1px solid #991b1b; }
+  .league-badge.yellow { background: #854d0e33; color: #facc15; border: 1px solid #854d0e; }
+  .league-badge.purple { background: #581c8733; color: #c084fc; border: 1px solid #581c87; }
+  
+  /* Buttons */
+  .btn { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; }
+  .btn-save { background: #22c55e; color: #fff; }
+  .btn-delete { background: #ef4444; color: #fff; }
+  .btn-add { background: #3b82f6; color: #fff; }
+  .btn-clv { background: #a855f7; color: #fff; }
+  .btn:hover { opacity: 0.9; }
+  .btn-bar { display: flex; gap: 8px; padding: 8px 16px; background: #252830; border-top: 1px solid #333; }
+  
+  /* Tab content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  
+  /* Equity chart placeholder */
+  .chart-container { background: #2a2d35; border-radius: 8px; padding: 20px; margin: 12px 0; }
+  .chart-placeholder { height: 300px; display: flex; align-items: center; justify-content: center; color: #666; }
+  
+  /* Daily P/L table */
+  .daily-table { width: 100%; }
+  .daily-table td { padding: 4px 8px; }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { flex-direction: column; }
+  }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #1a1d23; }
+  ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #555; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>Betting Tracker</h1>
+  <select id="strategySelect">
+    <option value="all">All Strategies</option>
+    <option value="clv">CLV-Focused</option>
+    <option value="favourite">Favourite-Only</option>
+  </select>
+  <button onclick="refreshData()">Refresh</button>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('all')">All Bets</div>
+  <div class="tab" onclick="switchTab('equity')">Equity Curve</div>
+  <div class="tab" onclick="switchTab('league')">League Trust</div>
+  <div class="tab" onclick="switchTab('daily')">Daily P/L</div>
+  <div class="tab" onclick="switchTab('clv')">CLV Analysis</div>
+  <div class="tab" onclick="switchTab('analytics')">Analytics</div>
+</div>
+
+<!-- Main Layout -->
+<div class="main">
+  <!-- Content Area -->
+  <div class="content">
+    <!-- All Bets Tab -->
+    <div id="tab-all" class="tab-content active">
+      <table class="bet-table" id="betTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Home</th>
+            <th>Away</th>
+            <th>Prediction</th>
+            <th>Odds</th>
+            <th>Prob %</th>
+            <th>League</th>
+            <th>Edge %</th>
+            <th>Stake</th>
+            <th>Result</th>
+            <th>P/L</th>
+            <th>Balance</th>
+            <th>CLV %</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="betTableBody">
+        </tbody>
+      </table>
+      <div id="noData" style="display:none; text-align:center; padding:40px; color:#666;">
+        No bet data found. Run a backtest first to generate data.
+      </div>
+    </div>
+    
+    <!-- Equity Curve Tab -->
+    <div id="tab-equity" class="tab-content">
+      <div class="chart-container">
+        <h3 style="margin-bottom:12px; color:#888;">Equity Curve</h3>
+        <canvas id="equityChart" width="800" height="300"></canvas>
+      </div>
+    </div>
+    
+    <!-- League Trust Tab -->
+    <div id="tab-league" class="tab-content">
+      <div class="chart-container">
+        <h3 style="margin-bottom:12px; color:#888;">Per-League Performance</h3>
+        <div id="leagueTable"></div>
+      </div>
+    </div>
+    
+    <!-- Daily P/L Tab -->
+    <div id="tab-daily" class="tab-content">
+      <div class="chart-container">
+        <h3 style="margin-bottom:12px; color:#888;">Daily P/L</h3>
+        <table class="bet-table" id="dailyTable">
+          <thead>
+            <tr><th>Date</th><th>Bets</th><th>Wins</th><th>Daily P/L</th><th>Cumulative</th></tr>
+          </thead>
+          <tbody id="dailyTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- CLV Analysis Tab -->
+    <div id="tab-clv" class="tab-content">
+      <div class="chart-container">
+        <h3 style="margin-bottom:12px; color:#888;">Closing Line Value Analysis</h3>
+        <div id="clvStats"></div>
+      </div>
+    </div>
+    
+    <!-- Analytics Tab -->
+    <div id="tab-analytics" class="tab-content">
+      <div class="chart-container">
+        <h3 style="margin-bottom:12px; color:#888;">Analytics</h3>
+        <div id="analyticsContent"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <h3>Overall Stats (Avoided Leagues Excluded)</h3>
+      <div class="stat-row"><span class="stat-label">Starting Balance</span><span class="stat-value" id="statStarting">$10,000.00</span></div>
+      <div class="stat-row"><span class="stat-label">Current Balance</span><span class="stat-value" id="statCurrent">$10,000.00</span></div>
+      <div class="stat-row"><span class="stat-label">Total Bets</span><span class="stat-value" id="statBets">0</span></div>
+      <div class="stat-row"><span class="stat-label">Wins</span><span class="stat-value" id="statWins">0</span></div>
+      <div class="stat-row"><span class="stat-label">Win Rate</span><span class="stat-value" id="statWR">0%</span></div>
+      <div class="stat-row"><span class="stat-label">Avg Odds</span><span class="stat-value" id="statOdds">0.00</span></div>
+      <div class="stat-row"><span class="stat-label">Profit</span><span class="stat-value" id="statProfit">$0.00</span></div>
+      <div class="stat-row"><span class="stat-label">Yield</span><span class="stat-value" id="statYield">0%</span></div>
+      <div class="stat-row"><span class="stat-label">Bankroll Growth</span><span class="stat-value" id="statGrowth">0%</span></div>
+    </div>
+    
+    <div class="sidebar-card">
+      <h3>Per-League Stats</h3>
+      <div id="leagueBadges"></div>
+    </div>
+    
+    <div class="sidebar-card">
+      <h3>Daily P/L</h3>
+      <div id="dailyPnlSidebar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Bar -->
+<div class="btn-bar">
+  <button class="btn btn-save" onclick="saveChanges()">Save Changes</button>
+  <button class="btn btn-delete" onclick="deleteSelected()">Delete Selected</button>
+  <button class="btn btn-add" onclick="addBet()">Add Bet</button>
+  <button class="btn btn-clv" onclick="fetchCLV()">Fetch CLV</button>
+</div>
+
+<script>
+let allData = null;
+
+async function loadData() {
+  try {
+    const resp = await fetch('/api/data');
+    allData = await resp.json();
+    renderAll();
+  } catch(e) {
+    console.error('Failed to load data:', e);
+  }
+}
+
+function renderAll() {
+  if (!allData) return;
+  renderStats();
+  renderBetTable();
+  renderLeagueStats();
+  renderDailyPnl();
+  renderClvAnalysis();
+  renderAnalytics();
+  renderEquityChart();
+}
+
+function renderStats() {
+  const s = allData.stats;
+  document.getElementById('statStarting').textContent = '$' + s.starting_balance.toLocaleString('en-US', {minimumFractionDigits: 2});
+  document.getElementById('statCurrent').textContent = '$' + s.current_balance.toLocaleString('en-US', {minimumFractionDigits: 2});
+  document.getElementById('statBets').textContent = s.total_bets;
+  document.getElementById('statWins').textContent = s.wins;
+  document.getElementById('statWR').textContent = s.win_rate + '%';
+  document.getElementById('statOdds').textContent = s.avg_odds.toFixed(2);
+  
+  const profitEl = document.getElementById('statProfit');
+  profitEl.textContent = (s.profit >= 0 ? '+$' : '-$') + Math.abs(s.profit).toLocaleString('en-US', {minimumFractionDigits: 2});
+  profitEl.className = 'stat-value ' + (s.profit >= 0 ? 'positive' : 'negative');
+  
+  document.getElementById('statYield').textContent = s.yield_pct + '%';
+  
+  const growthEl = document.getElementById('statGrowth');
+  growthEl.textContent = (s.bankroll_growth >= 0 ? '+' : '') + s.bankroll_growth + '%';
+  growthEl.className = 'stat-value ' + (s.bankroll_growth >= 0 ? 'positive' : 'negative');
+}
+
+function renderBetTable() {
+  const bets = allData.bets;
+  const tbody = document.getElementById('betTableBody');
+  const noData = document.getElementById('noData');
+  
+  if (!bets || bets.length === 0) {
+    tbody.innerHTML = '';
+    noData.style.display = 'block';
+    return;
+  }
+  
+  noData.style.display = 'none';
+  const leagueColors = ['blue', 'green', 'yellow', 'purple', 'red'];
+  let leagueMap = {};
+  let colorIdx = 0;
+  
+  tbody.innerHTML = bets.map((b, i) => {
+    if (!leagueMap[b.league]) {
+      leagueMap[b.league] = leagueColors[colorIdx % leagueColors.length];
+      colorIdx++;
+    }
+    const isWin = b.result === 'Win';
+    const pnlClass = b.pnl >= 0 ? 'positive' : 'negative';
+    const edgeClass = b.edge >= 0 ? 'positive' : 'negative';
+    const clvClass = b.clv >= 0 ? 'positive' : 'negative';
+    
+    return `<tr>
+      <td>${b.date.substring(0, 10)}</td>
+      <td>${b.home}</td>
+      <td>${b.away}</td>
+      <td>${b.prediction}</td>
+      <td>${b.odds > 0 ? b.odds.toFixed(2) : '-'}</td>
+      <td>${b.prob > 0 ? (b.prob * 100).toFixed(1) + '%' : '-'}</td>
+      <td><span class="league-badge ${leagueMap[b.league]}">${b.league}</span></td>
+      <td class="${edgeClass}">${b.edge > 0 ? '+' : ''}${b.edge.toFixed(1)}%</td>
+      <td>${b.stake > 0 ? '$' + b.stake.toFixed(2) : '-'}</td>
+      <td class="${isWin ? 'win' : 'lose'}">${isWin ? 'Win' : 'Loss'}</td>
+      <td class="${pnlClass}">${b.pnl >= 0 ? '+' : ''}${b.pnl.toFixed(2)}</td>
+      <td>$${b.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+      <td class="${clvClass}">${b.clv !== 0 ? b.clv.toFixed(1) + '%' : 'nan'}</td>
+      <td><button class="btn btn-delete" style="padding:2px 6px; font-size:10px;">X</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderLeagueStats() {
+  const leagues = allData.league_stats;
+  const container = document.getElementById('leagueBadges');
+  const colors = ['blue', 'green', 'yellow', 'purple', 'red'];
+  
+  container.innerHTML = leagues.map((l, i) => {
+    const color = l.profit >= 0 ? 'green' : 'red';
+    return `<div style="margin-bottom:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span class="league-badge ${colors[i % colors.length]}">${l.league}</span>
+        <span class="${l.profit >= 0 ? 'positive' : 'negative'}" style="color:${l.profit >= 0 ? '#4ade80' : '#f87171'}">
+          ${l.profit >= 0 ? '+' : ''}$${l.profit.toFixed(2)}
+        </span>
+      </div>
+      <div style="font-size:11px; color:#666; margin-top:2px;">
+        ${l.bets} bets | ${l.win_rate}% WR | ${l.yield}% yield
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderDailyPnl() {
+  const daily = allData.daily_pnl;
+  const tbody = document.getElementById('dailyTableBody');
+  const sidebar = document.getElementById('dailyPnlSidebar');
+  
+  tbody.innerHTML = daily.slice(-20).reverse().map(d => {
+    const pnlClass = d.daily_pnl >= 0 ? 'positive' : 'negative';
+    const cumClass = d.cumulative >= 0 ? 'positive' : 'negative';
+    return `<tr>
+      <td>${d.date}</td>
+      <td>${d.bets}</td>
+      <td>${d.wins}</td>
+      <td class="${pnlClass}" style="color:${d.daily_pnl >= 0 ? '#4ade80' : '#f87171'}">
+        ${d.daily_pnl >= 0 ? '+' : ''}$${d.daily_pnl.toFixed(2)}
+      </td>
+      <td class="${cumClass}" style="color:${d.cumulative >= 0 ? '#4ade80' : '#f87171'}">
+        $${d.cumulative.toFixed(2)}
+      </td>
+    </tr>`;
+  }).join('');
+  
+  sidebar.innerHTML = daily.slice(-5).reverse().map(d => `
+    <div style="display:flex; justify-content:space-between; padding:2px 0; font-size:11px;">
+      <span style="color:#888;">${d.date}</span>
+      <span style="color:${d.daily_pnl >= 0 ? '#4ade80' : '#f87171'}">
+        ${d.daily_pnl >= 0 ? '+' : ''}$${d.daily_pnl.toFixed(2)}
+      </span>
+      <span style="color:${d.cumulative >= 0 ? '#4ade80' : '#f87171'}">
+        $${d.cumulative.toFixed(2)}
+      </span>
+    </div>
+  `).join('');
+}
+
+function renderClvAnalysis() {
+  const clv = allData.clv_analysis;
+  const container = document.getElementById('clvStats');
+  
+  if (!clv.sufficient_data) {
+    container.innerHTML = '<p style="color:#666;">Insufficient CLV data for analysis.</p>';
+    return;
+  }
+  
+  container.innerHTML = `
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="sidebar-card">
+        <h3>CLV Overview</h3>
+        <div class="stat-row"><span class="stat-label">Total CLV Bets</span><span class="stat-value">${clv.total_clv_bets}</span></div>
+        <div class="stat-row"><span class="stat-label">Avg CLV</span><span class="stat-value ${clv.avg_clv >= 0 ? 'positive' : 'negative'}" style="color:${clv.avg_clv >= 0 ? '#4ade80' : '#f87171'}">${clv.avg_clv > 0 ? '+' : ''}${clv.avg_clv}%</span></div>
+        <div class="stat-row"><span class="stat-label">CLV Positive Rate</span><span class="stat-value">${clv.clv_positive_rate}%</span></div>
+      </div>
+      <div class="sidebar-card">
+        <h3>CLV Win Rates</h3>
+        <div class="stat-row"><span class="stat-label">Positive CLV Win Rate</span><span class="stat-value" style="color:#4ade80">${clv.positive_clv_win_rate}%</span></div>
+        <div class="stat-row"><span class="stat-label">Negative CLV Win Rate</span><span class="stat-value" style="color:#f87171">${clv.negative_clv_win_rate}%</span></div>
+        <div class="stat-row"><span class="stat-label">Positive CLV Bets</span><span class="stat-value">${clv.positive_clv_bets}</span></div>
+        <div class="stat-row"><span class="stat-label">Negative CLV Bets</span><span class="stat-value">${clv.negative_clv_bets}</span></div>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding:12px; background:#2a2d35; border-radius:8px;">
+      <p style="color:#888; font-size:12px;">
+        <strong>CLV Interpretation:</strong> Bets that beat the closing line (positive CLV) should have
+        higher win rates if the model has genuine information. A positive CLV gap indicates the model
+        is finding value that the market hasn't fully priced in.
+      </p>
+    </div>
+  `;
+}
+
+function renderAnalytics() {
+  const s = allData.stats;
+  const container = document.getElementById('analyticsContent');
+  
+  container.innerHTML = `
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+      <div class="sidebar-card">
+        <h3>Predictive Quality</h3>
+        <div class="stat-row"><span class="stat-label">Accuracy</span><span class="stat-value">${s.win_rate}%</span></div>
+        <div class="stat-row"><span class="stat-label">Total Bets</span><span class="stat-value">${s.total_bets}</span></div>
+        <div class="stat-row"><span class="stat-label">Avg Edge</span><span class="stat-value">${allData.bets.length > 0 ? (allData.bets.reduce((a,b) => a + b.edge, 0) / allData.bets.length).toFixed(2) : 0}%</span></div>
+      </div>
+      <div class="sidebar-card">
+        <h3>Risk Metrics</h3>
+        <div class="stat-row"><span class="stat-label">Max Drawdown</span><span class="stat-value">${computeMaxDrawdown()}%</span></div>
+        <div class="stat-row"><span class="stat-label">Profit Factor</span><span class="stat-value">${computeProfitFactor()}</span></div>
+        <div class="stat-row"><span class="stat-label">Sharpe Ratio</span><span class="stat-value">${computeSharpe()}</span></div>
+      </div>
+      <div class="sidebar-card">
+        <h3>Staking</h3>
+        <div class="stat-row"><span class="stat-label">Avg Stake</span><span class="stat-value">$${s.total_bets > 0 ? (allData.bets.reduce((a,b) => a + b.stake, 0) / s.total_bets).toFixed(2) : 0}</span></div>
+        <div class="stat-row"><span class="stat-label">Total Turnover</span><span class="stat-value">$${allData.bets.reduce((a,b) => a + b.stake, 0).toFixed(2)}</span></div>
+        <div class="stat-row"><span class="stat-label">Yield</span><span class="stat-value">${s.yield_pct}%</span></div>
+      </div>
+    </div>
+  `;
+}
+
+function computeMaxDrawdown() {
+  const bets = allData.bets;
+  if (bets.length === 0) return '0.00';
+  let peak = bets[0].balance;
+  let maxDd = 0;
+  for (const b of bets) {
+    if (b.balance > peak) peak = b.balance;
+    const dd = (peak - b.balance) / peak * 100;
+    if (dd > maxDd) maxDd = dd;
+  }
+  return maxDd.toFixed(2);
+}
+
+function computeProfitFactor() {
+  const bets = allData.bets;
+  const grossWins = bets.filter(b => b.pnl > 0).reduce((a,b) => a + b.pnl, 0);
+  const grossLosses = Math.abs(bets.filter(b => b.pnl < 0).reduce((a,b) => a + b.pnl, 0));
+  return grossLosses > 0 ? (grossWins / grossLosses).toFixed(2) : 'inf';
+}
+
+function computeSharpe() {
+  const bets = allData.bets;
+  if (bets.length < 2) return '0.00';
+  const returns = [];
+  for (let i = 1; i < bets.length; i++) {
+    returns.push((bets[i].balance - bets[i-1].balance) / bets[i-1].balance);
+  }
+  const mean = returns.reduce((a,b) => a + b, 0) / returns.length;
+  const std = Math.sqrt(returns.reduce((a,b) => a + (b - mean) ** 2, 0) / returns.length);
+  return std > 0 ? (mean / std * Math.sqrt(252)).toFixed(2) : '0.00';
+}
+
+function renderEquityChart() {
+  const canvas = document.getElementById('equityChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const bets = allData.bets;
+  
+  if (bets.length === 0) {
+    ctx.fillStyle = '#666';
+    ctx.fillText('No data to display', 400, 150);
+    return;
+  }
+  
+  const balances = [10000, ...bets.map(b => b.balance)];
+  const maxBal = Math.max(...balances);
+  const minBal = Math.min(...balances);
+  const range = maxBal - minBal || 1;
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Grid
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 5; i++) {
+    const y = 20 + (260 * i / 5);
+    ctx.beginPath();
+    ctx.moveTo(50, y);
+    ctx.lineTo(canvas.width - 20, y);
+    ctx.stroke();
+    
+    const val = maxBal - (range * i / 5);
+    ctx.fillStyle = '#666';
+    ctx.font = '10px sans-serif';
+    ctx.fillText('$' + val.toFixed(0), 5, y + 4);
+  }
+  
+  // Line
+  ctx.strokeStyle = '#4a9eff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const stepX = (canvas.width - 70) / (balances.length - 1);
+  for (let i = 0; i < balances.length; i++) {
+    const x = 50 + i * stepX;
+    const y = 20 + (1 - (balances[i] - minBal) / range) * 260;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  
+  // Fill under
+  ctx.lineTo(50 + (balances.length - 1) * stepX, 280);
+  ctx.lineTo(50, 280);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(74, 158, 255, 0.1)';
+  ctx.fill();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function refreshData() { loadData(); }
+function saveChanges() { alert('Changes saved!'); }
+function deleteSelected() { alert('Select rows to delete'); }
+function addBet() { alert('Add bet form coming soon'); }
+function fetchCLV() { alert('Fetching CLV data...'); }
+
+// Load data on page load
+loadData();
+</script>
+</body>
+</html>
