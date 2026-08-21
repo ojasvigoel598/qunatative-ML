@@ -36,6 +36,7 @@ from scipy import stats
 from models.fast_kde import FastKDE, FastKDEGoalDistribution
 from models.fast_mixture_mc import FastMixtureMC
 from models.online_poisson import OnlinePoissonRatings
+from models.speed_optimizations import vectorized_poisson_score_grid, batch_poisson_score_grid
 
 warnings.filterwarnings("ignore")
 
@@ -542,26 +543,8 @@ class LayeredModel:
 
     def _poisson_score_grid(self, lam_h: float, lam_a: float,
                             max_goals: int = MAX_GOALS) -> Tuple[float, float, float]:
-        """Poisson score grid probability calculation."""
-        def poisson_pmf(k, lam):
-            return float(np.exp(-lam + k * np.log(max(lam, 1e-10)) - math.lgamma(k + 1)))
-
-        home_dist = [poisson_pmf(i, lam_h) for i in range(max_goals + 1)]
-        away_dist = [poisson_pmf(i, lam_a) for i in range(max_goals + 1)]
-
-        p_h = p_d = p_a = 0.0
-        for i in range(max_goals + 1):
-            for j in range(max_goals + 1):
-                prob = home_dist[i] * away_dist[j]
-                if i > j:
-                    p_h += prob
-                elif i == j:
-                    p_d += prob
-                else:
-                    p_a += prob
-
-        total = p_h + p_d + p_a
-        return p_h / total, p_d / total, p_a / total
+        """Poisson score grid probability calculation (vectorized)."""
+        return vectorized_poisson_score_grid(lam_h, lam_a, max_goals)
 
 
 # ======================================================================
