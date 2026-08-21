@@ -38,28 +38,54 @@ BASE_AWAY_GOALS = 1.3
 
 
 class _MLP(nn.Module):
-    def __init__(self, n_in: int, hidden: int = 64):
+    def __init__(self, n_in: int, hidden: int = 64, activation: str = "elu",
+                 use_batch_norm: bool = True, dropout: float = 0.2):
         super().__init__()
+        
+        # Choose activation function (research-backed: ELU+BN best for small data)
+        ACTIVATIONS = {
+            "relu": nn.ReLU(),
+            "leaky_relu": nn.LeakyReLU(negative_slope=0.01),
+            "elu": nn.ELU(alpha=1.0),
+            "selu": nn.SELU(),
+            "gelu": nn.GELU(),
+            "swish": nn.SiLU(),
+            "mish": nn.Mish(),
+        }
+        act_fn = ACTIVATIONS.get(activation, nn.ELU())
+        
         self.net = nn.Sequential(
             nn.Linear(n_in, hidden),
-            nn.ReLU(),
-            nn.Dropout(0.2),
+            *([nn.BatchNorm1d(hidden)] if use_batch_norm else []),
+            act_fn,
+            nn.Dropout(dropout),
             nn.Linear(hidden, hidden),
-            nn.ReLU(),
+            *([nn.BatchNorm1d(hidden)] if use_batch_norm else []),
+            act_fn,
             nn.Linear(hidden, 3),
         )
-
+        
+        # He initialization for better convergence
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.kaiming_normal_(m.weight, mode='fan_in', nonlinearity='relu')
+                nn.init.zeros_(m.bias)
+    
     def forward(self, x):
         return self.net(x)
 
 
 class NNFootballPredictor:
     def __init__(self, hidden: int = 64, epochs: int = 300, lr: float = 1e-3,
-                 batch_size: int = 64):
+                 batch_size: int = 64, activation: str = "elu",
+                 use_batch_norm: bool = True, dropout: float = 0.2):
         self.hidden = hidden
         self.epochs = epochs
         self.lr = lr
         self.batch_size = batch_size
+        self.activation = activation
+        self.use_batch_norm = use_batch_norm
+        self.dropout = dropout
         self.model = None
         self.mean = None
         self.std = None
@@ -97,7 +123,10 @@ class NNFootballPredictor:
         self._fit_scaler(X)
         Xs = self._scale(X)
 
-        self.model = _MLP(n_in=X.shape[1], hidden=self.hidden)
+        self.model = _MLP(n_in=X.shape[1], hidden=self.hidden,
+                         activation=self.activation,
+                         use_batch_norm=self.use_batch_norm,
+                         dropout=self.dropout)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
         loss_fn = nn.CrossEntropyLoss()
 
@@ -165,7 +194,7 @@ if __name__ == "__main__":
         {"home_elo": 1500.0, "away_elo": 1500.0,
          "home_goals_avg": 1.6, "away_goals_avg": 1.3}).to_numpy()
     y = df["result"].map(CLASS_MAP).to_numpy()
-    m = NNFootballPredictor(epochs=100)
+    m = NNFootballPredictor(epochs=100, activation="elu", use_batch_norm=True)
     m.train(X, y)
     print("Arsenal vs Chelsea:", m.predict_proba(1600, 1400, 1.9, 1.1))
     print("[OK] NNFootballPredictor self-test passed.")
