@@ -70,12 +70,32 @@ def download_season(league: str, season: str, raw: pd.DataFrame = None) -> pd.Da
         "FTHG": "home_goals", "FTAG": "away_goals", "FTR": "result",
         "B365H": "odds_home", "B365D": "odds_draw", "B365A": "odds_away",
         "PSH": "pin_home", "PSD": "pin_draw", "PSA": "pin_away",
+        # Rich match statistics
+        "HS": "home_shots", "AS": "away_shots",
+        "HST": "home_shots_on_target", "AST": "away_shots_on_target",
+        "HF": "home_fouls", "AF": "away_fouls",
+        "HC": "home_corners", "AC": "away_corners",
+        "HY": "home_yellow_cards", "AY": "away_yellow_cards",
+        "HR": "home_red_cards", "AR": "away_red_cards",
+        "HTHG": "home_goals_ht", "HTAG": "away_goals_ht",
+        "HTR": "result_ht",
         **_CLOSING_RENAME})
     df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y", errors="coerce")
     df["league"] = LEAGUES[league]
     df["season"] = SEASON_LABEL[season]
+    # Rich feature columns
+    RICH_COLS = [
+        "home_shots", "away_shots",
+        "home_shots_on_target", "away_shots_on_target",
+        "home_fouls", "away_fouls",
+        "home_corners", "away_corners",
+        "home_yellow_cards", "away_yellow_cards",
+        "home_red_cards", "away_red_cards",
+        "home_goals_ht", "away_goals_ht",
+        "result_ht",
+    ]
     keep = ["date", "home_team", "away_team", "home_goals", "away_goals",
-            "result", "league", "season"] + ODDS_COLS + CLOSING_COLS
+            "result", "league", "season"] + ODDS_COLS + CLOSING_COLS + RICH_COLS
     df = df[[c for c in keep if c in df.columns]]
     df = df.dropna(subset=["home_goals", "away_goals", "result"])
     return df.sort_values("date").reset_index(drop=True)
