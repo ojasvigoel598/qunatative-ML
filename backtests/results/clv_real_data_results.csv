@@ -1,0 +1,5 @@
+test_season,strategy,n_train_seasons,total_bets,wins,losses,strike_rate,total_profit,roi_pct,yield_pct,avg_edge_pct,avg_odds,avg_stake,sharpe_ratio,sortino_ratio,max_drawdown_pct,profit_factor,final_bankroll,clv_mean_pct,clv_t_stat
+2024/25,favourite_only,4,71,39,32,54.93,-4176.32,-41.76,-15.25,13.57,1.76,385.78,-1.037,-2.019,50.49,0.701,5823.67,0.01,0.02
+2024/25,research_validated,4,297,125,172,42.09,-6370.24,-63.7,-4.79,30.32,2.5,448.08,-0.307,-0.978,76.05,0.921,3629.73,1.58,3.15
+2025/26,favourite_only,5,71,38,33,53.52,-4450.31,-44.5,-23.35,11.21,1.78,268.44,-1.212,-2.535,46.08,0.584,5549.72,0.54,0.9
+2025/26,research_validated,5,247,86,161,34.82,-9176.56,-91.77,-12.48,32.66,2.6,297.76,-1.359,-4.344,94.46,0.809,823.42,1.08,2.0

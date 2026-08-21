@@ -1,0 +1,8 @@
+config,n_layers,log_loss,brier,accuracy,ece,market_log_loss,beats_market,n_test
+Baseline (Poisson only),0,1.0071,0.6016,0.5011,0.0343,0.9593,False,912
++ Bayesian,1,1.0148,0.6065,0.5099,0.0469,0.9593,False,912
++ EWMA,2,1.0148,0.6074,0.4989,0.046,0.9593,False,912
++ KDE,3,1.0148,0.6074,0.4989,0.046,0.9593,False,912
++ Mixture MC,4,1.0148,0.6074,0.4989,0.046,0.9593,False,912
++ Contextual,5,1.0136,0.6066,0.4967,0.0375,0.9593,False,912
+Full Ensemble,6,1.0071,0.6016,0.5011,0.0343,0.9593,False,912
