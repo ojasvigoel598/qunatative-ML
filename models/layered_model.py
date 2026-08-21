@@ -219,23 +219,22 @@ class KDEGoalDistribution:
 
     def score_grid_probs(self, home_kde: Optional[gaussian_kde],
                          away_kde: Optional[gaussian_kde],
-                         max_goals: int = MAX_GOALS) -> Tuple[float, float, float]:
+                         max_goals: int = 8) -> Tuple[float, float, float]:
         """Compute outcome probabilities using KDE score grid."""
         if home_kde is None or away_kde is None:
             return None
 
-        # Evaluate KDE at integer goal values
-        home_probs = []
-        away_probs = []
-        for g in range(max_goals + 1):
-            try:
-                hp = float(home_kde.evaluate([g])[0])
-                ap = float(away_kde.evaluate([g])[0])
-                home_probs.append(max(hp, 1e-10))
-                away_probs.append(max(ap, 1e-10))
-            except Exception:
-                home_probs.append(1e-10)
-                away_probs.append(1e-10)
+        # Evaluate KDE at integer goal values (batch for speed)
+        goal_vals = np.arange(max_goals + 1, dtype=float)
+        try:
+            home_probs = np.maximum(home_kde.evaluate(goal_vals), 1e-10)
+            away_probs = np.maximum(away_kde.evaluate(goal_vals), 1e-10)
+        except Exception:
+            return None
+
+        # Normalize
+        home_probs = home_probs / home_probs.sum()
+        away_probs = away_probs / away_probs.sum()
 
         # Normalize
         home_total = sum(home_probs)
@@ -243,17 +242,14 @@ class KDEGoalDistribution:
         home_probs = [p / home_total for p in home_probs]
         away_probs = [p / away_total for p in away_probs]
 
-        # Score grid
-        p_home = p_draw = p_away = 0.0
-        for h in range(max_goals + 1):
-            for a in range(max_goals + 1):
-                prob = home_probs[h] * away_probs[a]
-                if h > a:
-                    p_home += prob
-                elif h == a:
-                    p_draw += prob
-                else:
-                    p_away += prob
+        # Vectorized score grid
+        outer = np.outer(home_probs, away_probs)
+        triu = np.triu_indices(max_goals + 1, k=1)
+        tril = np.tril_indices(max_goals + 1, k=-1)
+        diag = np.diag_indices(max_goals + 1)
+        p_home = float(outer[triu].sum())
+        p_away = float(outer[tril].sum())
+        p_draw = float(outer[diag].sum())
 
         total = p_home + p_draw + p_away
         return p_home / total, p_draw / total, p_away / total
@@ -274,7 +270,7 @@ class MixtureMonteCarlo:
     - home/away
     """
 
-    def __init__(self, n_simulations: int = 5000, seed: int = 42):
+    def __init__(self, n_simulations: int = 1000, seed: int = 42):
         self.n_sims = n_simulations
         self.rng = np.random.default_rng(seed)
 
@@ -680,17 +676,20 @@ class LayeredModel:
         p_h, p_d, p_a = self._poisson_score_grid(lambda_home, lambda_away)
         predictions["poisson"] = {"home_win": p_h, "draw": p_d, "away_win": p_a}
 
-        # Layer 4b: KDE
+        # Layer 4b: KDE (only if team has enough data)
         if "kde" in self.active_layers:
-            home_kde = self.kde.predict_goals(home_team, is_home=True)
-            away_kde = self.kde.predict_goals(away_team, is_home=False)
-            kde_result = self.kde.score_grid_probs(home_kde, away_kde)
-            if kde_result is not None:
-                predictions["kde"] = {
-                    "home_win": kde_result[0],
-                    "draw": kde_result[1],
-                    "away_win": kde_result[2],
-                }
+            home_data = self.team_home_goals.get(home_team, [])
+            away_data = self.team_away_goals.get(away_team, [])
+            if len(home_data) >= 10 and len(away_data) >= 10:
+                home_kde = self.kde.predict_goals(home_team, is_home=True)
+                away_kde = self.kde.predict_goals(away_team, is_home=False)
+                kde_result = self.kde.score_grid_probs(home_kde, away_kde)
+                if kde_result is not None:
+                    predictions["kde"] = {
+                        "home_win": kde_result[0],
+                        "draw": kde_result[1],
+                        "away_win": kde_result[2],
+                    }
 
         # Layer 4c: Mixture Monte Carlo
         if "mixture_mc" in self.active_layers:
