@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Betting Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#1a1d23;color:#e0e0e0;font-size:13px}
+.header{background:#252830;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #333}
+.header h1{font-size:18px;color:#4a9eff}
+.header .subtitle{color:#888;font-size:12px}
+.tabs{background:#252830;display:flex;gap:0;border-bottom:2px solid #4a9eff;padding:0 16px}
+.tab{padding:10px 16px;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;font-weight:500;transition:all .2s}
+.tab:hover{color:#ccc}
+.tab.active{color:#4a9eff;border-bottom-color:#4a9eff}
+.main{display:flex;height:calc(100vh - 84px)}
+.content{flex:1;overflow:auto;padding:16px}
+.sidebar{width:300px;background:#252830;padding:16px;border-left:1px solid #333;overflow-y:auto}
+.bet-table{width:100%;border-collapse:collapse;font-size:12px}
+.bet-table th{background:#2a2d35;padding:8px 10px;text-align:left;color:#888;font-weight:600;border-bottom:1px solid #444;position:sticky;top:0;z-index:1}
+.bet-table td{padding:6px 10px;border-bottom:1px solid #2a2d35}
+.bet-table tr:hover{background:#2a2d35}
+.win{color:#4ade80;font-weight:600}
+.lose{color:#f87171;font-weight:600}
+.positive{color:#4ade80}
+.negative{color:#f87171}
+.sidebar-card{background:#2a2d35;border-radius:8px;padding:14px;margin-bottom:12px}
+.sidebar-card h3{font-size:11px;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+.stat-row{display:flex;justify-content:space-between;padding:4px 0}
+.stat-label{color:#888}
+.stat-value{color:#fff;font-weight:600}
+.stat-value.positive{color:#4ade80}
+.stat-value.negative{color:#f87171}
+.league-badge{display:inline-block;padding:3px 8px;border-radius:4px;margin:2px;font-size:11px;font-weight:500}
+.league-badge.blue{background:#1e40af33;color:#60a5fa;border:1px solid #1e40af}
+.league-badge.green{background:#16653433;color:#4ade80;border:1px solid #166534}
+.league-badge.red{background:#991b1b33;color:#f87171;border:1px solid #991b1b}
+.league-badge.yellow{background:#854d0e33;color:#facc15;border:1px solid #854d0e}
+.league-badge.purple{background:#581c8733;color:#c084fc;border:1px solid #581c87}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.chart-box{background:#2a2d35;border-radius:8px;padding:20px;margin:12px 0}
+canvas{width:100%;max-width:900px}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:#1a1d23}
+::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>&#9917; Betting Tracker</h1>
+  <span class="subtitle">Quantitative Sports Betting Model &mdash; Backtest Results (49 bets)</span>
+</div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('all',this)">All Bets</div>
+  <div class="tab" onclick="switchTab('equity',this)">Equity Curve</div>
+  <div class="tab" onclick="switchTab('league',this)">League Trust</div>
+  <div class="tab" onclick="switchTab('daily',this)">Daily P/L</div>
+  <div class="tab" onclick="switchTab('clv',this)">CLV Analysis</div>
+  <div class="tab" onclick="switchTab('analytics',this)">Analytics</div>
+</div>
+<div class="main">
+  <div class="content">
+    <div id="tab-all" class="tab-content active">
+      <table class="bet-table">
+        <thead><tr>
+          <th>Date</th><th>Home</th><th>Away</th><th>Prediction</th>
+          <th>Odds</th><th>Edge %</th><th>League</th>
+          <th>Stake</th><th>Result</th><th>P/L</th><th>Balance</th><th>CLV %</th>
+        </tr></thead>
+        <tbody id="betBody"></tbody>
+      </table>
+    </div>
+    <div id="tab-equity" class="tab-content">
+      <div class="chart-box"><h3 style="color:#888;margin-bottom:12px">Equity Curve</h3><canvas id="eqCanvas" height="300"></canvas></div>
+    </div>
+    <div id="tab-league" class="tab-content">
+      <div class="chart-box"><h3 style="color:#888;margin-bottom:12px">Per-League Performance</h3><div id="leagueContent"></div></div>
+    </div>
+    <div id="tab-daily" class="tab-content">
+      <div class="chart-box"><h3 style="color:#888;margin-bottom:12px">Daily P/L</h3>
+        <table class="bet-table"><thead><tr><th>Date</th><th>Bets</th><th>Wins</th><th>Daily P/L</th><th>Cumulative</th></tr></thead><tbody id="dailyBody"></tbody></table>
+      </div>
+    </div>
+    <div id="tab-clv" class="tab-content">
+      <div class="chart-box"><h3 style="color:#888;margin-bottom:12px">Closing Line Value</h3><div id="clvContent"></div></div>
+    </div>
+    <div id="tab-analytics" class="tab-content">
+      <div class="chart-box"><h3 style="color:#888;margin-bottom:12px">Analytics</h3><div id="analyticsContent"></div></div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="sidebar-card" id="statsCard"></div>
+    <div class="sidebar-card" id="leagueCard"></div>
+    <div class="sidebar-card" id="riskCard"></div>
+  </div>
+</div>
+<script>
+const DATA=[{"date":"2025-03-19","home":"Brighton","away":"Liverpool","prediction":"home_win","odds":2.85,"prob":0.0,"league":"Synthetic","edge":18.36,"stake":24.81,"result":"Win","pnl":45.9,"balance":1045.9,"clv":-1.4},{"date":"2025-03-23","home":"Newcastle","away":"Liverpool","prediction":"home_win","odds":2.4,"prob":0.0,"league":"Synthetic","edge":22.38,"stake":41.8,"result":"Lose","pnl":-41.8,"balance":1004.1,"clv":0.42},{"date":"2025-03-24","home":"Newcastle","away":"Liverpool","prediction":"home_win","odds":2.41,"prob":0.0,"league":"Synthetic","edge":22.89,"stake":40.75,"result":"Win","pnl":57.46,"balance":1061.56,"clv":0.41},{"date":"2025-03-26","home":"Crystal Palace","away":"Arsenal","prediction":"home_win","odds":4.33,"prob":0.0,"league":"Synthetic","edge":35.77,"stake":33.6,"result":"Lose","pnl":-33.6,"balance":1027.96,"clv":-1.16},{"date":"2025-03-30","home":"Aston Villa","away":"Wolves","prediction":"home_win","odds":1.53,"prob":0.0,"league":"Synthetic","edge":10.42,"stake":38.05,"result":"Win","pnl":19.83,"balance":1047.79,"clv":-0.66},{"date":"2025-04-02","home":"Man United","away":"Brighton","prediction":"away_win","odds":2.3,"prob":0.0,"league":"Synthetic","edge":14.41,"stake":31.91,"result":"Win","pnl":41.25,"balance":1089.04,"clv":0.0},{"date":"2025-04-05","home":"Newcastle","away":"Bournemouth","prediction":"home_win","odds":1.53,"prob":0.0,"league":"Synthetic","edge":7.68,"stake":26.96,"result":"Win","pnl":13.75,"balance":1102.79,"clv":-0.65},{"date":"2025-04-05","home":"Wolves","away":"Chelsea","prediction":"away_win","odds":1.57,"prob":0.0,"league":"Synthetic","edge":4.93,"stake":18.46,"result":"Lose","pnl":-18.46,"balance":1084.33,"clv":0.0},{"date":"2025-04-12","home":"Arsenal","away":"Brentford","prediction":"home_win","odds":1.3,"prob":0.0,"league":"Synthetic","edge":14.35,"stake":54.22,"result":"Win","pnl":16.27,"balance":1100.6,"clv":-0.77},{"date":"2025-04-13","home":"Man City","away":"Chelsea","prediction":"home_win","odds":1.73,"prob":0.0,"league":"Synthetic","edge":7.46,"stake":35.09,"result":"Lose","pnl":-35.09,"balance":1065.51,"clv":-1.73},{"date":"2025-04-19","home":"Brighton","away":"Newcastle","prediction":"away_win","odds":2.3,"prob":0.0,"league":"Synthetic","edge":14.41,"stake":31.91,"result":"Win","pnl":41.25,"balance":1106.76,"clv":0.0},{"date":"2025-04-19","home":"Crystal Palace","away":"West Ham","prediction":"home_win","odds":2.1,"prob":0.0,"league":"Synthetic","edge":13.33,"stake":33.38,"result":"Win","pnl":36.72,"balance":1143.48,"clv":0.0},{"date":"2025-04-19","home":"Liverpool","away":"Leicester","prediction":"home_win","odds":1.22,"prob":0.0,"league":"Synthetic","edge":13.01,"stake":59.95,"result":"Win","pnl":13.19,"balance":1156.67,"clv":-1.64},{"date":"2025-04-20","home":"Bournemouth","away":"Man United","prediction":"home_win","odds":2.1,"prob":0.0,"league":"Synthetic","edge":13.33,"stake":33.38,"result":"Lose","pnl":-33.38,"balance":1123.29,"clv":0.0},{"date":"2025-04-20","home":"Wolves","away":"Brighton","prediction":"away_win","odds":2.0,"prob":0.0,"league":"Synthetic","edge":10.91,"stake":30.01,"result":"Win","pnl":30.01,"balance":1153.3,"clv":0.0},{"date":"2025-04-26","home":"Brentford","away":"Brighton","prediction":"home_win","odds":2.15,"prob":0.0,"league":"Synthetic","edge":12.14,"stake":30.87,"result":"Win","pnl":35.5,"balance":1188.8,"clv":0.0},{"date":"2025-04-26","home":"Man United","away":"Wolves","prediction":"home_win","odds":1.53,"prob":0.0,"league":"Synthetic","edge":10.42,"stake":38.05,"result":"Win","pnl":19.83,"balance":1208.63,"clv":-0.66},{"date":"2025-04-26","home":"Nottm Forest","away":"Leicester","prediction":"home_win","odds":1.53,"prob":0.0,"league":"Synthetic","edge":7.68,"stake":26.96,"result":"Win","pnl":13.75,"balance":1222.38,"clv":-0.65},{"date":"2025-05-03","home":"Leicester","away":"Nottm Forest","prediction":"away_win","odds":2.3,"prob":0.0,"league":"Synthetic","edge":11.74,"stake":26.66,"result":"Win","pnl":34.51,"balance":1256.89,"clv":0.0},{"date":"2025-05-03","home":"Man City","away":"Wolves","prediction":"home_win","odds":1.36,"prob":0.0,"league":"Synthetic","edge":11.18,"stake":49.09,"result":"Win","pnl":17.67,"balance":1274.56,"clv":-1.47},{"date":"2025-05-04","home":"Brighton","away":"Bournemouth","prediction":"home_win","odds":1.73,"prob":0.0,"league":"Synthetic","edge":7.46,"stake":35.09,"result":"Lose","pnl":-35.09,"balance":1239.47,"clv":-1.73},{"date":"2025-05-10","home":"Arsenal","away":"Bournemouth","prediction":"home_win","odds":1.44,"prob":0.0,"league":"Synthetic","edge":8.73,"stake":37.25,"result":"Win","pnl":16.39,"balance":1255.86,"clv":-1.39},{"date":"2025-05-10","home":"Liverpool","away":"Arsenal","prediction":"home_win","odds":2.1,"prob":0.0,"league":"Synthetic","edge":13.33,"stake":33.38,"result":"Lose","pnl":-33.38,"balance":1222.48,"clv":0.0},{"date":"2025-05-10","home":"Man City","away":"Crystal Palace","prediction":"home_win","odds":1.36,"prob":0.0,"league":"Synthetic","edge":11.18,"stake":49.09,"result":"Lose","pnl":-49.09,"balance":1173.39,"clv":-1.47},{"date":"2025-05-10","home":"Newcastle","away":"Chelsea","prediction":"home_win","odds":2.1,"prob":0.0,"league":"Synthetic","edge":13.33,"stake":33.38,"result":"Win","pnl":36.72,"balance":1210.11,"clv":0.0},{"date":"2025-05-11","home":"Brighton","away":"Wolves","prediction":"home_win","odds":1.44,"prob":0.0,"league":"Synthetic","edge":8.73,"stake":37.25,"result":"Win","pnl":16.39,"balance":1226.5,"clv":-1.39},{"date":"2025-05-14","home":"Chelsea","away":"Man United","prediction":"home_win","odds":1.83,"prob":0.0,"league":"Synthetic","edge":8.37,"stake":33.2,"result":"Win","pnl":27.56,"balance":1254.06,"clv":-1.09},{"date":"2025-05-17","home":"Arsenal","away":"Newcastle","prediction":"home_win","odds":1.4,"prob":0.0,"league":"Synthetic","edge":10.53,"stake":43.06,"result":"Lose","pnl":-43.06,"balance":1211.0,"clv":-1.43},{"date":"2025-05-18","home":"Bournemouth","away":"Man City","prediction":"away_win","odds":1.83,"prob":0.0,"league":"Synthetic","edge":8.37,"stake":33.2,"result":"Win","pnl":27.56,"balance":1238.56,"clv":-1.09},{"date":"2025-05-18","home":"Man United","away":"Brentford","prediction":"home_win","odds":1.73,"prob":0.0,"league":"Synthetic","edge":7.46,"stake":35.09,"result":"Win","pnl":25.61,"balance":1264.17,"clv":-1.73},{"date":"2025-05-18","home":"Wolves","away":"Brighton","prediction":"away_win","odds":2.3,"prob":0.0,"league":"Synthetic","edge":14.41,"stake":31.91,"result":"Win","pnl":41.25,"balance":1305.42,"clv":0.0},{"date":"2025-05-21","home":"Arsenal","away":"Leicester","prediction":"home_win","odds":1.3,"prob":0.0,"league":"Synthetic","edge":14.35,"stake":54.22,"result":"Lose","pnl":-54.22,"balance":1251.2,"clv":-0.77},{"date":"2025-05-24","home":"Aston Villa","away":"Nottm Forest","prediction":"home_win","odds":1.53,"prob":0.0,"league":"Synthetic","edge":7.68,"stake":26.96,"result":"Win","pnl":13.75,"balance":1264.95,"clv":-0.65},{"date":"2025-05-24","home":"Brighton","away":"Liverpool","prediction":"away_win","odds":2.3,"prob":0.0,"league":"Synthetic","edge":11.74,"stake":26.66,"result":"Lose","pnl":-26.66,"balance":1238.29,"clv":0.0},{"date":"2025-05-25","home":"Brentford","away":"Man City","prediction":"away_win","odds":1.57,"prob":0.0,"league":"Synthetic","edge":4.93,"stake":18.46,"result":"Lose","pnl":-18.46,"balance":1219.83,"clv":0.0},{"date":"2025-05-25","home":"Leicester","away":"Bournemouth","prediction":"away_win","odds":2.3,"prob":0.0,"league":"Synthetic","edge":11.74,"stake":26.66,"result":"Lose","pnl":-26.66,"balance":1193.17,"clv":0.0},{"date":"2025-05-25","home":"Man United","away":"Chelsea","prediction":"home_win","odds":2.38,"prob":0.0,"league":"Synthetic","edge":15.66,"stake":33.6,"result":"Win","pnl":46.44,"balance":1239.61,"clv":0.0},{"date":"2025-05-25","home":"Newcastle","away":"Arsenal","prediction":"home_win","odds":2.5,"prob":0.0,"league":"Synthetic","edge":19.14,"stake":36.28,"result":"Lose","pnl":-36.28,"balance":1203.33,"clv":0.0},{"date":"2025-05-25","home":"Wolves","away":"Crystal Palace","prediction":"home_win","odds":2.38,"prob":0.0,"league":"Synthetic","edge":15.66,"stake":33.6,"result":"Win","pnl":46.44,"balance":1249.77,"clv":0.0},{"date":"2025-03-19","home":"Man City","away":"West Ham","prediction":"home_win","odds":1.25,"prob":0.0,"league":"ML+RL","edge":15.55,"stake":55.56,"result":"Win","pnl":13.89,"balance":1013.89,"clv":-1.56},{"date":"2025-03-19","home":"Brighton","away":"Liverpool","prediction":"home_win","odds":2.85,"prob":0.0,"league":"ML+RL","edge":18.36,"stake":23.05,"result":"Win","pnl":42.85,"balance":1056.74,"clv":-1.4},{"date":"2025-03-23","home":"Newcastle","away":"Liverpool","prediction":"home_win","odds":2.4,"prob":0.0,"league":"ML+RL","edge":22.38,"stake":39.16,"result":"Lose","pnl":-39.16,"balance":1017.58,"clv":0.42},{"date":"2025-03-24","home":"Newcastle","away":"Liverpool","prediction":"home_win","odds":2.41,"prob":0.0,"league":"ML+RL","edge":22.89,"stake":38.32,"result":"Win","pnl":54.03,"balance":1071.61,"clv":0.41},{"date":"2025-03-26","home":"Crystal Palace","away":"Arsenal","prediction":"home_win","odds":4.33,"prob":0.0,"league":"ML+RL","edge":35.77,"stake":31.57,"result":"Lose","pnl":-31.57,"balance":1040.04,"clv":-1.16},{"date":"2025-03-30","home":"Aston Villa","away":"Wolves","prediction":"home_win","odds":1.53,"prob":0.0,"league":"ML+RL","edge":10.42,"stake":36.58,"result":"Win","pnl":19.06,"balance":1059.1,"clv":-0.66},{"date":"2025-04-02","home":"Man United","away":"Brighton","prediction":"away_win","odds":2.3,"prob":0.0,"league":"ML+RL","edge":14.41,"stake":30.78,"result":"Win","pnl":39.81,"balance":1098.91,"clv":0.0},{"date":"2025-04-05","home":"Newcastle","away":"Bournemouth","prediction":"home_win","odds":1.53,"prob":0.0,"league":"ML+RL","edge":7.68,"stake":25.48,"result":"Win","pnl":13.0,"balance":1111.91,"clv":-0.65},{"date":"2025-04-05","home":"Wolves","away":"Chelsea","prediction":"away_win","odds":1.57,"prob":0.0,"league":"ML+RL","edge":4.93,"stake":17.84,"result":"Lose","pnl":-17.84,"balance":1094.07,"clv":0.0},{"date":"2025-04-12","home":"Arsenal","away":"Brentford","prediction":"home_win","odds":1.3,"prob":0.0,"league":"ML+RL","edge":14.35,"stake":52.76,"result":"Win","pnl":15.83,"balance":1109.9,"clv":-0.77},{"date":"2025-04-13","home":"Man City","away":"Chelsea","prediction":"home_win","odds":1.73,"prob":0.0,"league":"ML+RL","edge":7.46,"stake":34.08,"result":"Lose","pnl":-34.08,"balance":1075.82,"clv":-1.73},{"date":"2025-04-19","home":"Brighton","away":"Newcastle","prediction":"away_win","odds":2.3,"prob":0.0,"league":"ML+RL","edge":14.41,"stake":30.78,"result":"Win","pnl":39.81,"balance":1115.63,"clv":0.0},{"date":"2025-04-19","home":"Crystal Palace","away":"West Ham","prediction":"home_win","odds":2.1,"prob":0.0,"league":"ML+RL","edge":13.33,"stake":31.98,"result":"Win","pnl":35.18,"balance":1150.81,"clv":0.0},{"date":"2025-04-19","home":"Liverpool","away":"Leicester","prediction":"home_win","odds":1.22,"prob":0.0,"league":"ML+RL","edge":13.01,"stake":58.47,"result":"Win","pnl":12.87,"balance":1163.68,"clv":-1.64},{"date":"2025-04-20","home":"Bournemouth","away":"Man United","prediction":"home_win","odds":2.1,"prob":0.0,"league":"ML+RL","edge":13.33,"stake":31.98,"result":"Lose","pnl":-31.98,"balance":1131.7,"clv":0.0},{"date":"2025-04-20","home":"Wolves","away":"Brighton","prediction":"away_win","odds":2.0,"prob":0.0,"league":"ML+RL","edge":10.91,"stake":28.76,"result":"Win","pnl":28.76,"balance":1160.46,"clv":0.0},{"date":"2025-04-26","home":"Brentford","away":"Brighton","prediction":"home_win","odds":2.15,"prob":0.0,"league":"ML+RL","edge":12.14,"stake":29.59,"result":"Win","pnl":34.03,"balance":1194.49,"clv":0.0},{"date":"2025-04-26","home":"Man United","away":"Wolves","prediction":"home_win","odds":1.53,"prob":0.0,"league":"ML+RL","edge":10.42,"stake":36.58,"result":"Win","pnl":19.06,"balance":1213.55,"clv":-0.66},{"date":"2025-04-26","home":"Nottm Forest","away":"Leicester","prediction":"home_win","odds":1.53,"prob":0.0,"league":"ML+RL","edge":7.68,"stake":25.48,"result":"Win","pnl":13.0,"balance":1226.55,"clv":-0.65},{"date":"2025-05-03","home":"Leicester","away":"Nottm Forest","prediction":"away_win","odds":2.3,"prob":0.0,"league":"ML+RL","edge":11.74,"stake":25.63,"result":"Win","pnl":33.17,"balance":1259.72,"clv":0.0},{"date":"2025-05-03","home":"Man City","away":"Wolves","prediction":"home_win","odds":1.36,"prob":0.0,"league":"ML+RL","edge":11.18,"stake":47.29,"result":"Win","pnl":17.02,"balance":1276.74,"clv":-1.47}];
+
+function init(){renderStats();renderBetTable();renderLeague();renderDaily();renderCLV();renderAnalytics();}
+
+function renderStats(){
+  const wins=DATA.filter(b=>b.result==='Win').length;
+  const total=DATA.length;
+  const profit=DATA.reduce((s,b)=>s+b.pnl,0);
+  const stake=DATA.reduce((s,b)=>s+b.stake,0);
+  const bal=DATA.length?DATA[DATA.length-1].balance:1000;
+  const odds=DATA.filter(b=>b.odds>0).map(b=>b.odds);
+  const avgOdds=odds.length?odds.reduce((a,b)=>a+b,0)/odds.length:0;
+  let peak=DATA.length?DATA[0].balance:1000,maxDD=0;
+  DATA.forEach(b=>{if(b.balance>peak)peak=b.balance;const dd=(peak-b.balance)/peak*100;if(dd>maxDD)maxDD=dd});
+  const gw=DATA.filter(b=>b.pnl>0).reduce((s,b)=>s+b.pnl,0);
+  const gl=Math.abs(DATA.filter(b=>b.pnl<0).reduce((s,b)=>s+b.pnl,0));
+  let ls=0,mls=0;DATA.forEach(b=>{if(b.pnl<0){ls++;if(ls>mls)mls=ls}else ls=0});
+
+  document.getElementById('statsCard').innerHTML=`<h3>Overall Stats</h3>
+    <div class="stat-row"><span class="stat-label">Total Bets</span><span class="stat-value">${total}</span></div>
+    <div class="stat-row"><span class="stat-label">Wins</span><span class="stat-value win">${wins}</span></div>
+    <div class="stat-row"><span class="stat-label">Win Rate</span><span class="stat-value">${total?((wins/total)*100).toFixed(1):0}%</span></div>
+    <div class="stat-row"><span class="stat-label">Avg Odds</span><span class="stat-value">${avgOdds.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">Profit</span><span class="stat-value ${profit>=0?'positive':'negative'}">${profit>=0?'+':''}$${profit.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">Yield</span><span class="stat-value ${profit>=0?'positive':'negative'}">${stake?((profit/stake)*100).toFixed(1):0}%</span></div>
+    <div class="stat-row"><span class="stat-label">Balance</span><span class="stat-value">$${bal.toFixed(2)}</span></div>`;
+  document.getElementById('riskCard').innerHTML=`<h3>Risk Metrics</h3>
+    <div class="stat-row"><span class="stat-label">Max Drawdown</span><span class="stat-value negative">${maxDD.toFixed(1)}%</span></div>
+    <div class="stat-row"><span class="stat-label">Profit Factor</span><span class="stat-value">${gl?(gw/gl).toFixed(2):'inf'}</span></div>
+    <div class="stat-row"><span class="stat-label">Max Losing Streak</span><span class="stat-value negative">${mls}</span></div>`;
+}
+
+function renderBetTable(){
+  const colors=['blue','green','yellow','purple','red'];
+  const lm={};let ci=0;
+  document.getElementById('betBody').innerHTML=DATA.map(b=>{
+    if(!lm[b.league]){lm[b.league]=colors[ci%colors.length];ci++}
+    return `<tr>
+      <td>${b.date}</td><td>${b.home}</td><td>${b.away}</td><td>${b.prediction}</td>
+      <td>${b.odds>0?b.odds.toFixed(2):'-'}</td>
+      <td class="${b.edge>=0?'positive':'negative'}">${b.edge>0?'+':''}${b.edge.toFixed(1)}%</td>
+      <td><span class="league-badge ${lm[b.league]}">${b.league}</span></td>
+      <td>$${b.stake.toFixed(2)}</td>
+      <td class="${b.result==='Win'?'win':'lose'}">${b.result==='Win'?'&#9989; Win':'&#10060; Loss'}</td>
+      <td class="${b.pnl>=0?'positive':'negative'}">${b.pnl>=0?'+':''}$${b.pnl.toFixed(2)}</td>
+      <td>$${b.balance.toFixed(2)}</td>
+      <td class="${b.clv>=0?'positive':'negative'}">${b.clv.toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderLeague(){
+  const lg={};
+  DATA.forEach(b=>{if(!lg[b.league])lg[b.league]={bets:0,wins:0,profit:0,stake:0};
+    lg[b.league].bets++;if(b.result==='Win')lg[b.league].wins++;lg[b.league].profit+=b.pnl;lg[b.league].stake+=b.stake});
+  document.getElementById('leagueCard').innerHTML='<h3>Per-League</h3>'+Object.entries(lg).map(([k,v])=>{
+    return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-weight:600;color:#fff">${k}</span>
+      <span class="${v.profit>=0?'positive':'negative'}" style="font-weight:600">${v.profit>=0?'+':''}$${v.profit.toFixed(2)}</span></div>
+      <div style="font-size:11px;color:#666">${v.bets} bets | ${v.bets?(v.wins/v.bets*100).toFixed(1):0}% WR | ${v.stake?(v.profit/v.stake*100).toFixed(1):0}% yield</div></div>`;
+  }).join('');
+}
+
+function renderDaily(){
+  const dl={};
+  DATA.forEach(b=>{const d=b.date;if(!dl[d])dl[d]={pnl:0,bets:0,wins:0};
+    dl[d].pnl+=b.pnl;dl[d].bets++;if(b.result==='Win')dl[d].wins++});
+  let cum=0;
+  document.getElementById('dailyBody').innerHTML=Object.entries(dl).sort((a,b)=>a[0].localeCompare(b[0])).map(([d,v])=>{
+    cum+=v.pnl;return `<tr><td>${d}</td><td>${v.bets}</td><td>${v.wins}</td>
+      <td class="${v.pnl>=0?'positive':'negative'}" style="font-weight:600">${v.pnl>=0?'+':''}$${v.pnl.toFixed(2)}</td>
+      <td class="${cum>=0?'positive':'negative'}" style="font-weight:600">$${cum.toFixed(2)}</td></tr>`;
+  }).join('');
+}
+
+function renderCLV(){
+  const clvBets=DATA.filter(b=>b.clv!==0);
+  const pos=clvBets.filter(b=>b.clv>0);
+  const neg=clvBets.filter(b=>b.clv<=0);
+  const posWin=pos.filter(b=>b.result==='Win').length;
+  const negWin=neg.filter(b=>b.result==='Win').length;
+  const avgCLV=clvBets.length?clvBets.reduce((s,b)=>s+b.clv,0)/clvBets.length:0;
+  document.getElementById('clvContent').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:#252830;padding:16px;border-radius:8px"><h3 style="color:#888;margin-bottom:10px">CLV Overview</h3>
+        <div class="stat-row"><span class="stat-label">Total CLV Bets</span><span class="stat-value">${clvBets.length}</span></div>
+        <div class="stat-row"><span class="stat-label">Avg CLV</span><span class="stat-value ${avgCLV>=0?'positive':'negative'}">${avgCLV>=0?'+':''}${avgCLV.toFixed(2)}%</span></div>
+        <div class="stat-row"><span class="stat-label">CLV+ Rate</span><span class="stat-value">${clvBets.length?(pos.length/clvBets.length*100).toFixed(1):0}%</span></div></div>
+      <div style="background:#252830;padding:16px;border-radius:8px"><h3 style="color:#888;margin-bottom:10px">CLV Win Rates</h3>
+        <div class="stat-row"><span class="stat-label">Positive CLV Win%</span><span class="stat-value positive">${pos.length?(posWin/pos.length*100).toFixed(1):0}%</span></div>
+        <div class="stat-row"><span class="stat-label">Negative CLV Win%</span><span class="stat-value negative">${neg.length?(negWin/neg.length*100).toFixed(1):0}%</span></div></div></div>`;
+}
+
+function renderAnalytics(){
+  const total=DATA.length,wins=DATA.filter(b=>b.result==='Win').length;
+  const avgEdge=total?DATA.reduce((s,b)=>s+b.edge,0)/total:0;
+  const stake=DATA.reduce((s,b)=>s+b.stake,0),profit=DATA.reduce((s,b)=>s+b.pnl,0);
+  let peak=1000,maxDD=0;DATA.forEach(b=>{if(b.balance>peak)peak=b.balance;const dd=(peak-b.balance)/peak*100;if(dd>maxDD)maxDD=dd});
+  document.getElementById('analyticsContent').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+      <div style="background:#252830;padding:16px;border-radius:8px"><h3 style="color:#888;margin-bottom:10px">Predictive Quality</h3>
+        <div class="stat-row"><span class="stat-label">Win Rate</span><span class="stat-value">${total?(wins/total*100).toFixed(1):0}%</span></div>
+        <div class="stat-row"><span class="stat-label">Avg Edge</span><span class="stat-value positive">${avgEdge.toFixed(1)}%</span></div></div>
+      <div style="background:#252830;padding:16px;border-radius:8px"><h3 style="color:#888;margin-bottom:10px">Financial</h3>
+        <div class="stat-row"><span class="stat-label">ROI</span><span class="stat-value ${profit>=0?'positive':'negative'}">${stake?(profit/stake*100).toFixed(1):0}%</span></div>
+        <div class="stat-row"><span class="stat-label">Total P/L</span><span class="stat-value ${profit>=0?'positive':'negative'}">${profit>=0?'+':''}$${profit.toFixed(0)}</span></div></div>
+      <div style="background:#252830;padding:16px;border-radius:8px"><h3 style="color:#888;margin-bottom:10px">Risk</h3>
+        <div class="stat-row"><span class="stat-label">Max DD</span><span class="stat-value negative">${maxDD.toFixed(1)}%</span></div>
+        <div class="stat-row"><span class="stat-label">Avg Stake</span><span class="stat-value">$${total?(stake/total).toFixed(2):0}</span></div></div></div>`;
+}
+
+function switchTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+init();
+</script>
+</body>
+</html>
