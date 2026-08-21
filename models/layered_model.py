@@ -33,7 +33,9 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 from scipy import stats
-from scipy.stats import gaussian_kde
+from models.fast_kde import FastKDE, FastKDEGoalDistribution
+from models.fast_mixture_mc import FastMixtureMC
+from models.online_poisson import OnlinePoissonRatings
 
 warnings.filterwarnings("ignore")
 
@@ -161,206 +163,13 @@ class EWMARecency:
 # ======================================================================
 # Layer 3: KDE Goal Distribution
 # ======================================================================
-class KDEGoalDistribution:
-    """Kernel Density Estimation for goal distributions.
-
-    Instead of assuming Poisson, KDE captures:
-    - skew
-    - multimodality
-    - asymmetric tails
-    - floor/ceiling behavior
-    """
-
-    def __init__(self, bandwidth: str = "silverman"):
-        self.bandwidth = bandwidth
-        self.team_kde_home: Dict[str, gaussian_kde] = {}
-        self.team_kde_away: Dict[str, gaussian_kde] = {}
-        self.league_kde_home: Optional[gaussian_kde] = None
-        self.league_kde_away: Optional[gaussian_kde] = None
-
-    def fit(self, team: str, home_goals: List[float], away_goals: List[float],
-            min_samples: int = 5):
-        """Fit KDE for a team's goal distributions."""
-        if len(home_goals) >= min_samples:
-            try:
-                self.team_kde_home[team] = gaussian_kde(
-                    home_goals, bw_method=self.bandwidth)
-            except Exception:
-                pass
-
-        if len(away_goals) >= min_samples:
-            try:
-                self.team_kde_away[team] = gaussian_kde(
-                    away_goals, bw_method=self.bandwidth)
-            except Exception:
-                pass
-
-    def fit_league(self, all_home_goals: List[float], all_away_goals: List[float]):
-        """Fit league-wide KDE as fallback."""
-        if len(all_home_goals) >= 10:
-            try:
-                self.league_kde_home = gaussian_kde(
-                    all_home_goals, bw_method=self.bandwidth)
-            except Exception:
-                pass
-        if len(all_away_goals) >= 10:
-            try:
-                self.league_kde_away = gaussian_kde(
-                    all_away_goals, bw_method=self.bandwidth)
-            except Exception:
-                pass
-
-    def predict_goals(self, team: str, is_home: bool) -> Optional[gaussian_kde]:
-        """Get KDE for a team's goal distribution."""
-        if is_home:
-            return self.team_kde_home.get(team, self.league_kde_home)
-        else:
-            return self.team_kde_away.get(team, self.league_kde_away)
-
-    def score_grid_probs(self, home_kde: Optional[gaussian_kde],
-                         away_kde: Optional[gaussian_kde],
-                         max_goals: int = 8) -> Tuple[float, float, float]:
-        """Compute outcome probabilities using KDE score grid."""
-        if home_kde is None or away_kde is None:
-            return None
-
-        # Evaluate KDE at integer goal values (batch for speed)
-        goal_vals = np.arange(max_goals + 1, dtype=float)
-        try:
-            home_probs = np.maximum(home_kde.evaluate(goal_vals), 1e-10)
-            away_probs = np.maximum(away_kde.evaluate(goal_vals), 1e-10)
-        except Exception:
-            return None
-
-        # Normalize
-        home_probs = home_probs / home_probs.sum()
-        away_probs = away_probs / away_probs.sum()
-
-        # Normalize
-        home_total = sum(home_probs)
-        away_total = sum(away_probs)
-        home_probs = [p / home_total for p in home_probs]
-        away_probs = [p / away_total for p in away_probs]
-
-        # Vectorized score grid
-        outer = np.outer(home_probs, away_probs)
-        triu = np.triu_indices(max_goals + 1, k=1)
-        tril = np.tril_indices(max_goals + 1, k=-1)
-        diag = np.diag_indices(max_goals + 1)
-        p_home = float(outer[triu].sum())
-        p_away = float(outer[tril].sum())
-        p_draw = float(outer[diag].sum())
-
-        total = p_home + p_draw + p_away
-        return p_home / total, p_draw / total, p_away / total
+# KDEGoalDistribution is now imported from fast_kde module
 
 
 # ======================================================================
 # Layer 4: Mixture Monte Carlo
 # ======================================================================
-class MixtureMonteCarlo:
-    """Mixture Model Monte Carlo simulation with regime detection.
-
-    P(X) = w_floor * P(X|Floor) + w_normal * P(X|Normal) + w_ceiling * P(X|Ceiling)
-
-    Regimes are detected based on:
-    - recent form deviation from season average
-    - opponent strength
-    - rest days
-    - home/away
-    """
-
-    def __init__(self, n_simulations: int = 1000, seed: int = 42):
-        self.n_sims = n_simulations
-        self.rng = np.random.default_rng(seed)
-
-    def detect_regime(self, team_strength: float, opponent_strength: float,
-                      recent_form: float, season_avg: float) -> Dict[str, float]:
-        """Detect which regime the team is likely in.
-
-        Returns weights for Floor, Normal, Ceiling regimes.
-        """
-        # Form deviation from season average
-        form_dev = recent_form - season_avg
-
-        # Strength differential
-        strength_diff = team_strength - opponent_strength
-
-        # Base weights (will be modulated by context)
-        w_floor = 0.15
-        w_normal = 0.60
-        w_ceiling = 0.25
-
-        # If recent form is much below season average, increase floor weight
-        if form_dev < -0.5:
-            w_floor += 0.15
-            w_normal -= 0.10
-            w_ceiling -= 0.05
-
-        # If recent form is much above season average, increase ceiling weight
-        elif form_dev > 0.5:
-            w_ceiling += 0.15
-            w_normal -= 0.10
-            w_floor -= 0.05
-
-        # If facing a much stronger opponent, increase floor weight
-        if strength_diff < -0.5:
-            w_floor += 0.10
-            w_ceiling -= 0.10
-
-        # If facing a much weaker opponent, increase ceiling weight
-        elif strength_diff > 0.5:
-            w_ceiling += 0.10
-            w_floor -= 0.10
-
-        # Normalize
-        total = w_floor + w_normal + w_ceiling
-        return {
-            "floor": max(0.05, w_floor / total),
-            "normal": max(0.30, w_normal / total),
-            "ceiling": max(0.05, w_ceiling / total),
-        }
-
-    def simulate_goals(self, lambda_home: float, lambda_away: float,
-                       regime_weights: Dict[str, float]) -> Tuple[float, float, float]:
-        """Simulate goals using mixture of regime-specific distributions.
-
-        Floor regime: lower goals (defensive match)
-        Normal regime: expected goals
-        Ceiling regime: higher goals (open match)
-        """
-        # Regime multipliers
-        floor_mult = 0.7
-        normal_mult = 1.0
-        ceiling_mult = 1.4
-
-        home_goals_sim = []
-        away_goals_sim = []
-
-        for _ in range(self.n_sims):
-            # Sample regime
-            r = self.rng.random()
-            if r < regime_weights["floor"]:
-                mult = floor_mult
-            elif r < regime_weights["floor"] + regime_weights["normal"]:
-                mult = normal_mult
-            else:
-                mult = ceiling_mult
-
-            hg = self.rng.poisson(lambda_home * mult)
-            ag = self.rng.poisson(lambda_away * mult)
-            home_goals_sim.append(hg)
-            away_goals_sim.append(ag)
-
-        home_goals_sim = np.array(home_goals_sim)
-        away_goals_sim = np.array(away_goals_sim)
-
-        # Compute outcome probabilities from simulations
-        p_home = float(np.mean(home_goals_sim > away_goals_sim))
-        p_draw = float(np.mean(home_goals_sim == away_goals_sim))
-        p_away = float(np.mean(home_goals_sim < away_goals_sim))
-
-        return p_home, p_draw, p_away
+# MixtureMonteCarlo is now imported from fast_mixture_mc module
 
 
 # ======================================================================
@@ -549,8 +358,9 @@ class LayeredModel:
         self.bayesian = BayesianTeamPrior()
         self.ewma_home = EWMARecency(alpha=0.3)
         self.ewma_away = EWMARecency(alpha=0.3)
-        self.kde = KDEGoalDistribution()
-        self.mixture_mc = MixtureMonteCarlo(n_simulations=3000)
+        self.kde = FastKDEGoalDistribution(grid_size=256)
+        self.mixture_mc = FastMixtureMC(n_simulations=3000)
+        self.online_poisson = OnlinePoissonRatings()
         self.contextual = ContextualLayer()
         self.ensemble = AdaptiveEnsemble()
 
@@ -606,6 +416,10 @@ class LayeredModel:
             self.league_home_goals.append(hg)
             self.league_away_goals.append(ag)
 
+            # Update Online Poisson ratings
+            if "online_poisson" in self.active_layers:
+                self.online_poisson.update(h, a, hg, ag)
+
             # Update Elo
             self._update_elo(h, a, hg, ag)
 
@@ -631,7 +445,9 @@ class LayeredModel:
         self.elo_ratings[home] = h_r + self.elo_k * (actual - exp_h)
         self.elo_ratings[away] = a_r + self.elo_k * ((1 - actual) - (1 - exp_h))
 
-    def predict(self, home_team: str, away_team: str) -> Dict[str, float]:
+    def predict(self, home_team: str, away_team: str, 
+                close_odds_home: Optional[float] = None,
+                close_odds_away: Optional[float] = None) -> Dict[str, float]:
         """Predict match outcome probabilities using active layers."""
         if not self.is_trained:
             raise ValueError("Model not trained")
@@ -676,14 +492,12 @@ class LayeredModel:
         p_h, p_d, p_a = self._poisson_score_grid(lambda_home, lambda_away)
         predictions["poisson"] = {"home_win": p_h, "draw": p_d, "away_win": p_a}
 
-        # Layer 4b: KDE (only if team has enough data)
+        # Layer 4b: KDE (fast binning + FFT)
         if "kde" in self.active_layers:
             home_data = self.team_home_goals.get(home_team, [])
             away_data = self.team_away_goals.get(away_team, [])
-            if len(home_data) >= 10 and len(away_data) >= 10:
-                home_kde = self.kde.predict_goals(home_team, is_home=True)
-                away_kde = self.kde.predict_goals(away_team, is_home=False)
-                kde_result = self.kde.score_grid_probs(home_kde, away_kde)
+            if len(home_data) >= 5 and len(away_data) >= 5:
+                kde_result = self.kde.score_grid_probs(home_team, away_team)
                 if kde_result is not None:
                     predictions["kde"] = {
                         "home_win": kde_result[0],
@@ -691,7 +505,7 @@ class LayeredModel:
                         "away_win": kde_result[2],
                     }
 
-        # Layer 4c: Mixture Monte Carlo
+        # Layer 4c: Mixture Monte Carlo (vectorized)
         if "mixture_mc" in self.active_layers:
             h_str = self.bayesian.get_strength(home_team)
             a_str = self.bayesian.get_strength(away_team)
@@ -700,10 +514,18 @@ class LayeredModel:
                 self.ewma_home.get_ewma(home_team),
                 np.mean(self.team_home_goals.get(home_team, [1.5]))
             )
-            mc_h, mc_d, mc_a = self.mixture_mc.simulate_goals(
+            mc_h, mc_d, mc_a = self.mixture_mc.simulate(
                 lambda_home, lambda_away, regime_w)
             predictions["monte_carlo"] = {
                 "home_win": mc_h, "draw": mc_d, "away_win": mc_a
+            }
+
+        # Layer 4d: Online Poisson (updated every match)
+        if "online_poisson" in self.active_layers:
+            op_h, op_d, op_a = self.online_poisson.poisson_score_grid(
+                home_team, away_team)
+            predictions["online_poisson"] = {
+                "home_win": op_h, "draw": op_d, "away_win": op_a
             }
 
         # Layer 5: ML prediction (if trained)
