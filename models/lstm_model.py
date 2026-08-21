@@ -119,11 +119,28 @@ class _StateCell(nn.Module):
 class _FusedNet(nn.Module):
     """Shared RNN over (home_seq, away_seq) fused with a static vector."""
 
-    def __init__(self, feat_dim, hidden, layers, cell, static_dim):
+    def __init__(self, feat_dim, hidden, layers, cell, static_dim,
+                 activation: str = "elu", dropout: float = 0.2):
         super().__init__()
         self.rnn = _StateCell(feat_dim, hidden, layers, cell)
+        
+        # Choose activation (research-backed: ELU for small data)
+        ACTIVATIONS = {
+            "relu": nn.ReLU(),
+            "leaky_relu": nn.LeakyReLU(negative_slope=0.01),
+            "elu": nn.ELU(alpha=1.0),
+            "selu": nn.SELU(),
+            "gelu": nn.GELU(),
+            "swish": nn.SiLU(),
+            "mish": nn.Mish(),
+        }
+        act_fn = ACTIVATIONS.get(activation, nn.ELU())
+        
         self.head = nn.Sequential(
-            nn.Linear(hidden * 2 + static_dim, 64), nn.ReLU(), nn.Dropout(0.2),
+            nn.Linear(hidden * 2 + static_dim, 64),
+            nn.LayerNorm(64),  # LayerNorm instead of BatchNorm for sequence models
+            act_fn,
+            nn.Dropout(dropout),
             nn.Linear(64, 3),
         )
 
@@ -139,7 +156,8 @@ class StatefulSequenceModel:
 
     def __init__(self, rich: bool = True, cell: str = "lstm", hidden: int = HIDDEN,
                  layers: int = LAYERS, seq_len: int = SEQ_LEN, seed: int = 42,
-                 epochs: int = 60, lr: float = 2e-3):
+                 epochs: int = 60, lr: float = 2e-3,
+                 activation: str = "elu", dropout: float = 0.2):
         self.rich = rich
         self.cell = cell
         self.hidden = hidden
@@ -148,6 +166,8 @@ class StatefulSequenceModel:
         self.seed = seed
         self.epochs = epochs
         self.lr = lr
+        self.activation = activation
+        self.dropout = dropout
         self.net = None
         self.scaler = None
         self.team_state = _TeamHistory(rich)
@@ -211,7 +231,8 @@ class StatefulSequenceModel:
 
         # ---- net: shared RNN on both team sequences + fused static head
         self.net = _FusedNet(self.feat_dim, self.hidden, self.layers,
-                             self.cell, STATIC_DIM)
+                             self.cell, STATIC_DIM,
+                             activation=self.activation, dropout=self.dropout)
         opt = torch.optim.Adam(self.net.parameters(), lr=self.lr)
         loss_fn = nn.CrossEntropyLoss()
         best_ll, best_state, patience = float("inf"), None, 0
