@@ -44,11 +44,15 @@ BASE_AWAY_GOALS = 1.3
 
 class TFHybridPredictor:
     def __init__(self, hidden: int = 64, epochs: int = 300, lr: float = 1e-3,
-                 batch_size: int = 64):
+                 batch_size: int = 64, activation: str = "elu",
+                 use_batch_norm: bool = True, dropout: float = 0.2):
         self.hidden = hidden
         self.epochs = epochs
         self.lr = lr
         self.batch_size = batch_size
+        self.activation = activation
+        self.use_batch_norm = use_batch_norm
+        self.dropout = dropout
         self.model = None
         self.mean = None
         self.std = None
@@ -85,9 +89,25 @@ class TFHybridPredictor:
 
         tf.keras.utils.set_random_seed(42)
         inputs = tf.keras.Input(shape=(X.shape[1],))
-        x = tf.keras.layers.Dense(self.hidden, activation="relu")(inputs)
-        x = tf.keras.layers.Dropout(0.2)(x)
-        x = tf.keras.layers.Dense(self.hidden, activation="relu")(x)
+        
+        # Choose activation function
+        ACTIVATIONS = {
+            "relu": "relu",
+            "leaky_relu": "leaky_relu",
+            "elu": "elu",
+            "gelu": "gelu",
+            "swish": "swish",
+            "mish": "mish",
+        }
+        act_fn = ACTIVATIONS.get(self.activation, "elu")
+        
+        x = tf.keras.layers.Dense(self.hidden, activation=act_fn)(inputs)
+        if self.use_batch_norm:
+            x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Dropout(self.dropout)(x)
+        x = tf.keras.layers.Dense(self.hidden, activation=act_fn)(x)
+        if self.use_batch_norm:
+            x = tf.keras.layers.BatchNormalization()(x)
         out = tf.keras.layers.Dense(3, activation="softmax")(x)
         self.model = tf.keras.Model(inputs, out)
         self.model.compile(
