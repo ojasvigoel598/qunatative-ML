@@ -7,7 +7,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/)
-[![Tests](https://img.shields.io/badge/tests-84%20passing-brightgreen.svg)](#validation)
+[![Tests](https://img.shields.io/badge/tests-104%20passing-brightgreen.svg)](#validation)
 
 ![Pipeline architecture](assets/architecture.png)
 
@@ -64,7 +64,7 @@ All three are glued together by a shared engine (`pipeline.py`) that runs a chro
 - **Reproducible** — every random draw is seeded; running anything twice gives identical results.
 - **Monte-Carlo $1M simulation** — answers *"if I invested $1,000,000, what happens?"* with a distribution, not a single number.
 - **Explained notebook** — `notebooks/01_explained_ml_pipeline.ipynb` walks every step end-to-end (22 sections, fully executed): the core PoissonElo + ML + RL pipeline, deep learning (PyTorch/TF), real-data experiments, the adaptive model, the confidence-aware dynamic thinking layer, the hidden-signals CLV study, the leak-free multi-league walk-forward agent, LSTM/GRU, and the $1M simulations.
-- **Verification suite** — 37 tests covering leakage, calibration (ECE, isotonic, market comparison), Dixon-Coles, uncertainty, price shopping, CLV, loss attribution, the data-size sweep, and reproducibility.
+- **Verification suite** — 104 tests covering leakage, calibration (ECE, isotonic, market comparison), Dixon-Coles, uncertainty, price shopping, CLV, loss attribution, the data-size sweep, reproducibility, layered model, and walk-forward validation.
 
 ---
 
@@ -391,7 +391,7 @@ python scripts/08_staking_stress_test.py --trials 100
 # 11) Interactive metrics dashboard (self-contained HTML)
 python scripts/09_make_dashboard.py          # -> docs/dashboard.html
 
-# 12) Verification suite (37 tests)
+# 12) Verification suite (104 tests)
 python -m pytest tests/ -v
 
 # 13) Explain the ML pipeline end-to-end (executed notebook, open in Jupyter/GitHub)
@@ -569,7 +569,7 @@ qunatative-ML/                    # repository root (this project)
 
 ## Validation
 
-- **37 automated tests** (`python -m pytest tests/ -v`) verify: no same-team fixtures, result/goal consistency, no target leakage in rolling features, Poisson predictions sum to 1 and beat random baselines, the Dixon-Coles tau factors and fit, Monte-Carlo uncertainty (positive, shrinks with data), the ML layer distinguishes teams, RL stakes stay bounded, backtest bookkeeping is internally consistent, ECE separates calibrated from miscalibrated, isotonic renormalisation, model-vs-market comparison, price-shopping best odds, the uncertainty-adjusted bet rule, loss-attribution consistency, the data-size sweep, and full **reproducibility** (two identical runs → identical bets and metrics).
+- **104 automated tests** (`python -m pytest tests/ -v`) verify: no same-team fixtures, result/goal consistency, no target leakage in rolling features, Poisson predictions sum to 1 and beat random baselines, the Dixon-Coles tau factors and fit, Monte-Carlo uncertainty (positive, shrinks with data), the ML layer distinguishes teams, RL stakes stay bounded, backtest bookkeeping is internally consistent, ECE separates calibrated from miscalibrated, isotonic renormalisation, model-vs-market comparison, price-shopping best odds, the uncertainty-adjusted bet rule, loss-attribution consistency, the data-size sweep, layered model (Bayesian, EWMA, Contextual, Ensemble), walk-forward validation, and full **reproducibility** (two identical runs → identical bets and metrics).
 - **The CLV bug is fixed and tested**: the original `clv = (odds/odds − 1) × 100` always returned 0; CLV now uses real closing odds and the test asserts it is non-trivial.
 - **No data leakage**: chronological split, sequential Elo, shifted form features — covered by a dedicated test.
 - **Reproducible**: seed 42 everywhere; identical outputs on every machine.
