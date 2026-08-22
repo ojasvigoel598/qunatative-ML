@@ -241,9 +241,9 @@ def _test_season(
     odds_away = np.array(all_odds_away)
     
     # Compute calibration metrics
-    from models.calibration_selection import expected_calibration_error, log_loss as compute_ll
-    ece = expected_calibration_error(y_true, probs_arr)
-    ll = compute_ll(y_true, probs_arr)
+    from models.calibration import expected_calibration_error, log_loss as compute_ll
+    ece = expected_calibration_error(probs_arr, y_true)
+    ll = compute_ll(probs_arr, y_true)
     accuracy = float(np.mean(np.argmax(probs_arr, axis=1) == y_true))
     
     # Simulate betting

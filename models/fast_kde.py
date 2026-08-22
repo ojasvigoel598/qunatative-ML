@@ -298,10 +298,6 @@ class FastKDEGoalDistribution:
         return None
 
 
-# ======================================================================
-# Benchmarks
-# ======================================================================
-
 def benchmark_kde():
     """Compare standard vs fast KDE speed."""
     import time
@@ -340,6 +336,3 @@ def benchmark_kde():
 
     print("=" * 60)
 
-
-if __name__ == "__main__":
-    benchmark_kde()

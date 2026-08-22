@@ -183,8 +183,135 @@ def compare_to_market(model_probs: np.ndarray, market_probs: np.ndarray,
     return out
 
 
+# ---------------------------------------------------------------------------
+# Calibration-based model selection (Walsh & Joshi 2024)
+# ---------------------------------------------------------------------------
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+
+
+@dataclass
+class ModelCandidate:
+    """A model candidate with its calibration metrics."""
+    name: str
+    model: object
+    ece: float
+    brier: float
+    log_loss: float
+    accuracy: float
+    n_bins: int = 10
+
+
+def maximum_calibration_error(probs: np.ndarray, y: np.ndarray,
+                              n_bins: int = 10) -> float:
+    """Maximum Calibration Error (worst-case bin)."""
+    eces = []
+    for c in range(3):
+        p_c = probs[:, c]
+        y_c = (y == c).astype(float)
+        edges = np.linspace(0.0, 1.0, n_bins + 1)
+        for i in range(n_bins):
+            lo, hi = edges[i], edges[i + 1]
+            mask = (p_c > lo) & (p_c <= hi) if i < n_bins - 1 else \
+                (p_c >= lo) & (p_c <= hi)
+            if mask.any():
+                eces.append(abs(float(y_c[mask].mean()) - float(p_c[mask].mean())))
+    return max(eces) if eces else 0.0
+
+
+def calibration_slope(probs: np.ndarray, y: np.ndarray) -> float:
+    """Calibration slope. Perfect = 1.0, <1 = overconfident, >1 = underconfident."""
+    from scipy.special import logit
+    p = np.clip(probs[:, 2], 1e-7, 1 - 1e-7)
+    logits = logit(p)
+    X = np.column_stack([logits, np.ones(len(logits))])
+    target = (y == 2).astype(float)
+    try:
+        beta = np.linalg.lstsq(X, target, rcond=None)[0]
+        return float(beta[0])
+    except Exception:
+        return 1.0
+
+
+def calibration_intercept(probs: np.ndarray, y: np.ndarray) -> float:
+    """Calibration intercept."""
+    from scipy.special import logit
+    p = np.clip(probs[:, 2], 1e-7, 1 - 1e-7)
+    logits = logit(p)
+    X = np.column_stack([logits, np.ones(len(logits))])
+    target = (y == 2).astype(float)
+    try:
+        beta = np.linalg.lstsq(X, target, rcond=None)[0]
+        return float(beta[1])
+    except Exception:
+        return 0.0
+
+
+def evaluate_calibration(probs: np.ndarray, y: np.ndarray,
+                         n_bins: int = 10) -> Dict[str, float]:
+    """Full calibration evaluation: ECE, MCE, slope, intercept, Brier, log-loss, accuracy."""
+    return {
+        "ece": expected_calibration_error(probs, y, n_bins),
+        "mce": maximum_calibration_error(probs, y, n_bins),
+        "cal_slope": calibration_slope(probs, y),
+        "cal_intercept": calibration_intercept(probs, y),
+        "brier": brier_score(probs, y),
+        "log_loss": log_loss(probs, y),
+        "accuracy": accuracy(probs, y),
+    }
+
+
+def select_model_by_calibration(candidates: List[ModelCandidate],
+                                metric: str = "ece") -> ModelCandidate:
+    """Select best model by calibration metric (Walsh & Joshi 2024 key technique)."""
+    if metric == "ece":
+        return min(candidates, key=lambda c: c.ece)
+    elif metric == "brier":
+        return min(candidates, key=lambda c: c.brier)
+    elif metric == "cal_slope":
+        return min(candidates, key=lambda c: abs(c.cal_slope - 1.0))
+    elif metric == "log_loss":
+        return min(candidates, key=lambda c: c.log_loss)
+    elif metric == "accuracy":
+        return max(candidates, key=lambda c: c.accuracy)
+    raise ValueError(f"Unknown metric: {metric}")
+
+
+def select_model_by_composite(candidates: List[ModelCandidate],
+                              weights: Optional[Dict[str, float]] = None) -> ModelCandidate:
+    """Select model using weighted combination (ECE 40%, Brier 20%, LL 20%, Acc 20%)."""
+    if weights is None:
+        weights = {"ece": 0.40, "brier": 0.20, "log_loss": 0.20, "accuracy": 0.20}
+    metrics = {
+        "ece": [c.ece for c in candidates],
+        "brier": [c.brier for c in candidates],
+        "log_loss": [c.log_loss for c in candidates],
+        "accuracy": [c.accuracy for c in candidates],
+    }
+    normalized = {}
+    for m, vals in metrics.items():
+        lo, hi = min(vals), max(vals)
+        if hi > lo:
+            normalized[m] = [(hi - v) / (hi - lo) if m != "accuracy" else (v - lo) / (hi - lo) for v in vals]
+        else:
+            normalized[m] = [0.5] * len(vals)
+    scores = [sum(weights.get(m, 0) * normalized[m][i] for m in weights) for i in range(len(candidates))]
+    return candidates[int(np.argmax(scores))]
+
+
+def calibration_report(probs: np.ndarray, y: np.ndarray, name: str = "Model") -> str:
+    """Generate calibration report."""
+    m = evaluate_calibration(probs, y)
+    return (
+        f"\n{'='*60}\nCALIBRATION REPORT: {name}\n{'='*60}\n"
+        f"ECE: {m['ece']:.4f} | MCE: {m['mce']:.4f} | "
+        f"Slope: {m['cal_slope']:.4f} | Intercept: {m['cal_intercept']:.4f}\n"
+        f"Brier: {m['brier']:.4f} | Log-loss: {m['log_loss']:.4f} | Accuracy: {m['accuracy']:.4f}\n"
+        f"{'='*60}\n"
+    )
+
+
 if __name__ == "__main__":
-    # Quick self-test: a perfectly calibrated dummy must beat a miscalibrated one.
     rng = np.random.default_rng(0)
     y = rng.integers(0, 3, 2000)
     well = np.zeros((2000, 3))

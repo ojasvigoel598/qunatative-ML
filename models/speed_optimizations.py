@@ -283,10 +283,6 @@ class BatchRegimeDetector:
         return weights
 
 
-# ============================================================================
-# Benchmark
-# ============================================================================
-
 def benchmark_optimizations():
     """Compare original vs optimized implementations."""
     import time
@@ -357,6 +353,3 @@ def benchmark_optimizations():
     
     print("\n" + "=" * 70)
 
-
-if __name__ == "__main__":
-    benchmark_optimizations()

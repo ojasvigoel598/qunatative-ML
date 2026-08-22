@@ -169,10 +169,6 @@ class OnlinePoissonRatings:
         return p_home / total, p_draw / total, p_away / total
 
 
-# ======================================================================
-# Benchmarks
-# ======================================================================
-
 def benchmark_online_poisson():
     """Benchmark online Poisson ratings."""
     import time
@@ -203,6 +199,3 @@ def benchmark_online_poisson():
     print(f"  1000 predictions: {t_predict:.2f}ms")
     print(f"  Total: {t_update + t_predict:.2f}ms")
 
-
-if __name__ == "__main__":
-    benchmark_online_poisson()

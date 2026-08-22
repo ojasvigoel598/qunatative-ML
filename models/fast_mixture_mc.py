@@ -226,10 +226,6 @@ class FastRegimeDetector:
             return {"floor": 0.15, "normal": 0.70, "ceiling": 0.15}
 
 
-# ======================================================================
-# Benchmarks
-# ======================================================================
-
 def benchmark_mixture_mc():
     """Compare loop-based vs vectorized MC speed."""
     import time
@@ -281,6 +277,3 @@ def benchmark_mixture_mc():
 
     print("=" * 60)
 
-
-if __name__ == "__main__":
-    benchmark_mixture_mc()
