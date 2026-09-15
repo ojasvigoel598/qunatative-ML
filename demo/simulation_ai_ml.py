@@ -84,13 +84,24 @@ class SingleLeagueWorld:
 
 
 # ----------------------------------------------------------------- run
-def run_trial(agent, world) -> tuple[dict, list]:
+CLOSING_COL = {"home_win": "closing_odds_home", "draw": "closing_odds_draw",
+               "away_win": "closing_odds_away"}
+
+
+def run_trial(agent, world, commission: float = 0.0,
+              slippage: float = 0.0) -> tuple[dict, list]:
     """One chronological pass: predict each match, then reveal the result.
 
     Strict point-in-time discipline:
       1. agent.decide()  — before the result is revealed
       2. agent.settle()  — after the result is revealed
       3. agent.reveal_result() — update model state only afterwards
+
+    Realism added per bet:
+      * slippage    — the price you actually get is odds * (1 - slippage)
+      * commission  — exchange fee charged on net winnings (Betfair-style)
+      * closing CLV — (taken odds / closing odds - 1); beating the close is
+        the fastest-converging evidence that an edge is real.
 
     Returns (agent summary, per-bet ledger rows).
     """
@@ -102,36 +113,73 @@ def run_trial(agent, world) -> tuple[dict, list]:
             pick = d["decision"]
             won = RESULT_TO_OUTCOME[m["result"]] == pick
             odds = (d.get("odds") or {}).get(pick) or 0.0
-            profit = d["stake"] * (odds - 1.0) if won else -d["stake"]
+            odds_eff = odds * (1.0 - slippage)
+            profit = d["stake"] * (odds_eff - 1.0) if won else -d["stake"]
+            profit_net = (profit * (1.0 - commission) if won
+                          else -d["stake"])
+            closing = m.get(CLOSING_COL.get(pick, ""))
+            try:
+                closing = float(closing)
+                clv = 100.0 * (odds_eff / closing - 1.0) \
+                    if closing and odds_eff else float("nan")
+            except (TypeError, ValueError):
+                clv = float("nan")
             bets.append({"agent": getattr(agent, "name", "ML-only"),
                          "seed": agent.seed,
                          "season": world.season,
                          "match": d["match"], "kickoff": m["date"],
-                         "pick": pick, "odds": odds, "stake": d["stake"],
+                         "pick": pick, "odds": odds,
+                         "odds_eff": round(odds_eff, 4),
+                         "stake": d["stake"],
                          "won": int(won), "profit": round(profit, 2),
+                         "profit_net": round(profit_net, 2),
+                         "closing_odds": closing if closing else None,
+                         "clv_pct": round(clv, 3) if clv == clv else None,
                          "ai_layer": d.get("ai_layer", "")})
         agent.reveal_result(m)
     return agent.summary(), bets
 
 
 # ------------------------------------------------------------ statistics
-def pooled_unit_roi(bets: list) -> float:
+def pooled_unit_roi(bets: list, net: bool = False) -> float:
+    key = "profit_net" if net else "profit"
     staked = sum(b["stake"] for b in bets)
-    return 100.0 * sum(b["profit"] for b in bets) / staked if staked else float("nan")
+    return 100.0 * sum(b[key] for b in bets) / staked if staked else float("nan")
 
 
 def bootstrap_unit_roi_ci(bets: list, resamples: int = BOOTSTRAP_RESAMPLES,
-                          seed: int = 0) -> tuple[float, float]:
+                          seed: int = 0, net: bool = False) -> tuple[float, float]:
     """95% percentile CI for pooled unit ROI via bet-level resampling."""
     if not bets:
         return float("nan"), float("nan")
-    profits = np.array([b["profit"] for b in bets], dtype=float)
+    key = "profit_net" if net else "profit"
+    profits = np.array([b[key] for b in bets], dtype=float)
     stakes = np.array([b["stake"] for b in bets], dtype=float)
     rng = np.random.default_rng(seed)
     idx = rng.integers(0, len(bets), size=(resamples, len(bets)))
     rois = 100.0 * profits[idx].sum(axis=1) / stakes[idx].sum(axis=1)
     lo, hi = np.percentile(rois, [2.5, 97.5])
     return float(lo), float(hi)
+
+
+def mean_clv_ci(bets: list, resamples: int = BOOTSTRAP_RESAMPLES,
+                seed: int = 1) -> tuple[float, float, float]:
+    """Mean per-bet closing-line CLV (%) with a 95% percentile CI.
+
+    CLV converges far faster than ROI: ~100 bets of CLV evidence is worth
+    ~10x as many bets of ROI evidence, because per-bet CLV has no result
+    variance — only price variance.
+    """
+    clvs = np.array([b["clv_pct"] for b in bets
+                     if b.get("clv_pct") is not None
+                     and b["clv_pct"] == b["clv_pct"]], dtype=float)
+    if len(clvs) == 0:
+        return float("nan"), float("nan"), float("nan")
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(clvs), size=(resamples, len(clvs)))
+    means = clvs[idx].mean(axis=1)
+    lo, hi = np.percentile(means, [2.5, 97.5])
+    return float(clvs.mean()), float(lo), float(hi)
 
 
 def main():
@@ -154,13 +202,20 @@ def main():
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--tag", default="",
                         help="suffix for the results CSV (e.g. 'train5')")
+    parser.add_argument("--commission", type=float, default=0.02,
+                        help="exchange fee on net winnings (0.02 = Betfair "
+                             "base 2%%; 0 disables)")
+    parser.add_argument("--slippage", type=float, default=0.0,
+                        help="fractional price deterioration vs the recorded "
+                             "odds (0.01 = you get 1%% worse odds)")
     args = parser.parse_args()
 
     print("=" * 72)
     print("AI + ML HEAD-TO-HEAD WALK-FORWARD SIMULATION")
     print(f"League: {LEAGUES[args.league]}  Test: {','.join(args.test_seasons)}"
           f"  Train: {args.train_seasons} prior season(s)")
-    print(f"Seeds: {args.seeds}  Bankroll: ${args.bankroll:,.0f}")
+    print(f"Seeds: {args.seeds}  Bankroll: ${args.bankroll:,.0f}  "
+          f"commission: {args.commission:.0%}  slippage: {args.slippage:.0%}")
     print("=" * 72)
 
     agents_cls = {"ML-only": BettingAgent, "AI+ML": AIMLBettingAgent}
@@ -186,7 +241,9 @@ def main():
             seed = args.seed + i
             for name, cls in agents_cls.items():
                 agent = cls(train, bankroll=args.bankroll, seed=seed)
-                s, bet_rows = run_trial(agent, world)
+                s, bet_rows = run_trial(agent, world,
+                                        commission=args.commission,
+                                        slippage=args.slippage)
                 profit = s["final_bankroll"] - args.bankroll
                 s["unit_roi_pct"] = (100.0 * profit / s["total_staked"]
                                      if s["total_staked"] else 0.0)
@@ -204,15 +261,33 @@ def main():
     for name in agents_cls:
         per_run = [r["unit_roi_pct"] for r in rows[name]]
         pooled = pooled_unit_roi(bets[name])
+        pooled_net = pooled_unit_roi(bets[name], net=True)
         lo, hi = bootstrap_unit_roi_ci(bets[name])
+        lo_net, hi_net = bootstrap_unit_roi_ci(bets[name], net=True)
+        clv_m, clv_lo, clv_hi = mean_clv_ci(bets[name])
         n_bets = len(bets[name])
         verdict[name] = {"pooled_unit_roi_pct": pooled, "ci95": [lo, hi],
+                         "pooled_net_unit_roi_pct": pooled_net,
+                         "ci95_net": [lo_net, hi_net],
+                         "mean_clv_pct": clv_m, "clv_ci95": [clv_lo, clv_hi],
                          "mean_run_unit_roi_pct": float(np.mean(per_run)),
                          "n_bets": n_bets}
         sig = "SIGNIFICANT" if (lo > 0 or hi < 0) else "not significant"
         print(f"  {name:<8}: pooled unit ROI {pooled:+7.2f}%  "
               f"95% CI [{lo:+.1f}%, {hi:+.1f}%] ({sig})  "
               f"mean run {np.mean(per_run):+7.2f}%  ({n_bets} bets)")
+        if args.commission or args.slippage:
+            sig_n = "SIGNIFICANT" if (lo_net > 0 or hi_net < 0) \
+                else "not significant"
+            print(f"           net of {args.commission:.0%} commission "
+                  f"+ {args.slippage:.0%} slippage: {pooled_net:+7.2f}%  "
+                  f"95% CI [{lo_net:+.1f}%, {hi_net:+.1f}%] ({sig_n})")
+        if clv_m == clv_m:
+            sig_c = "SIGNIFICANT" if (clv_lo > 0 or clv_hi < 0) \
+                else "not significant"
+            print(f"           closing-line CLV mean {clv_m:+.2f}%  "
+                  f"95% CI [{clv_lo:+.2f}%, {clv_hi:+.2f}%] ({sig_c})  "
+                  "— beats the close?")
     d = (verdict["AI+ML"]["pooled_unit_roi_pct"]
          - verdict["ML-only"]["pooled_unit_roi_pct"])
     print(f"  AI layer delta on pooled unit ROI: {d:+.2f} pts  "
@@ -236,7 +311,17 @@ def main():
                 "final_bankroll": r["final_bankroll"],
                 "ai_vetoes": r.get("ai_vetoes", 0),
                 "ai_passes": r.get("ai_passes", 0),
-                "ai_upscales": r.get("ai_upscales", 0)})
+                "ai_upscales": r.get("ai_upscales", 0),
+                "pooled_unit_roi_pct": verdict[name]["pooled_unit_roi_pct"],
+                "ci95_lo": verdict[name]["ci95"][0],
+                "ci95_hi": verdict[name]["ci95"][1],
+                "pooled_net_unit_roi_pct": verdict[name]["pooled_net_unit_roi_pct"],
+                "ci95_net_lo": verdict[name]["ci95_net"][0],
+                "ci95_net_hi": verdict[name]["ci95_net"][1],
+                "mean_clv_pct": verdict[name]["mean_clv_pct"],
+                "clv_ci95_lo": verdict[name]["clv_ci95"][0],
+                "clv_ci95_hi": verdict[name]["clv_ci95"][1],
+                "commission": args.commission, "slippage": args.slippage})
     pd.DataFrame(csv_rows).to_csv(out, index=False)
 
     bets_out = RESULTS_DIR / f"ai_ml_bets{suffix}.csv"
