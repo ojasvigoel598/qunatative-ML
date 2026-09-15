@@ -1,0 +1,61 @@
+date,match,score,pick,p_model,stake,odds,won,pl,bankroll_after,result,reason,bucket,agent
+2026-08-21,Arsenal vs Coventry,3-0,,,0.0,,False,0.0,1000000.0,home_win,prob 20% < floor 40%,ML: prob below floor,ML-only
+2026-08-22,Hull vs Man United,2-0,,,0.0,,False,0.0,1000000.0,home_win,prob 28% < floor 40%,ML: prob below floor,ML-only
+2026-08-22,Everton vs Crystal Palace,2-0,,,0.0,,False,0.0,1000000.0,home_win,no edge,ML: no edge vs market,ML-only
+2026-08-22,Ipswich vs Sunderland,2-1,away_win,0.5039,10000.0,2.63,False,-10000.0,990000.0,home_win,edge +32.5% > +4.5% (league penalty +1.5%),BET PLACED,ML-only
+2026-08-22,Nott'm Forest vs Leeds,0-1,,,0.0,,False,0.0,990000.0,away_win,no edge,ML: no edge vs market,ML-only
+2026-08-22,Brentford vs Tottenham,3-0,,,0.0,,False,0.0,990000.0,home_win,no edge,ML: no edge vs market,ML-only
+2026-08-23,Brighton vs Aston Villa,4-0,,,0.0,,False,0.0,990000.0,home_win,no positive edge,ML: no edge vs market,ML-only
+2026-08-23,Man City vs Bournemouth,2-1,,,0.0,,False,0.0,990000.0,home_win,no edge,ML: no edge vs market,ML-only
+2026-08-23,Newcastle vs Liverpool,2-2,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-08-24,Fulham vs Chelsea,2-3,,,0.0,,False,0.0,990000.0,away_win,no edge,ML: no edge vs market,ML-only
+2026-08-28,Crystal Palace vs Man City,1-4,,,0.0,,False,0.0,990000.0,away_win,no edge,ML: no edge vs market,ML-only
+2026-08-29,Coventry vs Hull,0-1,,,0.0,,False,0.0,990000.0,away_win,no edge,ML: no edge vs market,ML-only
+2026-08-29,Tottenham vs Newcastle,0-2,,,0.0,,False,0.0,990000.0,away_win,no edge,ML: no edge vs market,ML-only
+2026-08-29,Liverpool vs Nott'm Forest,2-2,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-08-29,Bournemouth vs Everton,1-1,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-08-30,Chelsea vs Brighton,4-3,,,0.0,,False,0.0,990000.0,home_win,no edge,ML: no edge vs market,ML-only
+2026-08-30,Leeds vs Brentford,1-1,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-08-30,Sunderland vs Fulham,1-0,,,0.0,,False,0.0,990000.0,home_win,no edge,ML: no edge vs market,ML-only
+2026-08-30,Man United vs Ipswich,5-2,,,0.0,,False,0.0,990000.0,home_win,no edge,ML: no edge vs market,ML-only
+2026-08-31,Aston Villa vs Arsenal,0-1,,,0.0,,False,0.0,990000.0,away_win,prob 31% < floor 40%,ML: prob below floor,ML-only
+2026-09-04,Ipswich vs Liverpool,0-2,,,0.0,,False,0.0,990000.0,away_win,no edge,ML: no edge vs market,ML-only
+2026-09-05,Hull vs Aston Villa,0-0,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-09-05,Nott'm Forest vs Tottenham,0-0,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-09-05,Man City vs Coventry,1-0,,,0.0,,False,0.0,990000.0,home_win,prob 21% < floor 40%,ML: prob below floor,ML-only
+2026-09-05,Newcastle vs Bournemouth,2-2,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-09-05,Brighton vs Leeds,1-1,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-09-05,Brentford vs Sunderland,1-1,,,0.0,,False,0.0,990000.0,draw,prob 28% < floor 40%,ML: prob below floor,ML-only
+2026-09-05,Fulham vs Crystal Palace,2-3,,,0.0,,False,0.0,990000.0,away_win,no positive edge,ML: no edge vs market,ML-only
+2026-09-06,Everton vs Man United,2-2,,,0.0,,False,0.0,990000.0,draw,no edge,ML: no edge vs market,ML-only
+2026-09-06,Arsenal vs Chelsea,2-1,,,0.0,,False,0.0,990000.0,home_win,no edge,ML: no edge vs market,ML-only
+2026-08-21,Arsenal vs Coventry,3-0,,,0.0,,False,0.0,1000000.0,home_win,prob 20% < floor 40%,ML: prob below floor,AI+ML
+2026-08-22,Hull vs Man United,2-0,,,0.0,,False,0.0,1000000.0,home_win,prob 28% < floor 40%,ML: prob below floor,AI+ML
+2026-08-22,Everton vs Crystal Palace,2-0,,,0.0,,False,0.0,1000000.0,home_win,no edge,ML: no edge vs market,AI+ML
+2026-08-22,Ipswich vs Sunderland,2-1,away_win,0.5039,2500.0,2.63,False,-2500.0,997500.0,home_win,"edge +32.5% > +4.5% (league penalty +1.5%) | AI PASS (split -0.2%, clv +1.2%, odds 2.63); shrunk x0.25 (ML-market gap 20%)",BET PLACED,AI+ML
+2026-08-22,Nott'm Forest vs Leeds,0-1,,,0.0,,False,0.0,997500.0,away_win,no edge,ML: no edge vs market,AI+ML
+2026-08-22,Brentford vs Tottenham,3-0,,,0.0,,False,0.0,997500.0,home_win,no edge,ML: no edge vs market,AI+ML
+2026-08-23,Brighton vs Aston Villa,4-0,,,0.0,,False,0.0,997500.0,home_win,no positive edge,ML: no edge vs market,AI+ML
+2026-08-23,Man City vs Bournemouth,2-1,,,0.0,,False,0.0,997500.0,home_win,no edge,ML: no edge vs market,AI+ML
+2026-08-23,Newcastle vs Liverpool,2-2,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-08-24,Fulham vs Chelsea,2-3,,,0.0,,False,0.0,997500.0,away_win,no edge,ML: no edge vs market,AI+ML
+2026-08-28,Crystal Palace vs Man City,1-4,,,0.0,,False,0.0,997500.0,away_win,no edge,ML: no edge vs market,AI+ML
+2026-08-29,Coventry vs Hull,0-1,,,0.0,,False,0.0,997500.0,away_win,no edge,ML: no edge vs market,AI+ML
+2026-08-29,Tottenham vs Newcastle,0-2,,,0.0,,False,0.0,997500.0,away_win,no edge,ML: no edge vs market,AI+ML
+2026-08-29,Liverpool vs Nott'm Forest,2-2,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-08-29,Bournemouth vs Everton,1-1,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-08-30,Chelsea vs Brighton,4-3,,,0.0,,False,0.0,997500.0,home_win,no edge,ML: no edge vs market,AI+ML
+2026-08-30,Leeds vs Brentford,1-1,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-08-30,Sunderland vs Fulham,1-0,,,0.0,,False,0.0,997500.0,home_win,no edge,ML: no edge vs market,AI+ML
+2026-08-30,Man United vs Ipswich,5-2,,,0.0,,False,0.0,997500.0,home_win,no edge,ML: no edge vs market,AI+ML
+2026-08-31,Aston Villa vs Arsenal,0-1,,,0.0,,False,0.0,997500.0,away_win,prob 31% < floor 40%,ML: prob below floor,AI+ML
+2026-09-04,Ipswich vs Liverpool,0-2,,,0.0,,False,0.0,997500.0,away_win,no edge,ML: no edge vs market,AI+ML
+2026-09-05,Hull vs Aston Villa,0-0,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-09-05,Nott'm Forest vs Tottenham,0-0,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-09-05,Man City vs Coventry,1-0,,,0.0,,False,0.0,997500.0,home_win,prob 21% < floor 40%,ML: prob below floor,AI+ML
+2026-09-05,Newcastle vs Bournemouth,2-2,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-09-05,Brighton vs Leeds,1-1,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-09-05,Brentford vs Sunderland,1-1,,,0.0,,False,0.0,997500.0,draw,prob 28% < floor 40%,ML: prob below floor,AI+ML
+2026-09-05,Fulham vs Crystal Palace,2-3,,,0.0,,False,0.0,997500.0,away_win,no positive edge,ML: no edge vs market,AI+ML
+2026-09-06,Everton vs Man United,2-2,,,0.0,,False,0.0,997500.0,draw,no edge,ML: no edge vs market,AI+ML
+2026-09-06,Arsenal vs Chelsea,2-1,,,0.0,,False,0.0,997500.0,home_win,no edge,ML: no edge vs market,AI+ML
