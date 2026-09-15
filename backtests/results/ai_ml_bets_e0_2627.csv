@@ -1,0 +1,3 @@
+agent,seed,season,match,kickoff,pick,odds,stake,won,profit,ai_layer
+ML-only,42,2627,Ipswich vs Sunderland,2026-08-22,away_win,2.63,10000.0,0,-10000.0,
+AI+ML,42,2627,Ipswich vs Sunderland,2026-08-22,away_win,2.63,2500.0,0,-2500.0,PASS

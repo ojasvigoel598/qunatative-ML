@@ -1,0 +1,149 @@
+agent,seed,season,match,kickoff,pick,odds,stake,won,profit,ai_layer
+ML-only,42,2425,Leganes vs Las Palmas,2024-08-25,home_win,2.25,10000.0,1,12500.0,
+ML-only,42,2425,Villarreal vs Celta,2024-08-26,home_win,1.91,10000.0,1,9100.0,
+ML-only,42,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,10000.0,1,18000.0,
+ML-only,42,2425,Leganes vs Mallorca,2024-08-31,home_win,2.5,10000.0,0,-10000.0,
+ML-only,42,2425,Osasuna vs Celta,2024-09-01,home_win,2.45,10000.0,1,14500.0,
+ML-only,42,2425,Sevilla vs Getafe,2024-09-14,home_win,2.2,10000.0,1,12000.0,
+ML-only,42,2425,Betis vs Getafe,2024-09-18,home_win,1.91,10000.0,1,9100.0,
+ML-only,42,2425,Girona vs Vallecano,2024-09-25,home_win,1.73,10000.0,0,-10000.0,
+ML-only,42,2425,Getafe vs Alaves,2024-09-28,draw,2.88,10000.0,0,-10000.0,
+ML-only,42,2425,Ath Bilbao vs Sevilla,2024-09-29,home_win,1.7,10000.0,0,-10000.0,
+ML-only,42,2425,Leganes vs Valencia,2024-10-04,home_win,2.9,10000.0,0,-10000.0,
+ML-only,42,2425,Espanol vs Mallorca,2024-10-05,away_win,2.55,10000.0,0,-10000.0,
+ML-only,42,2425,Las Palmas vs Celta,2024-10-05,home_win,3.1,10000.0,0,-10000.0,
+ML-only,42,2425,Sociedad vs Ath Madrid,2024-10-06,away_win,2.3,10000.0,0,-10000.0,
+ML-only,42,2425,Girona vs Sociedad,2024-10-19,home_win,2.4,9280.0,0,-9280.0,
+ML-only,43,2425,Leganes vs Las Palmas,2024-08-25,home_win,2.25,10000.0,1,12500.0,
+ML-only,43,2425,Villarreal vs Celta,2024-08-26,home_win,1.91,10000.0,1,9100.0,
+ML-only,43,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,10000.0,1,18000.0,
+ML-only,43,2425,Leganes vs Mallorca,2024-08-31,home_win,2.5,10000.0,0,-10000.0,
+ML-only,43,2425,Sevilla vs Getafe,2024-09-14,home_win,2.2,10000.0,1,12000.0,
+ML-only,43,2425,Betis vs Getafe,2024-09-18,home_win,1.91,10000.0,1,9100.0,
+ML-only,43,2425,Girona vs Vallecano,2024-09-25,home_win,1.73,10000.0,0,-10000.0,
+ML-only,43,2425,Getafe vs Alaves,2024-09-28,draw,2.88,10000.0,0,-10000.0,
+ML-only,43,2425,Ath Bilbao vs Sevilla,2024-09-29,home_win,1.7,10000.0,0,-10000.0,
+ML-only,43,2425,Ath Madrid vs Real Madrid,2024-09-29,away_win,2.5,10000.0,0,-10000.0,
+ML-only,43,2425,Leganes vs Valencia,2024-10-04,home_win,2.9,10000.0,0,-10000.0,
+ML-only,43,2425,Las Palmas vs Celta,2024-10-05,home_win,3.1,10000.0,0,-10000.0,
+ML-only,43,2425,Sociedad vs Ath Madrid,2024-10-06,away_win,2.3,10000.0,0,-10000.0,
+ML-only,43,2425,Girona vs Sociedad,2024-10-19,home_win,2.4,10000.0,0,-10000.0,
+ML-only,43,2425,Osasuna vs Betis,2024-10-19,home_win,2.5,5605.0,0,-5605.0,
+ML-only,44,2425,Leganes vs Las Palmas,2024-08-25,home_win,2.25,10000.0,1,12500.0,
+ML-only,44,2425,Villarreal vs Celta,2024-08-26,home_win,1.91,10000.0,1,9100.0,
+ML-only,44,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,10000.0,1,18000.0,
+ML-only,44,2425,Leganes vs Mallorca,2024-08-31,home_win,2.5,10000.0,0,-10000.0,
+ML-only,44,2425,Betis vs Getafe,2024-09-18,home_win,1.91,10000.0,1,9100.0,
+ML-only,44,2425,Girona vs Vallecano,2024-09-25,home_win,1.73,10000.0,0,-10000.0,
+ML-only,44,2425,Getafe vs Alaves,2024-09-28,draw,2.88,10000.0,0,-10000.0,
+ML-only,44,2425,Ath Bilbao vs Sevilla,2024-09-29,home_win,1.7,10000.0,0,-10000.0,
+ML-only,44,2425,Ath Madrid vs Real Madrid,2024-09-29,away_win,2.5,10000.0,0,-10000.0,
+ML-only,44,2425,Leganes vs Valencia,2024-10-04,home_win,2.9,10000.0,0,-10000.0,
+ML-only,44,2425,Las Palmas vs Celta,2024-10-05,home_win,3.1,10000.0,0,-10000.0,
+ML-only,44,2425,Girona vs Sociedad,2024-10-19,home_win,2.4,10000.0,0,-10000.0,
+ML-only,44,2425,Osasuna vs Betis,2024-10-19,home_win,2.5,10000.0,0,-10000.0,
+ML-only,44,2425,Espanol vs Sevilla,2024-10-25,home_win,3.0,10000.0,0,-10000.0,
+ML-only,44,2425,Betis vs Celta,2024-11-10,home_win,1.95,2305.0,0,-2305.0,
+ML-only,45,2425,Leganes vs Las Palmas,2024-08-25,home_win,2.25,10000.0,1,12500.0,
+ML-only,45,2425,Villarreal vs Celta,2024-08-26,home_win,1.91,10000.0,1,9100.0,
+ML-only,45,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,10000.0,1,18000.0,
+ML-only,45,2425,Leganes vs Mallorca,2024-08-31,home_win,2.5,10000.0,0,-10000.0,
+ML-only,45,2425,Osasuna vs Celta,2024-09-01,home_win,2.45,10000.0,1,14500.0,
+ML-only,45,2425,Espanol vs Alaves,2024-09-14,home_win,2.63,10000.0,1,16300.0,
+ML-only,45,2425,Betis vs Getafe,2024-09-18,home_win,1.91,10000.0,1,9100.0,
+ML-only,45,2425,Girona vs Vallecano,2024-09-25,home_win,1.73,10000.0,0,-10000.0,
+ML-only,45,2425,Valladolid vs Mallorca,2024-09-27,away_win,2.63,10000.0,1,16300.0,
+ML-only,45,2425,Getafe vs Alaves,2024-09-28,draw,2.88,10000.0,0,-10000.0,
+ML-only,45,2425,Ath Bilbao vs Sevilla,2024-09-29,home_win,1.7,10000.0,0,-10000.0,
+ML-only,45,2425,Ath Madrid vs Real Madrid,2024-09-29,away_win,2.5,10000.0,0,-10000.0,
+ML-only,45,2425,Leganes vs Valencia,2024-10-04,home_win,2.9,10000.0,0,-10000.0,
+ML-only,45,2425,Espanol vs Mallorca,2024-10-05,away_win,2.55,10000.0,0,-10000.0,
+ML-only,45,2425,Las Palmas vs Celta,2024-10-05,home_win,3.1,10000.0,0,-10000.0,
+ML-only,45,2425,Sociedad vs Ath Madrid,2024-10-06,away_win,2.3,2370.0,0,-2370.0,
+ML-only,46,2425,Leganes vs Las Palmas,2024-08-25,home_win,2.25,10000.0,1,12500.0,
+ML-only,46,2425,Villarreal vs Celta,2024-08-26,home_win,1.91,10000.0,1,9100.0,
+ML-only,46,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,10000.0,1,18000.0,
+ML-only,46,2425,Leganes vs Mallorca,2024-08-31,home_win,2.5,10000.0,0,-10000.0,
+ML-only,46,2425,Osasuna vs Celta,2024-09-01,home_win,2.45,10000.0,1,14500.0,
+ML-only,46,2425,Sevilla vs Getafe,2024-09-14,home_win,2.2,10000.0,1,12000.0,
+ML-only,46,2425,Betis vs Getafe,2024-09-18,home_win,1.91,10000.0,1,9100.0,
+ML-only,46,2425,Girona vs Vallecano,2024-09-25,home_win,1.73,10000.0,0,-10000.0,
+ML-only,46,2425,Getafe vs Alaves,2024-09-28,draw,2.88,10000.0,0,-10000.0,
+ML-only,46,2425,Ath Bilbao vs Sevilla,2024-09-29,home_win,1.7,10000.0,0,-10000.0,
+ML-only,46,2425,Leganes vs Valencia,2024-10-04,home_win,2.9,10000.0,0,-10000.0,
+ML-only,46,2425,Las Palmas vs Celta,2024-10-05,home_win,3.1,10000.0,0,-10000.0,
+ML-only,46,2425,Sevilla vs Betis,2024-10-06,home_win,2.45,10000.0,1,14500.0,
+ML-only,46,2425,Sociedad vs Ath Madrid,2024-10-06,away_win,2.3,10000.0,0,-10000.0,
+ML-only,46,2425,Girona vs Sociedad,2024-10-19,home_win,2.4,10000.0,0,-10000.0,
+ML-only,46,2425,Osasuna vs Betis,2024-10-19,home_win,2.5,1455.0,0,-1455.0,
+ML-only,42,2526,Valencia vs Sociedad,2025-08-16,home_win,2.6,10000.0,0,-10000.0,
+ML-only,43,2526,Valencia vs Sociedad,2025-08-16,home_win,2.6,10000.0,0,-10000.0,
+ML-only,44,2526,Valencia vs Sociedad,2025-08-16,home_win,2.6,10000.0,0,-10000.0,
+ML-only,45,2526,Valencia vs Sociedad,2025-08-16,home_win,2.6,10000.0,0,-10000.0,
+ML-only,46,2526,Valencia vs Sociedad,2025-08-16,home_win,2.6,10000.0,0,-10000.0,
+AI+ML,42,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,6247.26,1,11245.07,PASS
+AI+ML,42,2425,Getafe vs Alaves,2024-09-28,draw,2.88,7173.28,0,-7173.28,PASS
+AI+ML,42,2425,Vallecano vs Ath Bilbao,2024-12-01,away_win,2.7,5394.14,1,9170.04,PASS
+AI+ML,42,2425,Valencia vs Vallecano,2024-12-07,home_win,2.25,2500.0,0,-2500.0,PASS
+AI+ML,42,2425,Valladolid vs Valencia,2024-12-13,draw,3.1,7924.21,0,-7924.21,PASS
+AI+ML,42,2425,Vallecano vs Girona,2025-01-26,away_win,2.88,5353.28,0,-5353.28,PASS
+AI+ML,42,2425,Girona vs Celta,2025-03-01,home_win,2.2,2500.0,0,-2500.0,PASS
+AI+ML,43,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,6039.26,1,10870.67,PASS
+AI+ML,43,2425,Getafe vs Alaves,2024-09-28,draw,2.88,7241.28,0,-7241.28,PASS
+AI+ML,43,2425,Girona vs Espanol,2024-11-23,home_win,1.67,2500.0,1,1675.0,PASS
+AI+ML,43,2425,Vallecano vs Ath Bilbao,2024-12-01,away_win,2.7,5506.14,1,9360.44,PASS
+AI+ML,43,2425,Valencia vs Vallecano,2024-12-07,home_win,2.25,2500.0,0,-2500.0,PASS
+AI+ML,43,2425,Valladolid vs Valencia,2024-12-13,draw,3.1,8360.21,0,-8360.21,PASS
+AI+ML,43,2425,Vallecano vs Girona,2025-01-26,away_win,2.88,4725.28,0,-4725.28,PASS
+AI+ML,43,2425,Girona vs Celta,2025-03-01,home_win,2.2,2500.0,0,-2500.0,PASS
+AI+ML,44,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,6011.26,1,10820.27,PASS
+AI+ML,44,2425,Getafe vs Alaves,2024-09-28,draw,2.88,7453.28,0,-7453.28,PASS
+AI+ML,44,2425,Girona vs Espanol,2024-11-23,home_win,1.67,2500.0,1,1675.0,PASS
+AI+ML,44,2425,Vallecano vs Ath Bilbao,2024-12-01,away_win,2.7,4990.14,1,8483.24,PASS
+AI+ML,44,2425,Valencia vs Vallecano,2024-12-07,home_win,2.25,2500.0,0,-2500.0,PASS
+AI+ML,44,2425,Valladolid vs Valencia,2024-12-13,draw,3.1,8256.21,0,-8256.21,PASS
+AI+ML,44,2425,Vallecano vs Girona,2025-01-26,away_win,2.88,4613.28,0,-4613.28,PASS
+AI+ML,44,2425,Girona vs Celta,2025-03-01,home_win,2.2,2500.0,0,-2500.0,PASS
+AI+ML,45,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,5611.26,1,10100.27,PASS
+AI+ML,45,2425,Getafe vs Alaves,2024-09-28,draw,2.88,7413.28,0,-7413.28,PASS
+AI+ML,45,2425,Vallecano vs Ath Bilbao,2024-12-01,away_win,2.7,5038.14,1,8564.84,PASS
+AI+ML,45,2425,Valencia vs Vallecano,2024-12-07,home_win,2.25,2500.0,0,-2500.0,PASS
+AI+ML,45,2425,Valladolid vs Valencia,2024-12-13,draw,3.1,8180.21,0,-8180.21,PASS
+AI+ML,45,2425,Vallecano vs Girona,2025-01-26,away_win,2.88,5329.28,0,-5329.28,PASS
+AI+ML,45,2425,Girona vs Celta,2025-03-01,home_win,2.2,2500.0,0,-2500.0,PASS
+AI+ML,46,2425,Espanol vs Vallecano,2024-08-31,home_win,2.8,5975.26,1,10755.47,PASS
+AI+ML,46,2425,Getafe vs Alaves,2024-09-28,draw,2.88,7177.28,0,-7177.28,PASS
+AI+ML,46,2425,Girona vs Espanol,2024-11-23,home_win,1.67,2500.0,1,1675.0,PASS
+AI+ML,46,2425,Vallecano vs Ath Bilbao,2024-12-01,away_win,2.7,4910.14,1,8347.24,PASS
+AI+ML,46,2425,Valencia vs Vallecano,2024-12-07,home_win,2.25,2500.0,0,-2500.0,PASS
+AI+ML,46,2425,Valladolid vs Valencia,2024-12-13,draw,3.1,7800.21,0,-7800.21,PASS
+AI+ML,46,2425,Vallecano vs Girona,2025-01-26,away_win,2.88,4937.28,0,-4937.28,PASS
+AI+ML,46,2425,Girona vs Celta,2025-03-01,home_win,2.2,2500.0,0,-2500.0,PASS
+AI+ML,42,2526,Valencia vs Getafe,2025-08-29,home_win,2.3,2500.0,1,3250.0,PASS
+AI+ML,42,2526,Osasuna vs Vallecano,2025-09-14,home_win,2.55,4235.91,1,6565.66,PASS
+AI+ML,42,2526,Valencia vs Ath Bilbao,2025-09-20,away_win,2.55,4781.82,0,-4781.82,PASS
+AI+ML,42,2526,Villarreal vs Getafe,2025-12-06,home_win,1.62,2500.0,1,1550.0,PASS
+AI+ML,42,2526,Vallecano vs Betis,2025-12-15,away_win,2.75,5743.68,0,-5743.68,PASS
+AI+ML,43,2526,Valencia vs Getafe,2025-08-29,home_win,2.3,2500.0,1,3250.0,PASS
+AI+ML,43,2526,Osasuna vs Vallecano,2025-09-14,home_win,2.55,4015.91,1,6224.66,PASS
+AI+ML,43,2526,Valencia vs Ath Bilbao,2025-09-20,away_win,2.55,4577.82,0,-4577.82,PASS
+AI+ML,43,2526,Girona vs Alaves,2025-11-08,draw,3.25,8248.9,0,-8248.9,PASS
+AI+ML,43,2526,Villarreal vs Getafe,2025-12-06,home_win,1.62,2500.0,1,1550.0,PASS
+AI+ML,43,2526,Vallecano vs Betis,2025-12-15,away_win,2.75,5899.68,0,-5899.68,PASS
+AI+ML,44,2526,Valencia vs Getafe,2025-08-29,home_win,2.3,2500.0,1,3250.0,PASS
+AI+ML,44,2526,Osasuna vs Vallecano,2025-09-14,home_win,2.55,3955.91,1,6131.66,PASS
+AI+ML,44,2526,Valencia vs Ath Bilbao,2025-09-20,away_win,2.55,4321.82,0,-4321.82,PASS
+AI+ML,44,2526,Girona vs Alaves,2025-11-08,draw,3.25,8944.9,0,-8944.9,PASS
+AI+ML,44,2526,Villarreal vs Getafe,2025-12-06,home_win,1.62,2500.0,1,1550.0,PASS
+AI+ML,44,2526,Vallecano vs Betis,2025-12-15,away_win,2.75,5435.68,0,-5435.68,PASS
+AI+ML,45,2526,Valencia vs Getafe,2025-08-29,home_win,2.3,2500.0,1,3250.0,PASS
+AI+ML,45,2526,Osasuna vs Vallecano,2025-09-14,home_win,2.55,4163.91,1,6454.06,PASS
+AI+ML,45,2526,Valencia vs Ath Bilbao,2025-09-20,away_win,2.55,4573.82,0,-4573.82,PASS
+AI+ML,45,2526,Girona vs Alaves,2025-11-08,draw,3.25,8900.9,0,-8900.9,PASS
+AI+ML,45,2526,Villarreal vs Getafe,2025-12-06,home_win,1.62,2500.0,1,1550.0,PASS
+AI+ML,45,2526,Vallecano vs Betis,2025-12-15,away_win,2.75,5611.68,0,-5611.68,PASS
+AI+ML,46,2526,Valencia vs Getafe,2025-08-29,home_win,2.3,2500.0,1,3250.0,PASS
+AI+ML,46,2526,Osasuna vs Vallecano,2025-09-14,home_win,2.55,3875.91,1,6007.66,PASS
+AI+ML,46,2526,Valencia vs Ath Bilbao,2025-09-20,away_win,2.55,4245.82,0,-4245.82,PASS
+AI+ML,46,2526,Villarreal vs Getafe,2025-12-06,home_win,1.62,2500.0,1,1550.0,PASS
+AI+ML,46,2526,Vallecano vs Betis,2025-12-15,away_win,2.75,5747.68,0,-5747.68,PASS

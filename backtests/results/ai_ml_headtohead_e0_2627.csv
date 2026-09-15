@@ -1,0 +1,3 @@
+agent,season,seed,roi_pct,unit_roi_pct,n_bets,n_wins,strike_rate,total_staked,final_bankroll,ai_vetoes,ai_passes,ai_upscales
+ML-only,2627,42,-1.0000000000000009,-100.0,1,0,0.0,10000.0,990000.0,0,0,0
+AI+ML,2627,42,-0.24999999999999467,-100.0,1,0,0.0,2500.0,997500.0,0,1,0
