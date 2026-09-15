@@ -1,228 +1,228 @@
-agent,seed,season,match,kickoff,pick,odds,stake,won,profit,ai_layer
-ML-only,42,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,10000.0,1,17500.0,
-ML-only,42,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,10000.0,1,18000.0,
-ML-only,42,2425,Brighton vs Man United,2024-08-24,away_win,2.63,10000.0,0,-10000.0,
-ML-only,42,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,10000.0,0,-10000.0,
-ML-only,42,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,10000.0,1,15000.0,
-ML-only,42,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,10000.0,1,13000.0,
-ML-only,42,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,10000.0,0,-10000.0,
-ML-only,42,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,10000.0,0,-10000.0,
-ML-only,42,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,10000.0,0,-10000.0,
-ML-only,42,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,10000.0,1,18000.0,
-ML-only,42,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,10000.0,1,20000.0,
-ML-only,42,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,10000.0,0,-10000.0,
-ML-only,42,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,10000.0,0,-10000.0,
-ML-only,42,2425,Aston Villa vs Bournemouth,2024-10-26,home_win,1.85,10000.0,0,-10000.0,
-ML-only,42,2425,West Ham vs Man United,2024-10-27,away_win,2.3,10000.0,0,-10000.0,
-ML-only,42,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,1725.0,0,-1725.0,
-ML-only,43,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,10000.0,1,17500.0,
-ML-only,43,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,10000.0,1,18000.0,
-ML-only,43,2425,Brighton vs Man United,2024-08-24,away_win,2.63,10000.0,0,-10000.0,
-ML-only,43,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,10000.0,0,-10000.0,
-ML-only,43,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,10000.0,1,15000.0,
-ML-only,43,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,10000.0,1,13000.0,
-ML-only,43,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,10000.0,0,-10000.0,
-ML-only,43,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,10000.0,0,-10000.0,
-ML-only,43,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,10000.0,0,-10000.0,
-ML-only,43,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,10000.0,1,18000.0,
-ML-only,43,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,10000.0,1,20000.0,
-ML-only,43,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,10000.0,0,-10000.0,
-ML-only,43,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,10000.0,0,-10000.0,
-ML-only,43,2425,West Ham vs Man United,2024-10-27,away_win,2.3,10000.0,0,-10000.0,
-ML-only,43,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,10000.0,0,-10000.0,
-ML-only,43,2425,Southampton vs Everton,2024-11-02,away_win,2.63,1725.0,0,-1725.0,
-ML-only,44,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,10000.0,1,17500.0,
-ML-only,44,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,10000.0,1,18000.0,
-ML-only,44,2425,Brighton vs Man United,2024-08-24,away_win,2.63,10000.0,0,-10000.0,
-ML-only,44,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,10000.0,0,-10000.0,
-ML-only,44,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,10000.0,1,15000.0,
-ML-only,44,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,10000.0,1,13000.0,
-ML-only,44,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,10000.0,0,-10000.0,
-ML-only,44,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,10000.0,0,-10000.0,
-ML-only,44,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,10000.0,0,-10000.0,
-ML-only,44,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,10000.0,1,18000.0,
-ML-only,44,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,10000.0,0,-10000.0,
-ML-only,44,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,10000.0,0,-10000.0,
-ML-only,44,2425,West Ham vs Man United,2024-10-27,away_win,2.3,10000.0,0,-10000.0,
-ML-only,44,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,10000.0,0,-10000.0,
-ML-only,44,2425,Southampton vs Everton,2024-11-02,away_win,2.63,8725.0,0,-8725.0,
-ML-only,45,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,10000.0,1,17500.0,
-ML-only,45,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,10000.0,1,18000.0,
-ML-only,45,2425,Brighton vs Man United,2024-08-24,away_win,2.63,10000.0,0,-10000.0,
-ML-only,45,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,10000.0,0,-10000.0,
-ML-only,45,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,10000.0,1,15000.0,
-ML-only,45,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,10000.0,1,13000.0,
-ML-only,45,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,10000.0,0,-10000.0,
-ML-only,45,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,10000.0,0,-10000.0,
-ML-only,45,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,10000.0,0,-10000.0,
-ML-only,45,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,10000.0,1,18000.0,
-ML-only,45,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,10000.0,1,20000.0,
-ML-only,45,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,10000.0,0,-10000.0,
-ML-only,45,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,10000.0,0,-10000.0,
-ML-only,45,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,10000.0,0,-10000.0,
-ML-only,45,2425,Wolves vs Crystal Palace,2024-11-02,away_win,2.88,10000.0,0,-10000.0,
-ML-only,45,2425,Southampton vs Everton,2024-11-02,away_win,2.63,1725.0,0,-1725.0,
-ML-only,46,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,10000.0,1,17500.0,
-ML-only,46,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,10000.0,1,18000.0,
-ML-only,46,2425,Brighton vs Man United,2024-08-24,away_win,2.63,10000.0,0,-10000.0,
-ML-only,46,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,10000.0,0,-10000.0,
-ML-only,46,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,10000.0,1,15000.0,
-ML-only,46,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,10000.0,1,13000.0,
-ML-only,46,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,10000.0,0,-10000.0,
-ML-only,46,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,10000.0,0,-10000.0,
-ML-only,46,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,10000.0,0,-10000.0,
-ML-only,46,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,10000.0,1,18000.0,
-ML-only,46,2425,Newcastle vs Brighton,2024-10-19,home_win,1.95,10000.0,0,-10000.0,
-ML-only,46,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,10000.0,1,20000.0,
-ML-only,46,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,10000.0,0,-10000.0,
-ML-only,46,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,10000.0,0,-10000.0,
-ML-only,46,2425,West Ham vs Man United,2024-10-27,away_win,2.3,10000.0,0,-10000.0,
-ML-only,46,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,1725.0,0,-1725.0,
-ML-only,42,2526,Sunderland vs West Ham,2025-08-16,home_win,3.25,10000.0,1,22500.0,
-ML-only,42,2526,Leeds vs Everton,2025-08-18,away_win,3.0,10000.0,0,-10000.0,
-ML-only,42,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,10000.0,0,-10000.0,
-ML-only,42,2526,Crystal Palace vs Nott'm Forest,2025-08-24,home_win,2.35,10000.0,0,-10000.0,
-ML-only,42,2526,Fulham vs Man United,2025-08-24,home_win,3.25,10000.0,0,-10000.0,
-ML-only,42,2526,West Ham vs Tottenham,2025-09-13,home_win,3.4,10000.0,0,-10000.0,
-ML-only,42,2526,Brentford vs Man United,2025-09-27,home_win,3.4,10000.0,1,24000.0,
-ML-only,42,2526,Aston Villa vs Fulham,2025-09-28,home_win,2.3,10000.0,1,13000.0,
-ML-only,42,2526,Chelsea vs Liverpool,2025-10-04,home_win,2.8,10000.0,1,18000.0,
-ML-only,42,2526,Wolves vs Brighton,2025-10-05,away_win,2.0,10000.0,0,-10000.0,
-ML-only,42,2526,Aston Villa vs Burnley,2025-10-05,home_win,1.6,10000.0,1,6000.0,
-ML-only,42,2526,Everton vs Crystal Palace,2025-10-05,away_win,3.0,10000.0,0,-10000.0,
-ML-only,42,2526,Brighton vs Newcastle,2025-10-18,home_win,2.63,10000.0,1,16300.0,
-ML-only,42,2526,Sunderland vs Wolves,2025-10-18,home_win,2.5,10000.0,1,15000.0,
-ML-only,42,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,10000.0,1,25000.0,
-ML-only,42,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,10000.0,0,-10000.0,
-ML-only,43,2526,Sunderland vs West Ham,2025-08-16,home_win,3.25,10000.0,1,22500.0,
-ML-only,43,2526,Leeds vs Everton,2025-08-18,away_win,3.0,10000.0,0,-10000.0,
-ML-only,43,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,10000.0,0,-10000.0,
-ML-only,43,2526,Crystal Palace vs Nott'm Forest,2025-08-24,home_win,2.35,10000.0,0,-10000.0,
-ML-only,43,2526,Fulham vs Man United,2025-08-24,home_win,3.25,10000.0,0,-10000.0,
-ML-only,43,2526,West Ham vs Tottenham,2025-09-13,home_win,3.4,10000.0,0,-10000.0,
-ML-only,43,2526,Brentford vs Man United,2025-09-27,home_win,3.4,10000.0,1,24000.0,
-ML-only,43,2526,Aston Villa vs Fulham,2025-09-28,home_win,2.3,10000.0,1,13000.0,
-ML-only,43,2526,Leeds vs Tottenham,2025-10-04,away_win,2.5,10000.0,1,15000.0,
-ML-only,43,2526,Chelsea vs Liverpool,2025-10-04,home_win,2.8,10000.0,1,18000.0,
-ML-only,43,2526,Wolves vs Brighton,2025-10-05,away_win,2.0,10000.0,0,-10000.0,
-ML-only,43,2526,Aston Villa vs Burnley,2025-10-05,home_win,1.6,10000.0,1,6000.0,
-ML-only,43,2526,Everton vs Crystal Palace,2025-10-05,away_win,3.0,10000.0,0,-10000.0,
-ML-only,43,2526,Brighton vs Newcastle,2025-10-18,home_win,2.63,10000.0,1,16300.0,
-ML-only,43,2526,Crystal Palace vs Bournemouth,2025-10-18,home_win,2.2,10000.0,0,-10000.0,
-ML-only,43,2526,Sunderland vs Wolves,2025-10-18,home_win,2.5,5220.0,1,7830.0,
-ML-only,43,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,1174.5,1,2936.25,
-ML-only,43,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,440.44,0,-440.44,
-ML-only,44,2526,Sunderland vs West Ham,2025-08-16,home_win,3.25,10000.0,1,22500.0,
-ML-only,44,2526,Leeds vs Everton,2025-08-18,away_win,3.0,10000.0,0,-10000.0,
-ML-only,44,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,10000.0,0,-10000.0,
-ML-only,44,2526,Crystal Palace vs Nott'm Forest,2025-08-24,home_win,2.35,10000.0,0,-10000.0,
-ML-only,44,2526,Fulham vs Man United,2025-08-24,home_win,3.25,10000.0,0,-10000.0,
-ML-only,44,2526,West Ham vs Tottenham,2025-09-13,home_win,3.4,10000.0,0,-10000.0,
-ML-only,44,2526,Brentford vs Man United,2025-09-27,home_win,3.4,10000.0,1,24000.0,
-ML-only,44,2526,Aston Villa vs Fulham,2025-09-28,home_win,2.3,10000.0,1,13000.0,
-ML-only,44,2526,Chelsea vs Liverpool,2025-10-04,home_win,2.8,10000.0,1,18000.0,
-ML-only,44,2526,Wolves vs Brighton,2025-10-05,away_win,2.0,10000.0,0,-10000.0,
-ML-only,44,2526,Aston Villa vs Burnley,2025-10-05,home_win,1.6,10000.0,1,6000.0,
-ML-only,44,2526,Everton vs Crystal Palace,2025-10-05,away_win,3.0,10000.0,0,-10000.0,
-ML-only,44,2526,Brighton vs Newcastle,2025-10-18,home_win,2.63,10000.0,1,16300.0,
-ML-only,44,2526,Crystal Palace vs Bournemouth,2025-10-18,home_win,2.2,10000.0,0,-10000.0,
-ML-only,44,2526,Sunderland vs Wolves,2025-10-18,home_win,2.5,10000.0,1,15000.0,
-ML-only,44,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,5220.0,1,13050.0,
-ML-only,44,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,1957.5,0,-1957.5,
-ML-only,45,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,10000.0,0,-10000.0,
-ML-only,45,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,10000.0,0,-10000.0,
-ML-only,45,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,10000.0,1,25000.0,
-ML-only,45,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,10000.0,0,-10000.0,
-ML-only,45,2526,West Ham vs Brentford,2025-10-20,away_win,2.88,10000.0,1,18800.0,
-ML-only,45,2526,Leeds vs West Ham,2025-10-24,away_win,4.75,10000.0,0,-10000.0,
-ML-only,45,2526,Tottenham vs Chelsea,2025-11-01,away_win,2.5,10000.0,1,15000.0,
-ML-only,45,2526,Brighton vs Leeds,2025-11-01,home_win,1.85,10000.0,1,8500.0,
-ML-only,45,2526,Sunderland vs Everton,2025-11-03,home_win,2.7,10000.0,0,-10000.0,
-ML-only,45,2526,Tottenham vs Man United,2025-11-08,away_win,2.5,10000.0,0,-10000.0,
-ML-only,45,2526,Everton vs Fulham,2025-11-08,home_win,2.2,10000.0,1,12000.0,
-ML-only,45,2526,Man City vs Liverpool,2025-11-09,home_win,1.9,10000.0,1,9000.0,
-ML-only,45,2526,Nott'm Forest vs Leeds,2025-11-09,home_win,2.25,10000.0,1,12500.0,
-ML-only,45,2526,Aston Villa vs Bournemouth,2025-11-09,home_win,2.2,10000.0,1,12000.0,
-ML-only,45,2526,Brentford vs Newcastle,2025-11-09,home_win,2.8,10000.0,1,18000.0,
-ML-only,45,2526,Crystal Palace vs Brighton,2025-11-09,home_win,2.25,10000.0,0,-10000.0,
-ML-only,46,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,10000.0,0,-10000.0,
-ML-only,46,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,10000.0,0,-10000.0,
-ML-only,46,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,10000.0,1,25000.0,
-ML-only,46,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,10000.0,0,-10000.0,
-ML-only,46,2526,West Ham vs Brentford,2025-10-20,away_win,2.88,10000.0,1,18800.0,
-ML-only,46,2526,Leeds vs West Ham,2025-10-24,away_win,4.75,10000.0,0,-10000.0,
-ML-only,46,2526,Tottenham vs Chelsea,2025-11-01,away_win,2.5,10000.0,1,15000.0,
-ML-only,46,2526,Brighton vs Leeds,2025-11-01,home_win,1.85,10000.0,1,8500.0,
-ML-only,46,2526,Sunderland vs Everton,2025-11-03,home_win,2.7,10000.0,0,-10000.0,
-ML-only,46,2526,Everton vs Fulham,2025-11-08,home_win,2.2,10000.0,1,12000.0,
-ML-only,46,2526,Man City vs Liverpool,2025-11-09,home_win,1.9,10000.0,1,9000.0,
-ML-only,46,2526,Nott'm Forest vs Leeds,2025-11-09,home_win,2.25,10000.0,1,12500.0,
-ML-only,46,2526,Aston Villa vs Bournemouth,2025-11-09,home_win,2.2,10000.0,1,12000.0,
-ML-only,46,2526,Brentford vs Newcastle,2025-11-09,home_win,2.8,10000.0,1,18000.0,
-ML-only,46,2526,Crystal Palace vs Brighton,2025-11-09,home_win,2.25,10000.0,0,-10000.0,
-ML-only,46,2526,Leeds vs Aston Villa,2025-11-23,away_win,2.4,10000.0,1,14000.0,
-ML-only,46,2526,Sunderland vs Bournemouth,2025-11-29,home_win,3.2,2720.0,1,5984.0,
-ML-only,46,2526,Everton vs Newcastle,2025-11-29,home_win,2.8,897.6,0,-897.6,
-AI+ML,42,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,3795.11,1,5692.66,PASS
-AI+ML,42,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,4604.34,1,8656.16,PASS
-AI+ML,42,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,7479.66,0,-7479.66,PASS
-AI+ML,42,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,5200.34,0,-5200.34,PASS
-AI+ML,42,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2500.0,1,3125.0,PASS
-AI+ML,42,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2500.0,1,2625.0,PASS
-AI+ML,42,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,7549.04,1,16607.89,PASS
-AI+ML,42,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2500.0,0,-2500.0,PASS
-AI+ML,42,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2500.0,1,4075.0,PASS
-AI+ML,42,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2500.0,1,3000.0,PASS
-AI+ML,42,2425,Man City vs Brighton,2025-03-15,home_win,1.67,2500.0,0,-2500.0,PASS
-AI+ML,43,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,4031.11,1,6046.66,PASS
-AI+ML,43,2425,Aston Villa vs Brentford,2024-12-04,home_win,1.8,2500.0,1,2000.0,PASS
-AI+ML,43,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,4744.34,1,8919.36,PASS
-AI+ML,43,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,7119.66,0,-7119.66,PASS
-AI+ML,43,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,5688.34,0,-5688.34,PASS
-AI+ML,43,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2500.0,1,3125.0,PASS
-AI+ML,43,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2500.0,1,2625.0,PASS
-AI+ML,43,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,6965.04,1,15323.09,PASS
-AI+ML,43,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2500.0,0,-2500.0,PASS
-AI+ML,43,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2500.0,1,4075.0,PASS
-AI+ML,43,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2500.0,1,3000.0,PASS
-AI+ML,43,2425,Man City vs Brighton,2025-03-15,home_win,1.67,2500.0,0,-2500.0,PASS
-AI+ML,44,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,4003.11,1,6004.66,PASS
-AI+ML,44,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,5000.34,1,9400.64,PASS
-AI+ML,44,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,7407.66,0,-7407.66,PASS
-AI+ML,44,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,5712.34,0,-5712.34,PASS
-AI+ML,44,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2500.0,1,3125.0,PASS
-AI+ML,44,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2500.0,1,2625.0,PASS
-AI+ML,44,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,7533.04,1,16572.69,PASS
-AI+ML,44,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2500.0,0,-2500.0,PASS
-AI+ML,44,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2500.0,1,4075.0,PASS
-AI+ML,44,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2500.0,1,3000.0,PASS
-AI+ML,44,2425,Man City vs Brighton,2025-03-15,home_win,1.67,2500.0,0,-2500.0,PASS
-AI+ML,45,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,3871.11,1,5806.66,PASS
-AI+ML,45,2425,Aston Villa vs Brentford,2024-12-04,home_win,1.8,2500.0,1,2000.0,PASS
-AI+ML,45,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,5000.34,1,9400.64,PASS
-AI+ML,45,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,7511.66,0,-7511.66,PASS
-AI+ML,45,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,6004.34,0,-6004.34,PASS
-AI+ML,45,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2500.0,1,3125.0,PASS
-AI+ML,45,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2500.0,1,2625.0,PASS
-AI+ML,45,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,6905.04,1,15191.09,PASS
-AI+ML,45,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2500.0,0,-2500.0,PASS
-AI+ML,45,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2500.0,1,4075.0,PASS
-AI+ML,45,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2500.0,1,3000.0,PASS
-AI+ML,45,2425,Man City vs Brighton,2025-03-15,home_win,1.67,2500.0,0,-2500.0,PASS
-AI+ML,46,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,3835.11,1,5752.66,PASS
-AI+ML,46,2425,Aston Villa vs Brentford,2024-12-04,home_win,1.8,2500.0,1,2000.0,PASS
-AI+ML,46,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,4880.34,1,9175.04,PASS
-AI+ML,46,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,7283.66,0,-7283.66,PASS
-AI+ML,46,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,5452.34,0,-5452.34,PASS
-AI+ML,46,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2500.0,1,3125.0,PASS
-AI+ML,46,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2500.0,1,2625.0,PASS
-AI+ML,46,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,7321.04,1,16106.29,PASS
-AI+ML,46,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2500.0,0,-2500.0,PASS
-AI+ML,46,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2500.0,1,4075.0,PASS
-AI+ML,46,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2500.0,1,3000.0,PASS
-AI+ML,46,2425,Man City vs Brighton,2025-03-15,home_win,1.67,2500.0,0,-2500.0,PASS
-AI+ML,42,2526,Burnley vs Nott'm Forest,2025-09-20,away_win,2.2,2500.0,0,-2500.0,PASS
-AI+ML,43,2526,Burnley vs Nott'm Forest,2025-09-20,away_win,2.2,2500.0,0,-2500.0,PASS
-AI+ML,44,2526,Burnley vs Nott'm Forest,2025-09-20,away_win,2.2,2500.0,0,-2500.0,PASS
-AI+ML,45,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,2500.0,0,-2500.0,PASS
-AI+ML,46,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,2500.0,0,-2500.0,PASS
+agent,seed,season,match,kickoff,pick,odds,odds_eff,stake,won,profit,profit_net,closing_odds,clv_pct,ai_layer
+ML-only,42,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,2.75,10000.0,1,17500.0,17150.0,2.8,-1.786,
+ML-only,42,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,3.0,-6.667,
+ML-only,42,2425,Brighton vs Man United,2024-08-24,away_win,2.63,2.63,10000.0,0,-10000.0,-10000.0,2.88,-8.681,
+ML-only,42,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.0,0.0,
+ML-only,42,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.45,2.041,
+ML-only,42,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.6,-11.538,
+ML-only,42,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,3.2,10000.0,0,-10000.0,-10000.0,2.88,11.111,
+ML-only,42,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,2.4,10000.0,0,-10000.0,-10000.0,2.4,0.0,
+ML-only,42,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.05,14.634,
+ML-only,42,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.8,0.0,
+ML-only,42,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,3.0,10000.0,1,20000.0,19600.0,3.25,-7.692,
+ML-only,42,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,1.65,10000.0,0,-10000.0,-10000.0,1.75,-5.714,
+ML-only,42,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,42,2425,Aston Villa vs Bournemouth,2024-10-26,home_win,1.85,1.85,10000.0,0,-10000.0,-10000.0,1.75,5.714,
+ML-only,42,2425,West Ham vs Man United,2024-10-27,away_win,2.3,2.3,10000.0,0,-10000.0,-10000.0,2.1,9.524,
+ML-only,42,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,2.5,1725.0,0,-1725.0,-1725.0,2.2,13.636,
+ML-only,43,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,2.75,10000.0,1,17500.0,17150.0,2.8,-1.786,
+ML-only,43,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,3.0,-6.667,
+ML-only,43,2425,Brighton vs Man United,2024-08-24,away_win,2.63,2.63,10000.0,0,-10000.0,-10000.0,2.88,-8.681,
+ML-only,43,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.0,0.0,
+ML-only,43,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.45,2.041,
+ML-only,43,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.6,-11.538,
+ML-only,43,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,3.2,10000.0,0,-10000.0,-10000.0,2.88,11.111,
+ML-only,43,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,2.4,10000.0,0,-10000.0,-10000.0,2.4,0.0,
+ML-only,43,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.05,14.634,
+ML-only,43,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.8,0.0,
+ML-only,43,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,3.0,10000.0,1,20000.0,19600.0,3.25,-7.692,
+ML-only,43,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,1.65,10000.0,0,-10000.0,-10000.0,1.75,-5.714,
+ML-only,43,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,43,2425,West Ham vs Man United,2024-10-27,away_win,2.3,2.3,10000.0,0,-10000.0,-10000.0,2.1,9.524,
+ML-only,43,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,2.5,10000.0,0,-10000.0,-10000.0,2.2,13.636,
+ML-only,43,2425,Southampton vs Everton,2024-11-02,away_win,2.63,2.63,1725.0,0,-1725.0,-1725.0,2.63,0.0,
+ML-only,44,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,2.75,10000.0,1,17500.0,17150.0,2.8,-1.786,
+ML-only,44,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,3.0,-6.667,
+ML-only,44,2425,Brighton vs Man United,2024-08-24,away_win,2.63,2.63,10000.0,0,-10000.0,-10000.0,2.88,-8.681,
+ML-only,44,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.0,0.0,
+ML-only,44,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.45,2.041,
+ML-only,44,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.6,-11.538,
+ML-only,44,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,3.2,10000.0,0,-10000.0,-10000.0,2.88,11.111,
+ML-only,44,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,2.4,10000.0,0,-10000.0,-10000.0,2.4,0.0,
+ML-only,44,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.05,14.634,
+ML-only,44,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.8,0.0,
+ML-only,44,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,1.65,10000.0,0,-10000.0,-10000.0,1.75,-5.714,
+ML-only,44,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,44,2425,West Ham vs Man United,2024-10-27,away_win,2.3,2.3,10000.0,0,-10000.0,-10000.0,2.1,9.524,
+ML-only,44,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,2.5,10000.0,0,-10000.0,-10000.0,2.2,13.636,
+ML-only,44,2425,Southampton vs Everton,2024-11-02,away_win,2.63,2.63,8725.0,0,-8725.0,-8725.0,2.63,0.0,
+ML-only,45,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,2.75,10000.0,1,17500.0,17150.0,2.8,-1.786,
+ML-only,45,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,3.0,-6.667,
+ML-only,45,2425,Brighton vs Man United,2024-08-24,away_win,2.63,2.63,10000.0,0,-10000.0,-10000.0,2.88,-8.681,
+ML-only,45,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.0,0.0,
+ML-only,45,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.45,2.041,
+ML-only,45,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.6,-11.538,
+ML-only,45,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,3.2,10000.0,0,-10000.0,-10000.0,2.88,11.111,
+ML-only,45,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,2.4,10000.0,0,-10000.0,-10000.0,2.4,0.0,
+ML-only,45,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.05,14.634,
+ML-only,45,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.8,0.0,
+ML-only,45,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,3.0,10000.0,1,20000.0,19600.0,3.25,-7.692,
+ML-only,45,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,1.65,10000.0,0,-10000.0,-10000.0,1.75,-5.714,
+ML-only,45,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,45,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,2.5,10000.0,0,-10000.0,-10000.0,2.2,13.636,
+ML-only,45,2425,Wolves vs Crystal Palace,2024-11-02,away_win,2.88,2.88,10000.0,0,-10000.0,-10000.0,3.0,-4.0,
+ML-only,45,2425,Southampton vs Everton,2024-11-02,away_win,2.63,2.63,1725.0,0,-1725.0,-1725.0,2.63,0.0,
+ML-only,46,2425,West Ham vs Aston Villa,2024-08-17,away_win,2.75,2.75,10000.0,1,17500.0,17150.0,2.8,-1.786,
+ML-only,46,2425,Southampton vs Nott'm Forest,2024-08-24,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,3.0,-6.667,
+ML-only,46,2425,Brighton vs Man United,2024-08-24,away_win,2.63,2.63,10000.0,0,-10000.0,-10000.0,2.88,-8.681,
+ML-only,46,2425,Ipswich vs Fulham,2024-08-31,home_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.0,0.0,
+ML-only,46,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.45,2.041,
+ML-only,46,2425,Tottenham vs Arsenal,2024-09-15,away_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.6,-11.538,
+ML-only,46,2425,Southampton vs Ipswich,2024-09-21,away_win,3.2,3.2,10000.0,0,-10000.0,-10000.0,2.88,11.111,
+ML-only,46,2425,Fulham vs Newcastle,2024-09-21,away_win,2.4,2.4,10000.0,0,-10000.0,-10000.0,2.4,0.0,
+ML-only,46,2425,Man United vs Tottenham,2024-09-29,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.05,14.634,
+ML-only,46,2425,Fulham vs Aston Villa,2024-10-19,away_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.8,0.0,
+ML-only,46,2425,Newcastle vs Brighton,2024-10-19,home_win,1.95,1.95,10000.0,0,-10000.0,-10000.0,1.73,12.717,
+ML-only,46,2425,Southampton vs Leicester,2024-10-19,away_win,3.0,3.0,10000.0,1,20000.0,19600.0,3.25,-7.692,
+ML-only,46,2425,Bournemouth vs Arsenal,2024-10-19,away_win,1.65,1.65,10000.0,0,-10000.0,-10000.0,1.75,-5.714,
+ML-only,46,2425,Nott'm Forest vs Crystal Palace,2024-10-21,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,46,2425,West Ham vs Man United,2024-10-27,away_win,2.3,2.3,10000.0,0,-10000.0,-10000.0,2.1,9.524,
+ML-only,46,2425,Arsenal vs Liverpool,2024-10-27,home_win,2.5,2.5,1725.0,0,-1725.0,-1725.0,2.2,13.636,
+ML-only,42,2526,Sunderland vs West Ham,2025-08-16,home_win,3.25,3.25,10000.0,1,22500.0,22050.0,3.4,-4.412,
+ML-only,42,2526,Leeds vs Everton,2025-08-18,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,42,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,3.5,10000.0,0,-10000.0,-10000.0,3.2,9.375,
+ML-only,42,2526,Crystal Palace vs Nott'm Forest,2025-08-24,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.35,0.0,
+ML-only,42,2526,Fulham vs Man United,2025-08-24,home_win,3.25,3.25,10000.0,0,-10000.0,-10000.0,3.4,-4.412,
+ML-only,42,2526,West Ham vs Tottenham,2025-09-13,home_win,3.4,3.4,10000.0,0,-10000.0,-10000.0,3.1,9.677,
+ML-only,42,2526,Brentford vs Man United,2025-09-27,home_win,3.4,3.4,10000.0,1,24000.0,23520.0,3.2,6.25,
+ML-only,42,2526,Aston Villa vs Fulham,2025-09-28,home_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.2,4.545,
+ML-only,42,2526,Chelsea vs Liverpool,2025-10-04,home_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.9,-3.448,
+ML-only,42,2526,Wolves vs Brighton,2025-10-05,away_win,2.0,2.0,10000.0,0,-10000.0,-10000.0,2.1,-4.762,
+ML-only,42,2526,Aston Villa vs Burnley,2025-10-05,home_win,1.6,1.6,10000.0,1,6000.0,5880.0,1.55,3.226,
+ML-only,42,2526,Everton vs Crystal Palace,2025-10-05,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,2.8,7.143,
+ML-only,42,2526,Brighton vs Newcastle,2025-10-18,home_win,2.63,2.63,10000.0,1,16300.0,15974.0,2.88,-8.681,
+ML-only,42,2526,Sunderland vs Wolves,2025-10-18,home_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.5,0.0,
+ML-only,42,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,3.5,10000.0,1,25000.0,24500.0,3.1,12.903,
+ML-only,42,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,1.6,10000.0,0,-10000.0,-10000.0,1.7,-5.882,
+ML-only,43,2526,Sunderland vs West Ham,2025-08-16,home_win,3.25,3.25,10000.0,1,22500.0,22050.0,3.4,-4.412,
+ML-only,43,2526,Leeds vs Everton,2025-08-18,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,43,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,3.5,10000.0,0,-10000.0,-10000.0,3.2,9.375,
+ML-only,43,2526,Crystal Palace vs Nott'm Forest,2025-08-24,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.35,0.0,
+ML-only,43,2526,Fulham vs Man United,2025-08-24,home_win,3.25,3.25,10000.0,0,-10000.0,-10000.0,3.4,-4.412,
+ML-only,43,2526,West Ham vs Tottenham,2025-09-13,home_win,3.4,3.4,10000.0,0,-10000.0,-10000.0,3.1,9.677,
+ML-only,43,2526,Brentford vs Man United,2025-09-27,home_win,3.4,3.4,10000.0,1,24000.0,23520.0,3.2,6.25,
+ML-only,43,2526,Aston Villa vs Fulham,2025-09-28,home_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.2,4.545,
+ML-only,43,2526,Leeds vs Tottenham,2025-10-04,away_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.5,0.0,
+ML-only,43,2526,Chelsea vs Liverpool,2025-10-04,home_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.9,-3.448,
+ML-only,43,2526,Wolves vs Brighton,2025-10-05,away_win,2.0,2.0,10000.0,0,-10000.0,-10000.0,2.1,-4.762,
+ML-only,43,2526,Aston Villa vs Burnley,2025-10-05,home_win,1.6,1.6,10000.0,1,6000.0,5880.0,1.55,3.226,
+ML-only,43,2526,Everton vs Crystal Palace,2025-10-05,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,2.8,7.143,
+ML-only,43,2526,Brighton vs Newcastle,2025-10-18,home_win,2.63,2.63,10000.0,1,16300.0,15974.0,2.88,-8.681,
+ML-only,43,2526,Crystal Palace vs Bournemouth,2025-10-18,home_win,2.2,2.2,10000.0,0,-10000.0,-10000.0,2.15,2.326,
+ML-only,43,2526,Sunderland vs Wolves,2025-10-18,home_win,2.5,2.5,5220.0,1,7830.0,7673.4,2.5,0.0,
+ML-only,43,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,3.5,1174.5,1,2936.25,2877.53,3.1,12.903,
+ML-only,43,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,1.6,440.44,0,-440.44,-440.44,1.7,-5.882,
+ML-only,44,2526,Sunderland vs West Ham,2025-08-16,home_win,3.25,3.25,10000.0,1,22500.0,22050.0,3.4,-4.412,
+ML-only,44,2526,Leeds vs Everton,2025-08-18,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,3.1,-3.226,
+ML-only,44,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,3.5,10000.0,0,-10000.0,-10000.0,3.2,9.375,
+ML-only,44,2526,Crystal Palace vs Nott'm Forest,2025-08-24,home_win,2.35,2.35,10000.0,0,-10000.0,-10000.0,2.35,0.0,
+ML-only,44,2526,Fulham vs Man United,2025-08-24,home_win,3.25,3.25,10000.0,0,-10000.0,-10000.0,3.4,-4.412,
+ML-only,44,2526,West Ham vs Tottenham,2025-09-13,home_win,3.4,3.4,10000.0,0,-10000.0,-10000.0,3.1,9.677,
+ML-only,44,2526,Brentford vs Man United,2025-09-27,home_win,3.4,3.4,10000.0,1,24000.0,23520.0,3.2,6.25,
+ML-only,44,2526,Aston Villa vs Fulham,2025-09-28,home_win,2.3,2.3,10000.0,1,13000.0,12740.0,2.2,4.545,
+ML-only,44,2526,Chelsea vs Liverpool,2025-10-04,home_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.9,-3.448,
+ML-only,44,2526,Wolves vs Brighton,2025-10-05,away_win,2.0,2.0,10000.0,0,-10000.0,-10000.0,2.1,-4.762,
+ML-only,44,2526,Aston Villa vs Burnley,2025-10-05,home_win,1.6,1.6,10000.0,1,6000.0,5880.0,1.55,3.226,
+ML-only,44,2526,Everton vs Crystal Palace,2025-10-05,away_win,3.0,3.0,10000.0,0,-10000.0,-10000.0,2.8,7.143,
+ML-only,44,2526,Brighton vs Newcastle,2025-10-18,home_win,2.63,2.63,10000.0,1,16300.0,15974.0,2.88,-8.681,
+ML-only,44,2526,Crystal Palace vs Bournemouth,2025-10-18,home_win,2.2,2.2,10000.0,0,-10000.0,-10000.0,2.15,2.326,
+ML-only,44,2526,Sunderland vs Wolves,2025-10-18,home_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.5,0.0,
+ML-only,44,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,3.5,5220.0,1,13050.0,12789.0,3.1,12.903,
+ML-only,44,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,1.6,1957.5,0,-1957.5,-1957.5,1.7,-5.882,
+ML-only,45,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,2.25,10000.0,0,-10000.0,-10000.0,2.45,-8.163,
+ML-only,45,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,3.5,10000.0,0,-10000.0,-10000.0,3.2,9.375,
+ML-only,45,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,3.5,10000.0,1,25000.0,24500.0,3.1,12.903,
+ML-only,45,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,1.6,10000.0,0,-10000.0,-10000.0,1.7,-5.882,
+ML-only,45,2526,West Ham vs Brentford,2025-10-20,away_win,2.88,2.88,10000.0,1,18800.0,18424.0,2.55,12.941,
+ML-only,45,2526,Leeds vs West Ham,2025-10-24,away_win,4.75,4.75,10000.0,0,-10000.0,-10000.0,4.5,5.556,
+ML-only,45,2526,Tottenham vs Chelsea,2025-11-01,away_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.25,11.111,
+ML-only,45,2526,Brighton vs Leeds,2025-11-01,home_win,1.85,1.85,10000.0,1,8500.0,8330.0,1.91,-3.141,
+ML-only,45,2526,Sunderland vs Everton,2025-11-03,home_win,2.7,2.7,10000.0,0,-10000.0,-10000.0,3.3,-18.182,
+ML-only,45,2526,Tottenham vs Man United,2025-11-08,away_win,2.5,2.5,10000.0,0,-10000.0,-10000.0,2.35,6.383,
+ML-only,45,2526,Everton vs Fulham,2025-11-08,home_win,2.2,2.2,10000.0,1,12000.0,11760.0,2.3,-4.348,
+ML-only,45,2526,Man City vs Liverpool,2025-11-09,home_win,1.9,1.9,10000.0,1,9000.0,8820.0,1.85,2.703,
+ML-only,45,2526,Nott'm Forest vs Leeds,2025-11-09,home_win,2.25,2.25,10000.0,1,12500.0,12250.0,2.2,2.273,
+ML-only,45,2526,Aston Villa vs Bournemouth,2025-11-09,home_win,2.2,2.2,10000.0,1,12000.0,11760.0,2.3,-4.348,
+ML-only,45,2526,Brentford vs Newcastle,2025-11-09,home_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.8,0.0,
+ML-only,45,2526,Crystal Palace vs Brighton,2025-11-09,home_win,2.25,2.25,10000.0,0,-10000.0,-10000.0,2.38,-5.462,
+ML-only,46,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,2.25,10000.0,0,-10000.0,-10000.0,2.45,-8.163,
+ML-only,46,2526,Burnley vs Sunderland,2025-08-23,away_win,3.5,3.5,10000.0,0,-10000.0,-10000.0,3.2,9.375,
+ML-only,46,2526,Tottenham vs Aston Villa,2025-10-19,away_win,3.5,3.5,10000.0,1,25000.0,24500.0,3.1,12.903,
+ML-only,46,2526,Liverpool vs Man United,2025-10-19,home_win,1.6,1.6,10000.0,0,-10000.0,-10000.0,1.7,-5.882,
+ML-only,46,2526,West Ham vs Brentford,2025-10-20,away_win,2.88,2.88,10000.0,1,18800.0,18424.0,2.55,12.941,
+ML-only,46,2526,Leeds vs West Ham,2025-10-24,away_win,4.75,4.75,10000.0,0,-10000.0,-10000.0,4.5,5.556,
+ML-only,46,2526,Tottenham vs Chelsea,2025-11-01,away_win,2.5,2.5,10000.0,1,15000.0,14700.0,2.25,11.111,
+ML-only,46,2526,Brighton vs Leeds,2025-11-01,home_win,1.85,1.85,10000.0,1,8500.0,8330.0,1.91,-3.141,
+ML-only,46,2526,Sunderland vs Everton,2025-11-03,home_win,2.7,2.7,10000.0,0,-10000.0,-10000.0,3.3,-18.182,
+ML-only,46,2526,Everton vs Fulham,2025-11-08,home_win,2.2,2.2,10000.0,1,12000.0,11760.0,2.3,-4.348,
+ML-only,46,2526,Man City vs Liverpool,2025-11-09,home_win,1.9,1.9,10000.0,1,9000.0,8820.0,1.85,2.703,
+ML-only,46,2526,Nott'm Forest vs Leeds,2025-11-09,home_win,2.25,2.25,10000.0,1,12500.0,12250.0,2.2,2.273,
+ML-only,46,2526,Aston Villa vs Bournemouth,2025-11-09,home_win,2.2,2.2,10000.0,1,12000.0,11760.0,2.3,-4.348,
+ML-only,46,2526,Brentford vs Newcastle,2025-11-09,home_win,2.8,2.8,10000.0,1,18000.0,17640.0,2.8,0.0,
+ML-only,46,2526,Crystal Palace vs Brighton,2025-11-09,home_win,2.25,2.25,10000.0,0,-10000.0,-10000.0,2.38,-5.462,
+ML-only,46,2526,Leeds vs Aston Villa,2025-11-23,away_win,2.4,2.4,10000.0,1,14000.0,13720.0,2.25,6.667,
+ML-only,46,2526,Sunderland vs Bournemouth,2025-11-29,home_win,3.2,3.2,2720.0,1,5984.0,5864.32,3.2,0.0,
+ML-only,46,2526,Everton vs Newcastle,2025-11-29,home_win,2.8,2.8,897.6,0,-897.6,-897.6,2.63,6.464,
+AI+ML,42,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,3795.11,1,5692.66,5578.81,2.45,2.041,PASS
+AI+ML,42,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,2.88,4604.34,1,8656.16,8483.04,2.88,0.0,PASS
+AI+ML,42,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,3.4,7479.66,0,-7479.66,-7479.66,2.88,18.056,PASS
+AI+ML,42,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,2.88,5200.34,0,-5200.34,-5200.34,2.75,4.727,PASS
+AI+ML,42,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2.25,2500.0,1,3125.0,3062.5,1.73,30.058,PASS
+AI+ML,42,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2.05,2500.0,1,2625.0,2572.5,2.38,-13.866,PASS
+AI+ML,42,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,3.2,7549.04,1,16607.89,16275.73,3.5,-8.571,PASS
+AI+ML,42,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2.45,2500.0,0,-2500.0,-2500.0,2.3,6.522,PASS
+AI+ML,42,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2.63,2500.0,1,4075.0,3993.5,2.6,1.154,PASS
+AI+ML,42,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2.2,2500.0,1,3000.0,2940.0,2.2,0.0,PASS
+AI+ML,42,2425,Man City vs Brighton,2025-03-15,home_win,1.67,1.67,2500.0,0,-2500.0,-2500.0,1.8,-7.222,PASS
+AI+ML,43,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,4031.11,1,6046.66,5925.73,2.45,2.041,PASS
+AI+ML,43,2425,Aston Villa vs Brentford,2024-12-04,home_win,1.8,1.8,2500.0,1,2000.0,1960.0,1.67,7.784,PASS
+AI+ML,43,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,2.88,4744.34,1,8919.36,8740.97,2.88,0.0,PASS
+AI+ML,43,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,3.4,7119.66,0,-7119.66,-7119.66,2.88,18.056,PASS
+AI+ML,43,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,2.88,5688.34,0,-5688.34,-5688.34,2.75,4.727,PASS
+AI+ML,43,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2.25,2500.0,1,3125.0,3062.5,1.73,30.058,PASS
+AI+ML,43,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2.05,2500.0,1,2625.0,2572.5,2.38,-13.866,PASS
+AI+ML,43,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,3.2,6965.04,1,15323.09,15016.63,3.5,-8.571,PASS
+AI+ML,43,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2.45,2500.0,0,-2500.0,-2500.0,2.3,6.522,PASS
+AI+ML,43,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2.63,2500.0,1,4075.0,3993.5,2.6,1.154,PASS
+AI+ML,43,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2.2,2500.0,1,3000.0,2940.0,2.2,0.0,PASS
+AI+ML,43,2425,Man City vs Brighton,2025-03-15,home_win,1.67,1.67,2500.0,0,-2500.0,-2500.0,1.8,-7.222,PASS
+AI+ML,44,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,4003.11,1,6004.66,5884.57,2.45,2.041,PASS
+AI+ML,44,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,2.88,5000.34,1,9400.64,9212.63,2.88,0.0,PASS
+AI+ML,44,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,3.4,7407.66,0,-7407.66,-7407.66,2.88,18.056,PASS
+AI+ML,44,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,2.88,5712.34,0,-5712.34,-5712.34,2.75,4.727,PASS
+AI+ML,44,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2.25,2500.0,1,3125.0,3062.5,1.73,30.058,PASS
+AI+ML,44,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2.05,2500.0,1,2625.0,2572.5,2.38,-13.866,PASS
+AI+ML,44,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,3.2,7533.04,1,16572.69,16241.23,3.5,-8.571,PASS
+AI+ML,44,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2.45,2500.0,0,-2500.0,-2500.0,2.3,6.522,PASS
+AI+ML,44,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2.63,2500.0,1,4075.0,3993.5,2.6,1.154,PASS
+AI+ML,44,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2.2,2500.0,1,3000.0,2940.0,2.2,0.0,PASS
+AI+ML,44,2425,Man City vs Brighton,2025-03-15,home_win,1.67,1.67,2500.0,0,-2500.0,-2500.0,1.8,-7.222,PASS
+AI+ML,45,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,3871.11,1,5806.66,5690.53,2.45,2.041,PASS
+AI+ML,45,2425,Aston Villa vs Brentford,2024-12-04,home_win,1.8,1.8,2500.0,1,2000.0,1960.0,1.67,7.784,PASS
+AI+ML,45,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,2.88,5000.34,1,9400.64,9212.63,2.88,0.0,PASS
+AI+ML,45,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,3.4,7511.66,0,-7511.66,-7511.66,2.88,18.056,PASS
+AI+ML,45,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,2.88,6004.34,0,-6004.34,-6004.34,2.75,4.727,PASS
+AI+ML,45,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2.25,2500.0,1,3125.0,3062.5,1.73,30.058,PASS
+AI+ML,45,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2.05,2500.0,1,2625.0,2572.5,2.38,-13.866,PASS
+AI+ML,45,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,3.2,6905.04,1,15191.09,14887.27,3.5,-8.571,PASS
+AI+ML,45,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2.45,2500.0,0,-2500.0,-2500.0,2.3,6.522,PASS
+AI+ML,45,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2.63,2500.0,1,4075.0,3993.5,2.6,1.154,PASS
+AI+ML,45,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2.2,2500.0,1,3000.0,2940.0,2.2,0.0,PASS
+AI+ML,45,2425,Man City vs Brighton,2025-03-15,home_win,1.67,1.67,2500.0,0,-2500.0,-2500.0,1.8,-7.222,PASS
+AI+ML,46,2425,Newcastle vs Tottenham,2024-09-01,home_win,2.5,2.5,3835.11,1,5752.66,5637.61,2.45,2.041,PASS
+AI+ML,46,2425,Aston Villa vs Brentford,2024-12-04,home_win,1.8,1.8,2500.0,1,2000.0,1960.0,1.67,7.784,PASS
+AI+ML,46,2425,Brentford vs Newcastle,2024-12-07,home_win,2.88,2.88,4880.34,1,9175.04,8991.54,2.88,0.0,PASS
+AI+ML,46,2425,Tottenham vs Chelsea,2024-12-08,home_win,3.4,3.4,7283.66,0,-7283.66,-7283.66,2.88,18.056,PASS
+AI+ML,46,2425,West Ham vs Brighton,2024-12-21,home_win,2.88,2.88,5452.34,0,-5452.34,-5452.34,2.75,4.727,PASS
+AI+ML,46,2425,Tottenham vs Newcastle,2025-01-04,away_win,2.25,2.25,2500.0,1,3125.0,3062.5,1.73,30.058,PASS
+AI+ML,46,2425,Man City vs Chelsea,2025-01-25,home_win,2.05,2.05,2500.0,1,2625.0,2572.5,2.38,-13.866,PASS
+AI+ML,46,2425,Brentford vs Tottenham,2025-02-02,away_win,3.2,3.2,7321.04,1,16106.29,15784.16,3.5,-8.571,PASS
+AI+ML,46,2425,Brighton vs Chelsea,2025-02-14,away_win,2.45,2.45,2500.0,0,-2500.0,-2500.0,2.3,6.522,PASS
+AI+ML,46,2425,Aston Villa vs Chelsea,2025-02-22,home_win,2.63,2.63,2500.0,1,4075.0,3993.5,2.6,1.154,PASS
+AI+ML,46,2425,West Ham vs Newcastle,2025-03-10,away_win,2.2,2.2,2500.0,1,3000.0,2940.0,2.2,0.0,PASS
+AI+ML,46,2425,Man City vs Brighton,2025-03-15,home_win,1.67,1.67,2500.0,0,-2500.0,-2500.0,1.8,-7.222,PASS
+AI+ML,42,2526,Burnley vs Nott'm Forest,2025-09-20,away_win,2.2,2.2,2500.0,0,-2500.0,-2500.0,2.15,2.326,PASS
+AI+ML,43,2526,Burnley vs Nott'm Forest,2025-09-20,away_win,2.2,2.2,2500.0,0,-2500.0,-2500.0,2.15,2.326,PASS
+AI+ML,44,2526,Burnley vs Nott'm Forest,2025-09-20,away_win,2.2,2.2,2500.0,0,-2500.0,-2500.0,2.15,2.326,PASS
+AI+ML,45,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,2.25,2500.0,0,-2500.0,-2500.0,2.45,-8.163,PASS
+AI+ML,46,2526,Aston Villa vs Newcastle,2025-08-16,home_win,2.25,2.25,2500.0,0,-2500.0,-2500.0,2.45,-8.163,PASS
