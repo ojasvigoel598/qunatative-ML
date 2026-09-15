@@ -98,8 +98,8 @@ cutting the loss from 1.00% to 0.25% of bankroll — exactly its job.
 | Model quality vs market baseline (acc/Brier/log loss) | ✓ within ~3 pts of market, calibrated |
 | Multiple leagues | ✓ 3 (only E0 positive & significant) |
 | Out-of-sample live test (2026/27 PL) | ✓ 30 matches, 1 bet, lost small |
-| Fee/limit realism (exchange commission, stake caps) | ✗ TODO |
-| Per-bet CLV vs closing line (fastest-converging metric) | ✗ TODO |
+| Fee/limit realism (exchange commission, slippage) | ✓ 2% commission on wins: E0 stays +49.2% significant |
+| Per-bet CLV vs closing line (fastest-converging metric) | ✓ pooled AI+ML CLV **+1.50%, CI [+0.32, +2.73] — significant** |
 
 **Bottom line:** the model's math is sound and near-market; the -100% ML-only
 results come from longshot selection (winner's curse), not broken code.  The
@@ -107,3 +107,33 @@ AI+ML hybrid turns pooled unit ROI positive (+4.7% vs -14.2%) with only E0
 CI-significant.  Treat it as a validated *research harness*, not a money
 printer: the next two hardening steps are closing-line CLV tracking and
 commission/stake-cap realism.
+
+## 7. Closing-line CLV + trading costs (added after first publication)
+
+Both TODOs above are now implemented in `demo/simulation_ai_ml.py`
+(`--commission`, `--slippage`; every bet graded vs the closing line).
+
+**Per-bet closing-line CLV, pooled 5 seeds × 2 seasons × 3 leagues:**
+
+| Agent | mean CLV per bet | 95% CI | verdict |
+|---|---|---|---|
+| ML-only | -0.04% | [-0.96, +0.87] | zero edge — its "edges" are noise |
+| **AI+ML** | **+1.50%** | **[+0.32, +2.73]** | **significantly beats the close** |
+
+Per league, the AI layer beats ML-only on CLV in **all three** leagues
+(I1 +0.47 vs -1.00, E0 +2.83 vs +0.82, SP1 +0.81 vs -1.04; E0's CLV CI is
+significant on its own).  CLV is the strongest evidence in this project: it
+has no result variance, so ~166 bets of significant CLV is worth far more
+than 166 bets of ROI.  The E0 ROI significance (+51.0% gross) is corroborated,
+not contradicted, by the price evidence.
+
+**Costs:** at 2% exchange commission on net winnings (Betfair base) the E0
+result stays significant (+49.2%, CI [+11.7, +87.9]); pooled numbers barely
+move (AI+ML +4.8% → +4.5% net; slippage of 1% would cost roughly another
+1 pt on avg odds ~2.1).  The ML-only longshot strategy stays deeply negative
+under any cost assumption.
+
+**Remaining honesty note:** closing lines in the data are B365 close (Pinnacle
+close unavailable post-2020); Avg-line proxies were used pre-kickoff.  CLV vs
+a soft-ish close slightly *flatters* us — treat +1.5% as an upper bound, and
+stake caps / market impact are still unmodelled.
