@@ -28,9 +28,10 @@ REAL_DIR = PROJECT_ROOT / "data" / "real"
 LEAGUES = {"SP1": "La Liga", "E0": "Premier League", "I1": "Serie A"}
 
 # season codes as they appear in the URL (2021 = 2020/21)
-SEASON_CODES = ["2021", "2122", "2223", "2324", "2425", "2526"]
+SEASON_CODES = ["2021", "2122", "2223", "2324", "2425", "2526", "2627"]
 SEASON_LABEL = {"2021": "2020/21", "2122": "2021/22", "2223": "2022/23",
-                "2324": "2023/24", "2425": "2024/25", "2526": "2025/26"}
+                "2324": "2023/24", "2425": "2024/25", "2526": "2025/26",
+                "2627": "2026/27"}
 
 ODDS_COLS = ["odds_home", "odds_draw", "odds_away",
              "pin_home", "pin_draw", "pin_away"]
@@ -83,6 +84,13 @@ def download_season(league: str, season: str, raw: pd.DataFrame = None) -> pd.Da
     df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y", errors="coerce")
     df["league"] = LEAGUES[league]
     df["season"] = SEASON_LABEL[season]
+    # Recent seasons dropped the Pinnacle (PS*) columns.  Fall back to the
+    # market AVERAGE (Avg*) as the sharp-line proxy: it is the best available
+    # consensus reference for the CLV/split gates and is present in 2026/27.
+    for dst, src in (("pin_home", "AvgH"), ("pin_draw", "AvgD"),
+                     ("pin_away", "AvgA")):
+        if (dst not in df.columns or df[dst].isna().all()) and src in df.columns:
+            df[dst] = pd.to_numeric(df[src], errors="coerce")
     # Rich feature columns
     RICH_COLS = [
         "home_shots", "away_shots",
