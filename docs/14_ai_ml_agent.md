@@ -43,28 +43,33 @@ or UPSCALE it:
 | Winner's-curse sizing | shrink stakes as ML-vs-market disagreement grows | why_model_losing.txt |
 | Agreement upscale | ≤ 25% bigger stake when sharp + CLV agree | capped, never a longshot |
 
-## 4. Head-to-head results (same model, same data, same season — only the AI layer differs)
+## 4. Head-to-head results — DOUBLE-VERIFIED (multi-seed + bootstrap CI)
 
 Unit ROI = profit / staked — the fair metric, because downsizing changes bet counts.
+Each cell pools 2 test seasons (2024/25, 2025/26) × 5 training seeds, leakage-free
+(training = 5 prior seasons only).  95% CI from 2,000 bootstrap resamples of the bet
+ledger.  An earlier single-seed version of this table (+3.26% on I1) did **not**
+survive the multi-seed check — it was seed luck; see `docs/15_verification_report.md`.
 
-| Run | ML-only unit ROI | AI+ML unit ROI | AI delta |
+| League | ML-only unit ROI (bets, strike) | AI+ML unit ROI (bets, strike) | AI delta |
 |---|---|---|---|
-| I1, 4 seasons (2223–2526) | -15.51% (48 bets) | -7.41% (13 bets) | **+8.09 pts** |
-| E0, 3 seasons (2324–2526) | +17.47% (50 bets) | +43.39% (13 bets) | **+25.92 pts** |
-| SP1, 3 seasons (2324–2526) | -19.26% (31 bets) | -17.15% (13 bets) | **+2.11 pts** |
-| I1, 2 seasons (2425–2526) | -100.0% (12 bets) | +3.26% (11 bets) | **+103.26 pts** |
-| **Pooled (10 league-seasons)** | **≈ -3.7%** | **≈ +3.8%** | **≈ +7.5 pts** |
+| I1 (Serie A) | **-100.0%** (61 bets, **0 wins**) | -24.5% (37 bets, 35.1%) | **+75.5 pts** |
+| E0 (Premier) | +20.8% (164 bets, 45.1%) | **+51.0%** (63 bets, 60.3%) — CI [+13.0, +90.3] ✓ | **+30.2 pts** |
+| SP1 (La Liga) | -16.6% (82 bets, 35.4%) | -14.7% (66 bets, 42.4%) | **+1.9 pts** |
+| **Pooled, 476 bets** | **-14.2%** (307 bets, 33.6%) | **+4.7%** (166 bets, 47.6%) | **+18.9 pts** |
 
 Key properties:
 
-- **Positive pooled unit ROI for the hybrid; negative for ML-only** — on 3 different
-  leagues, 10 league-seasons, leakage-free training (5 prior seasons only).
+- **Pooled positive unit ROI for the hybrid, negative for ML-only** on 3 leagues,
+  476 bets — and the E0 result is CI-significant.  I1/SP1 alone are not significant:
+  small samples stay small.
 - The AI layer never saw a result in advance; every gate uses pre-kickoff odds.
-- It works with **less data**: training is 1 league × 5 seasons, and results hold
-  with as few as 2 prior seasons (`ai_ml_headtohead_train2.csv`).
-- Caveat: with ~13 bets/season the sample is small — this is a research harness, not
-  a trading claim. Next step would be per-bet CLV measurement (the honest metric that
-  converges fastest) and a bootstrap over bet order.
+- Data-size sweep (calibrated gates): the hybrid needs **≥ 5 prior training seasons**;
+  with 2 seasons both agents lose (`ai_ml_headtohead_train2_cal.csv`).  Small data is
+  a real constraint — the AI layer filters bad bets, it cannot conjure signal that
+  the model never learned.
+- Honest caveat: the AI layer halves staking volume, so bankroll growth is slower
+  than unit ROI suggests; and ~166 bets is still not a trading-grade sample.
 
 ## 5. Run it
 
