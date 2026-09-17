@@ -2,7 +2,7 @@
 **Simulations**: 1,000,000
 **Bets per path**: 45
 **Initial bankroll**: $10,000
-**Runtime**: 10.8s
+**Runtime**: 13.1s
 
 ## ROI Distribution
 | Statistic | Value ||-----------|------:|| Mean ROI | +194.81% || Median ROI | +156.96% || Std ROI | 165.18% || 5th percentile | +7.40% || 25th percentile | +79.54% || 75th percentile | +267.62% || 95th percentile | +510.39% |
